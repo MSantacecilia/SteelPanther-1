@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Select Visual</h1>
+<div id="Content">
+    <form action="{{ url_for('indv_vis') }}" method="GET">
+        <p><select name="assessment">
+                <option disabled=true>Select Assessment</option>
+                {% for a in assessments %}
+                <option value="{{a.id}}">{{ a.organization }} @ {{ a.timestamp }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p><select name="org">
+                <option disabled=true>Select Organization</option>
+                {% for o in orgs %}
+                <option value="{{o.id}}">{{ o.name }}</option>
+                {% endfor %}
+            </select>
+        </p>
+        <p><button>Proceed</button></p>  
+    </form>
+</div>
+{% endblock %}

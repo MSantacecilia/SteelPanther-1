@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>Long Term Visualization</title>
+  </head>
+  <body>
+    <div class="container">
+        <canvas height="1" id="myChart" style="border:1px solid" width="3"></canvas>
+    </div>
+<script>
+        var myChart
+        var chart
+        myChart = document.getElementById("myChart").getContext("2d");
+        chart = new Chart(myChart,{
+            type:'line',
+            data:{
+                labels:[
+                    {% for k,v in assessDict.items() %}
+                            "{{v.assessment.time_stamp}}",
+                    {% endfor %}
+                ],
+                datasets:[{
+                    label:'Rating',
+                    data:[
+                        {% for k,v in assessDict.items() %}
+                                "{{v.rating}}",
+                        {% endfor %}
+                    ],
+                    backgroundColor:['rgba(255,100,132,0.6)']
+                }]
+            },
+            options:{
+        responsive: true,
+        legend: {
+            position: 'bottom',
+        },
+        hover: {
+            mode: 'label'
+        },
+        scales: {
+            xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Month'
+                    }
+                }],
+            yAxes: [{
+                    display: true,
+                    ticks: {
+                        //beginAtZero: true,
+                        max: 5,
+                        min: 0
+                    }
+                }]
+        },
+        title: {
+            display: true,
+            text: 'Long term Progress'
+        }
+    }
+    });
+        </script>
+    <form>
+        <button formaction="{{ url_for('select_vis') }}">Single Assessment View</button>
+    </form>
+      </body>
+    </html>

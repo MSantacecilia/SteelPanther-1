@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <title>My Test Screen</title>
+  </head>
+  <body>
+    <div class="container">
+      {% for category in category_list %}
+        <canvas height="1" id="{{category}}" style="border:1px solid" width="3"></canvas>
+      {% endfor %}
+    </div>
+<script>
+      // Generates a random value between 0 and 255
+      function randomNum() {
+        return Math.floor(Math.random() * 256);
+      }
+      
+      // Returns an array of 3 values for rgb
+      function randomRGB() {
+        var red = randomNum();
+        var green = randomNum();
+        var blue = randomNum();
+        return "rgba(" + red + ", " + green + ", " + blue + ", 0.5)";
+      }
+        var myChart
+        var chart
+        {% for category in category_list %}
+        myChart = document.getElementById("{{category}}").getContext("2d");
+        chart = new Chart(myChart,{
+            type:'radar',
+            data:{
+                labels:[
+                    {% for obj in questions_list_object %}
+                        {% if obj.question.category.name == category %}
+                            "{{obj.question.name}}",
+                        {% endif %}
+                    {% endfor %}
+                ],
+                datasets:[{
+                    label:['Rating'],
+                    data:[
+                        {% for obj in questions_list_object %}
+                            {% if obj.question.category.name == category %}
+                                {{obj.rating}},
+                            {% endif %}
+                        {% endfor %}
+                    ],
+                    backgroundColor:[randomRGB()]
+                }]
+            },
+            options:{
+                title:{
+                    display:true,
+                    text:["{{category}}"],
+                    fontsize:20
+                },
+                legend:{
+                    position:'bottom'
+                },
+                layout:{
+                    padding:{
+                        left:50,
+                        right:0,
+                        bottom:0,
+                        top:0
+                    }
+                },
+                tooltips:{
+                    display:false
+                },
+                scale:{
+                    ticks: {
+                        beginAtZero: true,
+                        min: 0,
+                        max: 3
+                    }
+                }
+            }
+        });
+        {% endfor %}
+        </script>
+            <form>
+    </form>
+    <a href="{{ url_for('select_vis') }}">Select Visual</a>
+
+      </body>
+    </html>
