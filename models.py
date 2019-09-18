@@ -2,26 +2,30 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
 from webapp import db, login
+from sqlalchemy.ext.declarative import declarative_base
 
 # UserMixin will implement the is_authenticated, is_active, is_anonymous, and get_id() 
 # required items for flask_login
-class User(UserMixin, db.Model):
+class User_account(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    manager_status = db.Column(db.Boolean, default=False)
-    assessments = db.relationship('Assessment', backref='user', lazy='dynamic')
-    assessment_templates = db.relationship('AssessmentTemplate', backref='user', lazy='dynamic')
+    manager_status = db.Column(db.Integer, default=0)
+    assessments = db.relationship('Assessment', backref='user_account', lazy='dynamic')
+    assessment_templates = db.relationship('AssessmentTemplate', backref='user_account', lazy='dynamic')
 
     def __repr__(self):
-        return '<User {0}>'.format(self.username)
+        return '<User_account {0}>'.format(self.username)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def is_admin(self):
+        return self.manager_status == 1
 
 
 class Organization(db.Model):
@@ -62,7 +66,7 @@ class Question(db.Model):
 class Assessment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=False)
     questionlist = db.relationship('QuestionList', backref='assessment', lazy='dynamic')
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
@@ -96,7 +100,7 @@ class QuestionList(db.Model):
 class AssessmentTemplate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=False)
     questions = db.Column(db.Text)
 
     def __repr__(self):

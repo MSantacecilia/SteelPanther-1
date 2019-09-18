@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request
 from werkzeug.urls import url_parse
 from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, TemplateForm, QuestionListForm
 from flask_login import current_user, login_user, logout_user, login_required
-from webapp.models import User, Category, Organization, Question, Assessment, AssessmentTemplate, QuestionList
+from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentTemplate, QuestionList
 
 
 @app.route('/')
@@ -19,7 +19,7 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User_account(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -35,7 +35,7 @@ def login():
     
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
+        user = User_account.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
