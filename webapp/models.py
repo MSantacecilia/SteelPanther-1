@@ -124,4 +124,4 @@ class AssessmentTemplate(db.Model):
 
 @login.user_loader
 def load_user(id):
-    return User.query.get(int(id))
+    return User_account.query.get(int(id))
