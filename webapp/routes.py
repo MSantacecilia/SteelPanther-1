@@ -70,8 +70,12 @@ def add_organization():
 
 @app.route('/add_category',methods=['GET','POST'])
 def add_category():
+    # This functionality is only for managers
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
     form = CategoryForm()
     if form.validate_on_submit():
         cat = Category(name=form.name.data)
@@ -84,8 +88,12 @@ def add_category():
 
 @app.route('/add_question',methods=['GET','POST'])
 def add_question():
+    # This functionality is only for managers
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
     form = QuestionForm()
     cats = Category.query.all()
     if form.validate_on_submit():
@@ -99,8 +107,12 @@ def add_question():
 
 @app.route('/create_template',methods=['GET','POST'])
 def create_template():
+    # This functionality is only for managers
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
     form = TemplateForm()
     questions = Question.query.all()
     if form.validate_on_submit():
@@ -151,8 +163,12 @@ def assess():
 
 @app.route('/add_domain_template', methods=['GET','POST'])
 def add_domain_template():
+    # This functionality is only for managers
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
     form = TemplateForm()
     cats = Category.query.all()
     if form.validate_on_submit():
