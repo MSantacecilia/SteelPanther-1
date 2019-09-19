@@ -1,25 +1,48 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Sign In</h1>
+
+<link rel="stylesheet" href="{{url_for('static',filename='styles/login_style.css')}}">
+
+  <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
+
+    
+
+    
+    <img class="wiproLogo" src="../static/wiproLogo.gif" />
+    
+  <div class="form-style-10">
+  
+  <h1>Sign In</h1>
+  
     <form action="" method="post" novalidate>
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.username.label }}<br>
+    {{ form.hidden_tag() }}
+
+      <div class="section">Please fill in the following details:</div>
+      <div class="inner-wrap">
+        <label> {{ form.username.label }}
             {{ form.username(size=32) }}<br>
             {% for error in form.username.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+            
             {% endfor %}
-        </p>
-        <p>
-            {{ form.password.label }}<br>
+        
+        </label>
+        <label>  {{ form.password.label }}
             {{ form.password(size=32) }}<br>
             {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+            
             {% endfor %}
-        </p>
+</label>
+      </div>
         <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
+      <div class="button-section">
+
         <p>{{ form.submit() }}</p>
-        <p>New User? <a href="{{ url_for('register') }}">Click to Register!</a></p>
-    </form>
+      </div>
+      
+      <span class ="register">
+            *New User? Click <a class="reg" href="{{ url_for('register') }}">here</a> to register!
+      </span>
+</form>
+  </div>
 {% endblock %}
