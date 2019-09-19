@@ -7,65 +7,12 @@
       {% endif %}
 
 
-{#    <style type="text/css">#}
-{##}
-{##}
-{#    body{#}
-{##}
-{##}
-{#        font-family: 'Nanum Gothic';#}
-{##}
-{##}
-{#    }#}
-{##}
-{#    .nav{#}
-{#        color: #FFFFFF;#}
-{#        background-color: #003873;#}
-{#        font-size: 30px;#}
-{##}
-{##}
-{#    }#}
-{##}
-{#        div.nav a{#}
-{#            padding-left: 10px;#}
-{#            color: #FFFFFF;#}
-{#            text-decoration: none;#}
-{#            font-size: 23px;#}
-{#            font-weight: bold;#}
-{##}
-{#        }#}
-{##}
-{#        div.nav a:hover{#}
-{##}
-{##}
-{#            color: #6FC04A;#}
-{#            text-decoration: none;#}
-{#            font-size: 23px;#}
-{##}
-{#        }#}
-{##}
-{##}
-{##}
-{#    </style>#}
+
 
   
     </head>
     <body>
 
-{#    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">#}
-{#    <center>#}
-{#        <div class="nav">#}
-{#            <a href="{{ url_for('index') }}">Home</a>#}
-{#            {% if current_user.is_anonymous %}#}
-{#            <a href="{{ url_for('login') }}">Login</a>#}
-{#            {% else %}#}
-{#            <a href="{{ url_for('logout') }}">Logout</a>#}
-{#            {% endif %}#}
-{#            <a href="{{ url_for('add_organization') }}">Add Organization</a>#}
-{#            <a href="{{ url_for('add_question') }}">Add Question</a>#}
-{#            <a href="{{ url_for('select_template') }}">Assess</a>#}
-{#        </div>#}
-{#    </center>#}
         <div style="color: red">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
