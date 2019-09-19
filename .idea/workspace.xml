@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b7ef25f0-224e-4eed-9dfa-3329d197a7ff" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webapp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/register.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,8 +42,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/webapp/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="17" column="23" lean-forward="true" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
+            <state relative-caret-position="180">
+              <caret line="12" column="45" lean-forward="true" selection-start-line="12" selection-start-column="45" selection-end-line="12" selection-end-column="45" />
               <folding>
                 <element signature="e#0#73#0" expanded="true" />
               </folding>
@@ -100,13 +95,13 @@
         <option value="$PROJECT_DIR$/webapp/routes.py" />
         <option value="$PROJECT_DIR$/models.py" />
         <option value="$PROJECT_DIR$/config.py" />
-        <option value="$PROJECT_DIR$/webapp/models.py" />
         <option value="$PROJECT_DIR$/webapp/forms.py" />
         <option value="$PROJECT_DIR$/webapp/templates/login.html" />
         <option value="$PROJECT_DIR$/webapp/templates/index.html" />
         <option value="$PROJECT_DIR$/webapp/templates/base.html" />
         <option value="$PROJECT_DIR$/webapp/templates/register.html" />
         <option value="$PROJECT_DIR$/webapp/static/styles/login_style.css" />
+        <option value="$PROJECT_DIR$/webapp/models.py" />
       </list>
     </option>
   </component>
@@ -169,6 +164,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
@@ -236,15 +232,16 @@
       <workItem from="1568815971159" duration="319000" />
       <workItem from="1568816731722" duration="5296000" />
       <workItem from="1568834789648" duration="2621000" />
-      <workItem from="1568838265927" duration="9128000" />
+      <workItem from="1568838265927" duration="9260000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18474000" />
+    <option name="totallyTimeSpent" value="18606000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.26752505" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -441,8 +438,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/webapp/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="17" column="23" lean-forward="true" selection-start-line="17" selection-start-column="23" selection-end-line="17" selection-end-column="23" />
+        <state relative-caret-position="180">
+          <caret line="12" column="45" lean-forward="true" selection-start-line="12" selection-start-column="45" selection-end-line="12" selection-end-column="45" />
           <folding>
             <element signature="e#0#73#0" expanded="true" />
           </folding>
