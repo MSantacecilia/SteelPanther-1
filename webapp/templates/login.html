@@ -18,31 +18,55 @@
     <form action="" method="post" novalidate>
     {{ form.hidden_tag() }}
 
-      <div class="section">Please fill in the following details:</div>
+      <div class="section">Please fill in the following details:</div><br>
       <div class="inner-wrap">
         <label> {{ form.username.label }}
-            {{ form.username(size=32) }}<br>
+            {{ form.username(size=32) }}<br><br><br>
             {% for error in form.username.errors %}
             
             {% endfor %}
         
         </label>
         <label>  {{ form.password.label }}
-            {{ form.password(size=32) }}<br>
+            {{ form.password(size=32) }}<br><br>
             {% for error in form.password.errors %}
             
             {% endfor %}
 </label>
+          <p style="float: left">{{ form.remember_me() }}</p><p style="float: left">{{ form.remember_me.label }}</p><br><br>
       </div>
-        <p>{{ form.remember_me() }} {{ form.remember_me.label }}</p>
-      <div class="button-section">
+    <br>
+        <p style="float: right;margin-top: 24px;font: normal 14px 'Nanum Gothic', serif;"><a class="reg" href="{{ url_for('register') }}">Create a new account!</a></p>
 
-        <p>{{ form.submit() }}</p>
+
+        <div style="color: red;position: absolute;margin-left: -20px">
+            <br><br>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+        </div>
+
+
+        <div class="button-section" style="float: left">
+
+        <p style="float:left">{{ form.submit() }}</p>
+
+
+
       </div>
+
       
-      <span class ="register">
-            *New User? Click <a class="reg" href="{{ url_for('register') }}">here</a> to register!
-      </span>
+<br><br><br><br>
+
+
+
 </form>
   </div>
 {% endblock %}

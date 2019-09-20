@@ -14,13 +14,16 @@
     .nav{
         color: #FFFFFF;
         background-color: #003873;
-        font-size: 30px;
+        font-size: 40px;
+        position: fixed;
+        top: 0;
+        width: 100%;
 
 
     }
 
     div.nav a{
-        padding-left: 10px;
+        padding-left: 0px;
         color: #FFFFFF;
         text-decoration: none;
         font-size: 23px;
@@ -31,9 +34,10 @@
     div.nav a:hover{
 
 
-        color: #6FC04A;
-        text-decoration: none;
+        background-color: #6FC04A;
+        border: 1px black;
         font-size: 23px;
+
 
     }
 
@@ -55,12 +59,20 @@
         <a href="{{ url_for('select_template') }}">Assess</a>
     </div>
 
-
+</center>
 
 
 {% block content %}
+    <br>
+    <br>
     <h1>Hi, {{ current_user.username }}!</h1>
     {% for post in posts %}
     <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
     {% endfor %}
+
+
+
+
+
+
 {% endblock %}

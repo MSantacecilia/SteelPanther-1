@@ -1,8 +1,10 @@
 .wiproLogo{
 
+width:12%;
+	height: 16%;
 
   float: left;
-	margin-left: 30%;
+	margin-left: 26%;
 	margin-top: 10%;
 }
 
@@ -18,7 +20,8 @@
 .form-style-10{
 	float: end;
 	width: 30%;
-	margin-left: 50%;
+
+	margin-left: 41%;
 	margin-top: 10%;
 
 
@@ -37,10 +40,16 @@
 	-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.13);
 }
 .form-style-10 .inner-wrap{
-	padding: 30px;
+	padding-top: 10px;
+	padding-bottom: 5px;
+	padding-left: 10px;
+	padding-right: 10px;
 	background: #F8F8F8;
 	border-radius: 6px;
-	margin-bottom: 15px;
+	margin-bottom: 0px;
+	vertical-align: top;
+	position: relative;
+
 }
 
 
@@ -68,9 +77,9 @@
 }
 .form-style-10 label{
 	display: block;
-	font: 15px 'Arial, Helvetica, sans-serif';
+	font: normal 14px 'Nanum Gothic', serif;
 	color: #888;
-	margin-bottom: 15px;
+	margin-bottom: 4px;
 }
 .form-style-10 input[type="text"],
 .form-style-10 input[type="date"],
@@ -83,7 +92,7 @@
 .form-style-10 input[type="password"],
 .form-style-10 textarea,
 .form-style-10 select {
-  float:left;
+	float:left;
 	display: block;
 	box-sizing: border-box;
 	-webkit-box-sizing: border-box;
@@ -91,9 +100,10 @@
 	width: 100%;
 	padding: 8px;
 	border-radius: 6px;
+
 	-webkit-border-radius:6px;
 	-moz-border-radius:6px;
-	border: 2px solid #fff;
+	border: 0.5px solid whitesmoke;
 	box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
 	-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
 	-webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
@@ -129,16 +139,19 @@ margin-left: 27%;
 a.reg {
 	color: #6FC04A;
 	text-decoration: none;
+	font: normal 14px 'Nanum Gothic', serif;
 }
 
 a.reg:hover{
 	color: #528f36;
 	text-decoration: underline;
+	font: normal 14px 'Nanum Gothic', serif;
 }
 
 a.reg:visited {
 	color: #003873;
 	text-decoration: none;
+	font: normal 14px 'Nanum Gothic', serif;
 }
 
 .form-style-10 input[type="button"],
