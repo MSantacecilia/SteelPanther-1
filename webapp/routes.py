@@ -49,12 +49,13 @@ def login():
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     form = ResetPasswordForm()
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
     if form.validate_on_submit():
-        user = User_account.query.filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
+        if current_user is None or not current_user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('reset_password'))
-        user.set_password(form.newpassword1.data)
+        current_user.set_password(form.newpassword1.data)
         db.session.commit()
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
