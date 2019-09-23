@@ -1,9 +1,9 @@
 from webapp import app, db
 from flask import render_template, flash, redirect, url_for, request
 from werkzeug.urls import url_parse
-from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, TemplateForm, QuestionListForm, ResetPasswordForm
+from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, TemplateForm, AssessmentDetailForm, ResetPasswordForm
 from flask_login import current_user, login_user, logout_user, login_required
-from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentTemplate, QuestionList
+from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentTemplate, AssessmentDetail
 
 
 @app.route('/')
@@ -161,7 +161,7 @@ def assess():
         return redirect(url_for('login'))
     template = int(request.args['template'])
     org = int(request.args['org'])
-    form = QuestionListForm(request.form)
+    form = AssessmentDetailForm(request.form)
     ql = AssessmentTemplate.query.get(template)
     queslist = ql.getQuestions()
     if form.validate_on_submit():
@@ -169,7 +169,7 @@ def assess():
         db.session.add(a)
         db.session.commit()
         for q in queslist:
-            obj = QuestionList(assessment_id=a.id, question_id=q.id,rating=request.form[str(q.id)])
+            obj = AssessmentDetail(assessment_id=a.id, question_id=q.id,rating=request.form[str(q.id)])
             db.session.add(obj)
         db.session.commit()
         flash('Success')
@@ -237,10 +237,10 @@ def multi_vis():
         return redirect(url_for('login'))
     organization_id = int(request.args['org'])
     # assessmentList = Assessment.query.all()
-    questionList = QuestionList.query.all()
+    AssessmentDetail = AssessmentDetail.query.all()
     assessDict = {}
     ratingdict = {}
-    for q in questionList:
+    for q in AssessmentDetail:
         if q.assessment.organization.id == organization_id:
             if q.assessment.id not in assessDict:
                 q.count = 1

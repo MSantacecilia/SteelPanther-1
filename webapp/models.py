@@ -51,12 +51,19 @@ class Category(db.Model):
     def getQuestions(self):
         return Question.query.filter(Question.category_id == self.id).all()
 
+class CategoryList(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    org_id = db.Column(db.Integer, db.ForeignKey('organization.id'), nullable=False)
+    cat_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+
+    def __repr__(self):
+        return '<CategoryList {0}>'.format(self.id)
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
-    questionlist = db.relationship('QuestionList', backref='question', lazy='dynamic')
+    assessmentdetail = db.relationship('AssessmentDetail', backref='question', lazy='dynamic')
 
     def __repr__(self):
         return '<Question {0}>'.format(self.name)
@@ -67,14 +74,14 @@ class Assessment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=False)
-    questionlist = db.relationship('QuestionList', backref='assessment', lazy='dynamic')
+    ass_detail = db.relationship('AssessmentDetail', backref='assessment', lazy='dynamic')
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     def __repr__(self):
         return '<Assessment {0} {1}>'.format(Organization.query.get(self.organization_id).name,self.id)
 
     def getAssessmentInfo(self):
-        qlo = QuestionList.query.all()
+        qlo = AssessmentDetail.query.all()
         ql = []
         catl = []
         for q in qlo:
@@ -87,14 +94,14 @@ class Assessment(db.Model):
         return ql, catl
 
 
-class QuestionList(db.Model):
+class AssessmentDetail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     assessment_id = db.Column(db.Integer, db.ForeignKey('assessment.id'), nullable=False)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
     rating = db.Column(db.Integer)
 
     def __repr__(self):
-        return '<QuestionList {0} {1}>'.format(Question.query.get(self.question_id).name,self.id)
+        return '<AssessmentDetail {0} {1}>'.format(Question.query.get(self.question_id).name,self.id)
 
 
 class AssessmentTemplate(db.Model):

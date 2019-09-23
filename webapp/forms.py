@@ -62,5 +62,5 @@ class TemplateForm(FlaskForm):
     submit = SubmitField('Create Template')
 
 
-class QuestionListForm(FlaskForm):
+class AssessmentDetailForm(FlaskForm):
     submit = SubmitField('Submit')
