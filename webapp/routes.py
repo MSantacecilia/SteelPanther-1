@@ -1,7 +1,7 @@
 from webapp import app, db
 from flask import render_template, flash, redirect, url_for, request
 from werkzeug.urls import url_parse
-from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, TemplateForm, QuestionListForm
+from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, TemplateForm, QuestionListForm, ResetPasswordForm
 from flask_login import current_user, login_user, logout_user, login_required
 from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentTemplate, QuestionList
 
@@ -45,6 +45,22 @@ def login():
             next_page = url_for('index')
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password():
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user = User_account.query.filter_by(username=form.username.data).first()
+        if user is None or not user.check_password(form.password.data):
+            flash('Invalid username or password')
+            return redirect(url_for('reset_password'))
+        user.set_password(form.newpassword1.data)
+        db.session.commit()
+        next_page = request.args.get('next')
+        if not next_page or url_parse(next_page).netloc != '':
+            next_page = url_for('index')
+        return redirect(next_page)
+    return render_template('reset_password.html', title='Reset Password', form=form)
 
 
 @app.route('/logout')

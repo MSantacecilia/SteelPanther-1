@@ -29,6 +29,14 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
+class ResetPasswordForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    newpassword1 = PasswordField('New Password', validators=[DataRequired()])
+    newpassword2 = PasswordField(
+        'Repeat New Password', validators=[DataRequired(), EqualTo('newpassword1')])
+    submit = SubmitField('Confirm')
+
 class CategoryForm(FlaskForm):
     name = StringField('Category', validators=[DataRequired()])
     submit = SubmitField('Add Category')
