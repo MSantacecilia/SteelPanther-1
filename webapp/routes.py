@@ -1,9 +1,9 @@
 from webapp import app, db
 from flask import render_template, flash, redirect, url_for, request
 from werkzeug.urls import url_parse
-from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, TemplateForm, AssessmentDetailForm, ResetPasswordForm
+from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, AssessmentDetailForm, ResetPasswordForm
 from flask_login import current_user, login_user, logout_user, login_required
-from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentTemplate, AssessmentDetail, category_list
+from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentDetail, category_list
 
 
 @app.route('/')
@@ -123,39 +123,14 @@ def add_question():
         return redirect(url_for('index'))
     return render_template('add_question.html', title='Add Question', form=form, cats=cats)
 
-
-@app.route('/create_template',methods=['GET','POST'])
-def create_template():
-    # This functionality is only for managers
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    form = TemplateForm()
-    questions = Question.query.all()
-    if form.validate_on_submit():
-        qids = ""
-        at = AssessmentTemplate(name=form.name.data, user_id=current_user.id)
-        for q in questions:
-            if str(q.id) in dict(request.form).keys():
-                qids += str(q.id) + ","
-        qids = qids.rstrip(",")
-        at.questions=qids
-        db.session.add(at)
-        db.session.commit()
-        flash('Success')
-        return redirect(url_for('index'))
-    return render_template('create_template.html', title='Create Template', form=form, ql=questions)
-
 #TODO change cat query to pull relevant questions based on category list
-@app.route('/select_template',methods=['GET','POST'])
-def select_template():
+@app.route('/select_assessment_category',methods=['GET','POST'])
+def select_assessment_category():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     org = Organization.query.all()
     cat = Category.query.all()
-    return render_template('select_template.html', title='Select Template', org=org, cat=cat)
+    return render_template('select_assessment_category.html', title='Select Template', org=org, cat=cat)
 
 
 @app.route('/assess',methods=['GET','POST'])
@@ -178,35 +153,6 @@ def assess():
         flash('Success')
         return redirect(url_for('index'))
     return render_template('assess.html', title='Assessment', form=form, ql=queslist)
-    
- @app.route('/add_domain_template', methods=['GET','POST'])
-def add_domain_template():
-    # This functionality is only for managers
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    form = TemplateForm()
-    cats = Category.query.all()
-    if form.validate_on_submit():
-        cids = []
-        qids = ''
-        at = AssessmentTemplate(name=form.name.data, user_id=current_user.id)
-        for cat in cats:
-            if str(cat.id) in dict(request.form).keys():
-                cids.append(cat.id)
-                ql = cat.getQuestions()
-                for q in ql:
-                    qids += str(q.id) + ','
-        at.questions=qids.rstrip(',')
-        at.top_lvl = True
-        db.session.add(at)
-        db.session.commit()
-        flash('Success')
-        return redirect(url_for('index'))
-    return render_template('add_domain_template.html', title='Add Assessment Category', form=form, cats=cats) 
-
 
 @app.route('/select_visual', methods=['GET'])
 def select_vis():

@@ -13,7 +13,6 @@ class User_account(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     manager_status = db.Column(db.Integer, default=0)
     assessments = db.relationship('Assessment', backref='user_account', lazy='dynamic')
-    assessment_templates = db.relationship('AssessmentTemplate', backref='user_account', lazy='dynamic')
 
     def __repr__(self):
         return '<User_account {0}>'.format(self.username)
@@ -99,31 +98,6 @@ class Assessment(db.Model):
         catl = list(set(catl))
         catl.sort()
         return ql, catl
-
-class AssessmentTemplate(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=False)
-    questions = db.Column(db.Text)
-
-    def __repr__(self):
-        return '<AssessmentTemplate {0} {1}>'.format(self.name)
-    
-    def getQuestions(self):
-        ql = [int(x) for x in self.questions.split(',')]
-        queslist = []
-        for q in ql:
-            query = Question.query.get(q)
-            if query != None:
-                queslist.append(query)
-        return queslist
-    
-    def getIdList(self):
-        ql = []
-        if len(self.questions) > 0:
-            ql = [int(x) for x in self.questions.split(',')]
-        return ql
-
 
 @login.user_loader
 def load_user(id):
