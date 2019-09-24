@@ -1,10 +1,10 @@
 from webapp import app, db
-from webapp.models import User_account, Organization, Category, Assessment, AssessmentTemplate, Question, QuestionList
+from webapp.models import User_account, Organization, Category, Assessment, Question, AssessmentDetail
 
 @app.shell_context_processor
 def make_shell_context():
     return {'db': db, 'User': User, 
     'Organization':Organization, 'Category': Category,
     'Assessment': Assessment, 'Question': Question,
-    'AssessmentTemplate': AssessmentTemplate,'QuestionList': QuestionList
+    'AssessmentDetail': AssessmentDetail
     }

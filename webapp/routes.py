@@ -1,9 +1,9 @@
 from webapp import app, db
 from flask import render_template, flash, redirect, url_for, request
 from werkzeug.urls import url_parse
-from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, TemplateForm, QuestionListForm, ResetPasswordForm
+from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, AssessmentDetailForm, ResetPasswordForm
 from flask_login import current_user, login_user, logout_user, login_required
-from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentTemplate, QuestionList
+from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentDetail, category_list
 
 
 @app.route('/')
@@ -45,7 +45,7 @@ def login():
             next_page = url_for('index')
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
-
+   
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     form = ResetPasswordForm()
@@ -69,7 +69,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-
+#TODO: add functionality to select relevant categories
 @app.route('/add_organization',methods=['GET','POST'])
 def add_organization():
     if not current_user.is_authenticated:
@@ -78,6 +78,9 @@ def add_organization():
     if form.validate_on_submit():
         org = Organization(name=form.name.data, location=form.loc.data, 
             size=form.size.data, domain=form.domain.data)
+        catlist = Category.query.all()
+        for c in catlist:
+            org.cats.append(c)
         db.session.add(org)
         db.session.commit()
         flash('Success')
@@ -121,91 +124,36 @@ def add_question():
         return redirect(url_for('index'))
     return render_template('add_question.html', title='Add Question', form=form, cats=cats)
 
-
-@app.route('/create_template',methods=['GET','POST'])
-def create_template():
-    # This functionality is only for managers
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    form = TemplateForm()
-    questions = Question.query.all()
-    if form.validate_on_submit():
-        qids = ""
-        at = AssessmentTemplate(name=form.name.data, user_id=current_user.id)
-        for q in questions:
-            if str(q.id) in dict(request.form).keys():
-                qids += str(q.id) + ","
-        qids = qids.rstrip(",")
-        at.questions=qids
-        db.session.add(at)
-        db.session.commit()
-        flash('Success')
-        return redirect(url_for('index'))
-    return render_template('create_template.html', title='Create Template', form=form, ql=questions)
-
-
-@app.route('/select_template',methods=['GET','POST'])
-def select_template():
+#TODO change cat query to pull relevant questions based on category list
+@app.route('/select_assessment_category',methods=['GET','POST'])
+def select_assessment_category():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     org = Organization.query.all()
-    templates = AssessmentTemplate.query.all()
-    return render_template('select_template.html', title='Select Template', org=org, templates=templates)
+    cat = Category.query.all()
+    return render_template('select_assessment_category.html', title='Select Template', org=org, cat=cat)
 
 
 @app.route('/assess',methods=['GET','POST'])
 def assess():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-    template = int(request.args['template'])
     org = int(request.args['org'])
-    form = QuestionListForm(request.form)
-    ql = AssessmentTemplate.query.get(template)
+    cat = int(request.args['category'])
+    form = AssessmentDetailForm(request.form)
+    ql = Category.query.get(cat)
     queslist = ql.getQuestions()
     if form.validate_on_submit():
         a = Assessment(user_id=current_user.id, organization_id=org)
         db.session.add(a)
         db.session.commit()
         for q in queslist:
-            obj = QuestionList(assessment_id=a.id, question_id=q.id,rating=request.form[str(q.id)])
+            obj = AssessmentDetail(assessment_id=a.id, question_id=q.id,rating=request.form[str(q.id)])
             db.session.add(obj)
         db.session.commit()
         flash('Success')
         return redirect(url_for('index'))
     return render_template('assess.html', title='Assessment', form=form, ql=queslist)
-    
-
-@app.route('/add_domain_template', methods=['GET','POST'])
-def add_domain_template():
-    # This functionality is only for managers
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    form = TemplateForm()
-    cats = Category.query.all()
-    if form.validate_on_submit():
-        cids = []
-        qids = ''
-        at = AssessmentTemplate(name=form.name.data, user_id=current_user.id)
-        for cat in cats:
-            if str(cat.id) in dict(request.form).keys():
-                cids.append(cat.id)
-                ql = cat.getQuestions()
-                for q in ql:
-                    qids += str(q.id) + ','
-        at.questions=qids.rstrip(',')
-        at.top_lvl = True
-        db.session.add(at)
-        db.session.commit()
-        flash('Success')
-        return redirect(url_for('index'))
-    return render_template('add_domain_template.html', title='Add Assessment Category', form=form, cats=cats)
-
 
 @app.route('/select_visual', methods=['GET'])
 def select_vis():
@@ -238,10 +186,10 @@ def multi_vis():
         return redirect(url_for('login'))
     organization_id = int(request.args['org'])
     # assessmentList = Assessment.query.all()
-    questionList = QuestionList.query.all()
+    AssessmentDetail = AssessmentDetail.query.all()
     assessDict = {}
     ratingdict = {}
-    for q in questionList:
+    for q in AssessmentDetail:
         if q.assessment.organization.id == organization_id:
             if q.assessment.id not in assessDict:
                 q.count = 1

@@ -13,7 +13,6 @@ class User_account(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     manager_status = db.Column(db.Integer, default=0)
     assessments = db.relationship('Assessment', backref='user_account', lazy='dynamic')
-    assessment_templates = db.relationship('AssessmentTemplate', backref='user_account', lazy='dynamic')
 
     def __repr__(self):
         return '<User_account {0}>'.format(self.username)
@@ -27,6 +26,10 @@ class User_account(UserMixin, db.Model):
     def is_admin(self):
         return self.manager_status == 1
 
+category_list = db.Table('category_list', db.Model.metadata, 
+    db.Column('org_id', db.Integer, db.ForeignKey('organization.id')),
+    db.Column('cat_id', db.Integer, db.ForeignKey('category.id'))
+)
 
 class Organization(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -35,6 +38,7 @@ class Organization(db.Model):
     size = db.Column(db.String(64))
     domain = db.Column(db.String(64))
     assessments = db.relationship('Assessment', backref='organization', lazy='dynamic')
+    cats = db.relationship("Category", secondary=category_list)
 
     def __repr__(self):
         return '{0}'.format(self.name)
@@ -51,12 +55,20 @@ class Category(db.Model):
     def getQuestions(self):
         return Question.query.filter(Question.category_id == self.id).all()
 
+class AssessmentDetail(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    assessment_id = db.Column(db.Integer, db.ForeignKey('assessment.id'), nullable=False, primary_key=True)
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False, primary_key=True)
+    rating = db.Column(db.Integer)
+    quest = db.relationship("Question")
+
+    def __repr__(self):
+        return '<AssessmentDetail {0} {1} {2}>'.format(Question.query.get(self.question_id).name, Asessment.query.get(self.assessment_id.id), self.rating)
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
-    questionlist = db.relationship('QuestionList', backref='question', lazy='dynamic')
 
     def __repr__(self):
         return '<Question {0}>'.format(self.name)
@@ -67,14 +79,15 @@ class Assessment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=False)
-    questionlist = db.relationship('QuestionList', backref='assessment', lazy='dynamic')
+    ass_detail = db.relationship('AssessmentDetail', backref='assessment', lazy='dynamic')
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    question = db.relationship("AssessmentDetail")
 
     def __repr__(self):
         return '<Assessment {0} {1}>'.format(Organization.query.get(self.organization_id).name,self.id)
 
     def getAssessmentInfo(self):
-        qlo = QuestionList.query.all()
+        qlo = AssessmentDetail.query.all()
         ql = []
         catl = []
         for q in qlo:
@@ -85,42 +98,6 @@ class Assessment(db.Model):
         catl = list(set(catl))
         catl.sort()
         return ql, catl
-
-
-class QuestionList(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    assessment_id = db.Column(db.Integer, db.ForeignKey('assessment.id'), nullable=False)
-    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
-    rating = db.Column(db.Integer)
-
-    def __repr__(self):
-        return '<QuestionList {0} {1}>'.format(Question.query.get(self.question_id).name,self.id)
-
-
-class AssessmentTemplate(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), unique=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=False)
-    questions = db.Column(db.Text)
-
-    def __repr__(self):
-        return '<AssessmentTemplate {0} {1}>'.format(self.name)
-    
-    def getQuestions(self):
-        ql = [int(x) for x in self.questions.split(',')]
-        queslist = []
-        for q in ql:
-            query = Question.query.get(q)
-            if query != None:
-                queslist.append(query)
-        return queslist
-    
-    def getIdList(self):
-        ql = []
-        if len(self.questions) > 0:
-            ql = [int(x) for x in self.questions.split(',')]
-        return ql
-
 
 @login.user_loader
 def load_user(id):

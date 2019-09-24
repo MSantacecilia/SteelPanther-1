@@ -56,11 +56,5 @@ class QuestionForm(FlaskForm):
 class AssessmentForm(FlaskForm):
     submit = SubmitField('Add Assessment')
 
-
-class TemplateForm(FlaskForm):
-    name = StringField('Template Name', validators=[DataRequired()])
-    submit = SubmitField('Create Template')
-
-
-class QuestionListForm(FlaskForm):
+class AssessmentDetailForm(FlaskForm):
     submit = SubmitField('Submit')

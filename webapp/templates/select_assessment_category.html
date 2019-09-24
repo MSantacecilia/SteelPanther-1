@@ -1,17 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1>Select Assessment Template</h1>
+<h1>Select Assessment Category</h1>
 <div id="Content">
     <form action="{{ url_for('assess') }}" method="GET">
-        <p>Choose Template and Organization</p>
-        <p><select name="template">
-                <option>Select Template</option>
-                {% for temp in templates %}
-                <option value="{{temp.id}}">{{ temp.name }}</option>
-                {% endfor %}
-            </select>
-        </p>
+        <p>Choose Organization and Category</p>
         <p><select name="org">
                 <option>Select Org</option>
                 {% for entry in org %}
@@ -19,8 +12,14 @@
                 {% endfor %}
             </select>
         </p>
+        <p><select name="category">
+                <option>Select Category</option>
+                {% for entry in cat %}
+                <option value="{{entry.id}}">{{ entry.name }}</option>
+                {% endfor %}
+            </select>
+        </p>
         <p><button>Proceed</button></p>  
     </form>
-    <a href="{{ url_for('add_domain_template') }}">Create a New Template</a>
 </div>
 {% endblock %}
