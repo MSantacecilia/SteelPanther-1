@@ -3,7 +3,7 @@ from flask import render_template, flash, redirect, url_for, request
 from werkzeug.urls import url_parse
 from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, TemplateForm, AssessmentDetailForm, ResetPasswordForm
 from flask_login import current_user, login_user, logout_user, login_required
-from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentTemplate, AssessmentDetail
+from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentTemplate, AssessmentDetail, category_list
 
 
 @app.route('/')
@@ -68,7 +68,7 @@ def logout():
     logout_user()
     return redirect(url_for('index'))
 
-
+#TODO: add functionality to select relevant categories
 @app.route('/add_organization',methods=['GET','POST'])
 def add_organization():
     if not current_user.is_authenticated:
@@ -77,6 +77,9 @@ def add_organization():
     if form.validate_on_submit():
         org = Organization(name=form.name.data, location=form.loc.data, 
             size=form.size.data, domain=form.domain.data)
+        catlist = Category.query.all()
+        for c in catlist:
+            org.cats.append(c)
         db.session.add(org)
         db.session.commit()
         flash('Success')
