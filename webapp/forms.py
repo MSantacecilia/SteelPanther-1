@@ -30,7 +30,7 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 class ResetPasswordForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    # username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     newpassword1 = PasswordField('New Password', validators=[DataRequired()])
     newpassword2 = PasswordField(
