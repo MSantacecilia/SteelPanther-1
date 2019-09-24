@@ -10,24 +10,29 @@
 
 <html>
     <head>
-      {% if title %}
-      <title>{{ title }} - Wipro Organization Assessment</title>
-      {% else %}
-      <title>Welcome to myFirstWebApp</title>
-      {% endif %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="{{url_for('static',filename='styles/login_style.css')}}">
+        <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
+        {% if title %}
+            <title>{{ title }} - Wipro Organization Assessment</title>
+        {% else %}
+            <title>Project SteelPanther</title>
+        {% endif %}
 
 
 
 
-  
+
     </head>
     <body>
 
 
         {% block content %}
-        
-        
-        
+
+
+
         {% endblock %}
     </body>
 </html>

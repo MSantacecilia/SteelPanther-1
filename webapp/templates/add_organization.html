@@ -1,47 +1,58 @@
+{% extends "navbar.html" %}
 
 
-<link rel="stylesheet" href="{{url_for('static',filename='styles/login_style.css')}}">
 
-<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
-<img class="wiproLogo" src="../static/wiproLogo.gif" />
 
-<div class="form-style-10">
 {% block content %}
-    <h1>Add Organization</h1>
-    <form action="" method="post">
 
-        <div class="inner-wrap">
-        {{ form.hidden_tag() }}
 
-        <p>
-            {{ form.name.label }}
-            {{ form.name(size=32) }}<br><br>
-            {% for error in form.name.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.loc.label }}
-            {{ form.loc(size=32) }}<br><br>
-            {% for error in form.loc.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.size.label }}
-            {{ form.size(size=32) }}<br><br>
-            {% for error in form.size.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        <p>
-            {{ form.domain.label }}
-            {{ form.domain(size=32) }}<br><br>
-            {% for error in form.domain.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-            {% endfor %}
-        </p>
-        </div>
-        <p>{{ form.submit() }}</p>
-    </form></div>
+
+
+
+
+
+
+
+
+    <div class="form-style-10" style="margin-top: 10%;">
+        <h1>Add Organization</h1>
+        <form action="" method="post">
+
+            <div class="inner-wrap">
+                {{ form.hidden_tag() }}
+
+                <p>
+                    {{ form.name.label }}
+                    {{ form.name(size=32) }}<br><br>
+                    {% for error in form.name.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.loc.label }}
+                    {{ form.loc(size=32) }}<br><br>
+                    {% for error in form.loc.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.size.label }}
+                    {{ form.size(size=32) }}<br><br>
+                    {% for error in form.size.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+                <p>
+                    {{ form.domain.label }}
+                    {{ form.domain(size=32) }}<br><br>
+                    {% for error in form.domain.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+
+                <p>{{ form.submit() }}</p>
+            </div>
+        </form>
+    </div>
+
 {% endblock %}

@@ -2,71 +2,78 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="{{url_for('static',filename='styles/login_style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='styles/login_style.css')}}">
 
-  <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
-
-    
-
-    
-    <img class="wiproLogo" src="../static/wiproLogo.gif" />
-    
-  <div class="form-style-10">
-  
-  <h1>Sign In</h1>
-  
-    <form action="" method="post" novalidate>
-    {{ form.hidden_tag() }}
-
-      <div class="section">Please fill in the following details:</div><br>
-      <div class="inner-wrap">
-        <label> {{ form.username.label }}
-            {{ form.username(size=32) }}<br><br><br>
-            {% for error in form.username.errors %}
-            
-            {% endfor %}
-        
-        </label>
-        <label>  {{ form.password.label }}
-            {{ form.password(size=32) }}<br><br>
-            {% for error in form.password.errors %}
-            
-            {% endfor %}
-</label>
-          <p style="float: left">{{ form.remember_me() }}</p><p style="float: left">{{ form.remember_me.label }}</p><br><br>
-      </div>
-    <br>
-        <p style="float: right;margin-top: 24px;font: normal 14px 'Nanum Gothic', serif;"><a class="reg" href="{{ url_for('register') }}">Create a new account!</a></p>
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
 
 
-        <div style="color: red;position: absolute;margin-left: -20px">
-            <br><br>
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    <ul>
-                        {% for message in messages %}
-                            <li>{{ message }}</li>
-                        {% endfor %}
-                    </ul>
-                {% endif %}
-            {% endwith %}
+    <center><img alt="Wipro" class="wiproLogo" src="../static/wiproLogo.gif" /></center>
+    <br><br><br>
 
+    <div class="container h-100" align="center">
+        <div class="row h-100 justify-content-center align-items-center">
+            <form action="" method="post" novalidate  class="col-12">
+                {{ form.hidden_tag() }}
+
+
+                <div class="form-style-10">
+
+                    <h1>Sign In</h1>
+
+                    {#    {{ form.hidden_tag() }}#}
+
+                    <div class="section"></div><br>
+                    <div class="inner-wrap">
+                        <label align="left"> {{ form.username.label }}
+                            {{ form.username(size=32) }}<br><br><br>
+                            {% for error in form.username.errors %}
+
+                            {% endfor %}
+
+                        </label>
+                        <label align="left">  {{ form.password.label }}
+                            {{ form.password(size=32) }}<br><br>
+                            {% for error in form.password.errors %}
+
+                            {% endfor %}
+                        </label>
+                        <br>
+                        <p style="float: left">{{ form.remember_me() }}</p><p style="float: left">{{ form.remember_me.label }}</p><br><br>
+                    </div>
+                    <br>
+                    <p style="float: right;margin-top: 12px;font: normal 14px 'Nanum Gothic', serif;"><a class="reg" href="{{ url_for('register') }}">Create a new account!</a></p>
+
+
+                    <div style="color: red;position: absolute;margin-left: -20px">
+                        <br><br>
+                        {% with messages = get_flashed_messages() %}
+                            {% if messages %}
+                                <ul>
+                                    {% for message in messages %}
+                                        <li>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        {% endwith %}
+
+                    </div>
+
+
+                    <div class="button-section" style="float: left">
+
+                        <p style="float:left">{{ form.submit() }}</p>
+
+
+
+                    </div>
+
+
+                    <br><br><br><br>
+
+                </div>
+
+            </form>
         </div>
+    </div>
 
-
-        <div class="button-section" style="float: left">
-
-        <p style="float:left">{{ form.submit() }}</p>
-
-
-
-      </div>
-
-      
-<br><br><br><br>
-
-
-
-</form>
-  </div>
 {% endblock %}

@@ -1,74 +1,24 @@
-{#{% extends "base.html" %}#}
-
-<style type="text/css">
-
-
-    body{
-
-
-        font-family: 'Nanum Gothic';
-
-
-    }
-
-    .nav{
-        color: #FFFFFF;
-        background-color: #003873;
-        font-size: 40px;
-        position: fixed;
-        top: 0;
-        width: 100%;
-
-
-    }
-
-    div.nav a{
-        padding-left: 0px;
-        color: #FFFFFF;
-        text-decoration: none;
-        font-size: 23px;
-        font-weight: bold;
-
-    }
-
-    div.nav a:hover{
-
-
-        background-color: #6FC04A;
-        border: 1px black;
-        font-size: 23px;
-
-
-    }
+{% extends "navbar.html" %}
 
 
 
-</style>
+
 
 <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
-<center>
-    <div class="nav">
-        <a href="{{ url_for('index') }}">Home</a>
-        {% if current_user.is_anonymous %}
-            <a href="{{ url_for('login') }}">Login</a>
-        {% else %}
-            <a href="{{ url_for('logout') }}">Logout</a>
-        {% endif %}
-        <a href="{{ url_for('reset_password') }}">Reset Password</a>
-        <a href="{{ url_for('add_organization') }}">Add Organization</a>
-        <a href="{{ url_for('add_question') }}">Add Question</a>
-        <a href="{{ url_for('select_assessment_category') }}">Assess</a>
-    </div>
 
-</center>
 
 
 {% block content %}
-    <br>
-    <br>
+
+
+
     <h1>Hi, {{ current_user.username }}!</h1>
     {% for post in posts %}
-    <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
+        <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
+
+
+
+
     {% endfor %}
 
 

@@ -1,8 +1,14 @@
-{% extends "base.html" %}
+{% extends "navbar.html" %}
 
 {% block content %}
+
+    <div class="form-style-10" style="margin-top: 10%;">
+
+
 <h1>Select Assessment Category</h1>
 <div id="Content">
+
+        <div class="inner-wrap">
     <form action="{{ url_for('assess') }}" method="GET">
         <p>Choose Organization and Category</p>
         <p><select name="org">
@@ -22,4 +28,6 @@
         <p><button>Proceed</button></p>  
     </form>
 </div>
+</div>
+    </div>
 {% endblock %}

@@ -1,26 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Assessment</h1>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        {{ form.csrf_token }}
-            <p>
-                <table>
-                    <tr>
-                        <th>Category</th>
-                        <th>Question</th>
-                        <th>Rating</th>
-                    </tr>
-                    {% for q in ql %}
-                <tr>
-                    <td>{{q.category.name}}</td>
-                    <td>{{q.name}}</td>
-                    <td><input id="{{q.id}}" name="{{q.id}}" type="number" max=3 min=0 required=true></td>
-                </tr>
-                    {% endfor %}
-                </table>
-            </p>
-            <p>{{ form.submit() }}</p>
+    <link rel="stylesheet" href="{{url_for('static',filename='styles/login_style.css')}}">
+
+    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
+    <div class="form-style-10">
+        <h1>Assessment</h1>
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <div class="section">
+                <div class="inner-wrap">
+                    {{ form.csrf_token }}
+                    <p>
+                    <table>
+                        <tr>
+                            <th>Category</th>
+                            <th>Question</th>
+                            <th>Rating</th>
+                        </tr>
+                        {% for q in ql %}
+                            <tr>
+                                <td>{{q.category.name}}</td>
+                                <td>{{q.name}}</td>
+                                <td><input id="{{q.id}}" name="{{q.id}}" type="number" max=3 min=0 required=true></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                    </p>
+                    <p>{{ form.submit() }}</p>
         </form>
+    </div>
+
+    </div>
+    </div>
+
 {% endblock %}
