@@ -154,8 +154,8 @@ def select_template():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     org = Organization.query.all()
-    templates = AssessmentTemplate.query.all()
-    return render_template('select_template.html', title='Select Template', org=org, templates=templates)
+    cat = Category.query.all()
+    return render_template('select_template.html', title='Select Template', org=org, cat=cat)
 
 
 @app.route('/assess',methods=['GET','POST'])
