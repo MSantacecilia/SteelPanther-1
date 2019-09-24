@@ -148,7 +148,7 @@ def create_template():
         return redirect(url_for('index'))
     return render_template('create_template.html', title='Create Template', form=form, ql=questions)
 
-
+#TODO change cat query to pull relevant questions based on category list
 @app.route('/select_template',methods=['GET','POST'])
 def select_template():
     if not current_user.is_authenticated:
@@ -162,10 +162,10 @@ def select_template():
 def assess():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-    template = int(request.args['template'])
     org = int(request.args['org'])
+    cat = int(request.args['category'])
     form = AssessmentDetailForm(request.form)
-    ql = AssessmentTemplate.query.get(template)
+    ql = Category.query.get(cat)
     queslist = ql.getQuestions()
     if form.validate_on_submit():
         a = Assessment(user_id=current_user.id, organization_id=org)
@@ -179,8 +179,7 @@ def assess():
         return redirect(url_for('index'))
     return render_template('assess.html', title='Assessment', form=form, ql=queslist)
     
-
-@app.route('/add_domain_template', methods=['GET','POST'])
+ @app.route('/add_domain_template', methods=['GET','POST'])
 def add_domain_template():
     # This functionality is only for managers
     if not current_user.is_authenticated:
@@ -206,7 +205,7 @@ def add_domain_template():
         db.session.commit()
         flash('Success')
         return redirect(url_for('index'))
-    return render_template('add_domain_template.html', title='Add Assessment Category', form=form, cats=cats)
+    return render_template('add_domain_template.html', title='Add Assessment Category', form=form, cats=cats) 
 
 
 @app.route('/select_visual', methods=['GET'])
