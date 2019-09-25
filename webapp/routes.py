@@ -19,7 +19,9 @@ def register():
         return redirect(url_for('index'))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User_account(username=form.username.data, email=form.email.data)
+        # if form.manager.data is True:
+        #     manager_status = 1
+        user = User_account(username=form.username.data, email=form.email.data, manager_status=True)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -105,6 +107,30 @@ def add_category():
         return redirect(url_for('index'))
     return render_template('add_category.html', title='Add Category', form=form)
 
+@app.route('/test_category',methods=['GET','POST'])
+# Agile, Cloud, Devop
+def test_category():
+    # This functionality is only for managers
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    # ==trial======================================================= 
+    if request.method == "POST":
+        category_name = request.form["category_name"]
+        
+    # ==endtrial====================================================
+
+    # form = QuestionForm()
+    # cats = Category.query.all()
+    # if form.validate_on_submit():
+    #     q = Question(name=form.name.data, category_id=request.form['cat'])
+    #     db.session.add(q)
+    #     db.session.commit()
+    #     flash('Success')
+    #     return redirect(url_for('index'))
+    return render_template('test_category.html', title='Test Category')
 
 @app.route('/add_question',methods=['GET','POST'])
 def add_question():
