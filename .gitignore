@@ -18,3 +18,4 @@ migrations/
 
 #configuration file
 config.py
+*.pyc
