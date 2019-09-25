@@ -102,7 +102,7 @@ body {
 .form-style-10 input[type="url"],
 .form-style-10 input[type="password"],
 .form-style-10 textarea,
-.form-style-10 select {
+.form-style-10 select{
 	float:left;
 	display: block;
 	box-sizing: border-box;
@@ -122,7 +122,8 @@ body {
 
 .form-style-10 select{
 
-font-size: 17px;
+    font: normal 16px 'Nanum Gothic';
+    color: #888;
 
 }
 
@@ -146,6 +147,12 @@ font-size: 17px;
 	margin-top: -3px;
 }
 
+option.dropdown {
+
+    font: normal 16px 'Nanum Gothic';
+    color: #888;
+
+}
 
 span.register {
 

@@ -104,7 +104,7 @@ def add_category():
         db.session.add(cat)
         db.session.commit()
         flash('Success')
-        return redirect(url_for('index'))
+        return redirect(url_for('add_question'))
     return render_template('add_category.html', title='Add Category', form=form)
 
 @app.route('/test_category',methods=['GET','POST'])

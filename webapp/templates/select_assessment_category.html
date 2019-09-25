@@ -10,7 +10,7 @@
 
         <div class="inner-wrap">
     <form action="{{ url_for('assess') }}" method="GET">
-        <p>Choose Organization:</p>
+        <p><label>Choose Organization:</label></p>
         <p><select name="org">
                 <option></option>
                 {% for entry in org %}
@@ -18,7 +18,7 @@
                 {% endfor %}
             </select>
         </p><br><br>
-        <p>Choose Category:</p>
+        <p><label>Choose Category:</label></p>
         <p><select name="category">
                 <option></option>
                 {% for entry in cat %}

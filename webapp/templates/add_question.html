@@ -22,9 +22,9 @@
             <select name="cat">\
             <option>Select category</option>
                 {% for cat in cats%}
-                <option value="{{cat.id}}">{{cat.name}}</option>
+                <option class="dropdown" value="{{cat.id}}">{{cat.name}}</option>
                 {% endfor %}
-            </select> 
+            </select>
         </p><br><br>
         <p>{{ form.submit() }}</p>
     </form>
