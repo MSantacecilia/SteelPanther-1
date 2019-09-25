@@ -8,6 +8,19 @@
 	/*margin-top: 10%;*/
 }
 
+.index_format {
+	color:white;
+	font-family:monospace;
+	width: 50%;
+
+	/*margin-left: 41%;*/
+	/*margin-top: 10%;*/
+
+	/*margin: 1% auto;*/
+	padding:30px;
+	padding-right: 30px;
+}
+
 body {
 
 	background-image: url('../wiprobg.jpg');

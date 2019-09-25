@@ -11,14 +11,16 @@
 {% block content %}
 
 
+  <div class="index_format">
 
-    <h1>Hi, {{ current_user.username }}!</h1>
+
+    <h1>Hello, {{ current_user.username }} and welcome to Steel Panther, Wipro's finest organization assessment application.  Please click an option to the left!</h1>
     {% for post in posts %}
         <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
 
     {% endfor %}
 
-
+</div>
 
 
 
