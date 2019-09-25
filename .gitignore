@@ -17,5 +17,5 @@ Dockerfile
 migrations/
 
 #configuration file
-/config.py
+config.py
 *.pyc
