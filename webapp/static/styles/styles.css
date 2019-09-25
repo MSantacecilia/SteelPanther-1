@@ -2,6 +2,12 @@
 
 
 
+#cssmenu ul li.active a, #cssmenu ul li a:hover {
+  text-decoration:none;
+  color:#000;
+  background-color: white;
+}
+
 
 
 #cssmenu ul,
@@ -158,4 +164,11 @@
   border-right: 10px solid #fff;
   border-bottom: 10px solid transparent;
   border-top: 10px solid transparent;
+}
+
+#cssmenu ul li ul li.has-sub a:hover {
+  color: black;
+  background-color: white;
+
+
 }

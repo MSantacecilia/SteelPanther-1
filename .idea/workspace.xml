@@ -2,12 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b7ef25f0-224e-4eed-9dfa-3329d197a7ff" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/routes.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/static/styles/login_style.css" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/static/styles/login_style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/add_question.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/add_question.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/select_assessment_category.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/select_assessment_category.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/static/styles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/static/styles/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/templates/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/navbar.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -33,19 +32,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/webapp/static/css/test_category.css">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="1" lean-forward="true" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webapp/forms.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="241">
-              <caret line="46" column="74" selection-start-line="46" selection-start-column="74" selection-end-line="46" selection-end-column="74" />
+            <state relative-caret-position="226">
+              <caret line="45" column="74" selection-start-line="45" selection-start-column="74" selection-end-line="45" selection-end-column="74" />
               <folding>
                 <element signature="e#0#31#0" expanded="true" />
               </folding>
@@ -62,11 +52,38 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/webapp/static/styles/login_style.css">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="453">
-              <caret line="152" column="16" selection-start-line="152" selection-start-column="16" selection-end-line="152" selection-end-column="16" />
+            <state relative-caret-position="1290">
+              <caret line="165" column="16" selection-start-line="165" selection-start-column="16" selection-end-line="165" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webapp/templates/navbar.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="228">
+              <caret line="55" column="34" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webapp/static/styles/styles.css">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="6" column="12" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="285">
+              <caret line="19" selection-start-line="19" selection-end-line="19" />
             </state>
           </provider>
         </entry>
@@ -90,36 +107,22 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/webapp/templates/select_assessment_category.html">
+        <entry file="file://$PROJECT_DIR$/config.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="42" selection-start-line="20" selection-start-column="42" selection-end-line="20" selection-end-column="42" />
-              <folding>
-                <element signature="e#81#105#0#HTML" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/webapp/templates/add_category.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="165">
-              <caret line="11" column="18" lean-forward="true" selection-start-line="11" selection-start-column="18" selection-end-line="11" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/webapp/templates/register.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="6" column="42" selection-start-line="6" selection-start-column="42" selection-end-line="6" selection-end-column="42" />
+            <state relative-caret-position="120">
+              <caret line="8" column="48" selection-start-line="8" selection-start-column="48" selection-end-line="8" selection-end-column="48" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -134,10 +137,7 @@
       <list>
         <option value="$PROJECT_DIR$/models.py" />
         <option value="$PROJECT_DIR$/myFirstWebApp.py" />
-        <option value="$PROJECT_DIR$/config.py" />
-        <option value="$PROJECT_DIR$/webapp/static/styles/styles.css" />
         <option value="$PROJECT_DIR$/webapp/templates/base.html" />
-        <option value="$PROJECT_DIR$/webapp/templates/navbar.html" />
         <option value="$PROJECT_DIR$/webapp/templates/reset_password.html" />
         <option value="$PROJECT_DIR$/webapp/templates/assess.html" />
         <option value="$PROJECT_DIR$/webapp/templates/index.html" />
@@ -153,6 +153,11 @@
         <option value="$PROJECT_DIR$/webapp/templates/login.html" />
         <option value="$PROJECT_DIR$/webapp/templates/add_question.html" />
         <option value="$PROJECT_DIR$/webapp/static/styles/login_style.css" />
+        <option value="$PROJECT_DIR$/webapp/static/js/activeNav.js" />
+        <option value="$PROJECT_DIR$/webapp/templates/navbar.html" />
+        <option value="$PROJECT_DIR$/config.py" />
+        <option value="$PROJECT_DIR$/webapp/static/styles/styles.css" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -175,18 +180,7 @@
             <path>
               <item name="SteelPanther" type="b2602c69:ProjectViewProjectNode" />
               <item name="SteelPanther" type="462c0819:PsiDirectoryNode" />
-              <item name="migrations" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="SteelPanther" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SteelPanther" type="462c0819:PsiDirectoryNode" />
               <item name="webapp" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="SteelPanther" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SteelPanther" type="462c0819:PsiDirectoryNode" />
-              <item name="webapp" type="462c0819:PsiDirectoryNode" />
-              <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -282,7 +276,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="48516000" />
+    <option name="totallyTimeSpent" value="50225000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
@@ -413,23 +407,6 @@
     <entry file="file://$PROJECT_DIR$/webapp/static/wiprobg.jpg">
       <provider selected="true" editor-type-id="images" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/webapp/static/styles/styles.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="79" column="15" selection-start-line="79" selection-start-column="15" selection-end-line="79" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webapp/templates/reset_password.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" selection-start-line="12" selection-start-column="2" selection-end-line="12" selection-end-column="51" />
-          <folding>
-            <element signature="e#128#152#0#HTML" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/webapp/templates/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
@@ -451,17 +428,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="150">
           <caret line="10" column="17" selection-start-line="10" selection-start-column="17" selection-end-line="10" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webapp/templates/navbar.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-201">
-          <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
-          <folding>
-            <element signature="n#style#0;n#img#0;n#center#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#1;n#body#0;n#html#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -491,16 +457,6 @@
           </folding>
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="8" column="87" selection-start-line="8" selection-start-column="87" selection-end-line="8" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/webapp/__init__.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -564,8 +520,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/webapp/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="241">
-          <caret line="46" column="74" selection-start-line="46" selection-start-column="74" selection-end-line="46" selection-end-column="74" />
+        <state relative-caret-position="226">
+          <caret line="45" column="74" selection-start-line="45" selection-start-column="74" selection-end-line="45" selection-end-column="74" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
           </folding>
@@ -586,10 +542,48 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/webapp/templates/reset_password.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="17" column="32" selection-start-line="17" selection-start-column="32" selection-end-line="17" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webapp/static/js/activeNav.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/webapp/static/styles/login_style.css">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="152" column="16" selection-start-line="152" selection-start-column="16" selection-end-line="152" selection-end-column="16" />
+        <state relative-caret-position="1290">
+          <caret line="165" column="16" selection-start-line="165" selection-start-column="16" selection-end-line="165" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webapp/templates/navbar.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="228">
+          <caret line="55" column="34" selection-start-line="55" selection-start-column="34" selection-end-line="55" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="48" selection-start-line="8" selection-start-column="48" selection-end-line="8" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webapp/static/styles/styles.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="6" column="12" selection-start-line="6" selection-start-column="12" selection-end-line="6" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" selection-start-line="19" selection-end-line="19" />
         </state>
       </provider>
     </entry>

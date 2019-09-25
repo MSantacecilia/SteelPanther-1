@@ -15,6 +15,24 @@
     <link rel="stylesheet" href="{{url_for('static',filename='styles/styles.css')}}">
     <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
 
+    <script type="text/javascript">
+        $(function() {
+            // this will get the full URL at the address bar
+            var url = window.location.href;
+
+            // passes on every "a" tag
+            $("#cssmenu a").each(function() {
+                // checks if its the same on the address bar
+                if (url == (this.href)) {
+                    $(this).closest("li").addClass("active");
+                    //for making parent of submenu active
+                    $(this).closest("li").parent().parent().addClass("active");
+                }
+            });
+        });
+    </script>
+
+
 </head>
 
 
@@ -33,7 +51,7 @@
         <li class='last'><a href='{{ url_for('add_question') }}'><span>Question</span></a></li>
         <li class='last'><a href="{{ url_for('test_category') }}"><span>Test Category</span></a></li>
         <li class='last'><a href='{{ url_for('add_organization') }}'><span>Organization</span></a></li>
-        <li class='active has-sub'><a href='#'><span>My Account</span></a>
+        <li class='last'><a href='#'><span>My Account</span></a>
             <ul>
                 <li class='has-sub'><a href="{{ url_for('logout') }}"><span>Logout</span></a>
                     {#                    <ul>#}
