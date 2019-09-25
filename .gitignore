@@ -15,3 +15,6 @@ Dockerfile
 
 #ORM
 migrations/
+
+#configuration file
+config.py
