@@ -2,19 +2,54 @@
 
 {% block head %}
   {{super()}}
-  <link rel="stylesheet" href="{{url_for('static',filename='css/add_question.css')}}">
+  <link rel="stylesheet" href="{{url_for('static',filename='css/test_category.css')}}">
 {% endblock %}
 
 
 {% block content %}
-<div class = "container">
-    <div class="well text-center">
-        <h1> {{title}} </h1>
-    </div>
-</div>
+    
 
-<div class="container"> 
-    <div class="row">
+    <div class="container-fluid" id="sidebar">
+            <div class="row">
+                <div class="col-xs-4 col-sm-4 col-md-4">
+                    {% include 'navbar.html' %}
+                </div>
+                <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-3 main">
+                    <h1 class="page-header">{{title}}</h1>
+                    <div class="row align-items-end">
+                        <div class="col-md-6 col-xs-6">
+                            <h2>Assessment Category</h2>
+                        </div>
+                        <div class="col-md-6 col-xs-6">  
+                            <button type="button" class="btn btn-success float-md-right" data-toggle="modal" data-target="#cat_modal">
+                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> New Category
+                            </button>
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <table class="table table-striped">
+                            <tr>
+                                <th>Category</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr>
+                                <td> static </td>
+                                <td class="text-right">
+                                    <a href="" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modaledit">Edit</a>
+                                    <a href="" class="btn btn-danger btn-sm" onclick="return confirm('Are You Sure For Delete?')">Delete</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+<!-- <div class="container h-100" style="margin-left: 10%;"> 
+    <div class="row h-100 justify-content-center align-items-center">
         <div class="col-md-6 col-xs-6">
             <h2>Assessment Category</h2>
         </div>
@@ -24,8 +59,8 @@
             </button>
         </div>
     </div>
-</div>
-<br>
+</div> -->
+<!-- <br>
 <div class="container">
     <table class="table table-striped">
         <tr>
@@ -40,7 +75,7 @@
             </td>
         </tr>
     </table>
-</div>
+</div> -->
 
 <div id="cat_modal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
