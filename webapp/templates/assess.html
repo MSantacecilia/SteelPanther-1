@@ -1,18 +1,21 @@
-{% extends "base.html" %}
+{% extends "navbar.html" %}
 
 {% block content %}
-    <link rel="stylesheet" href="{{url_for('static',filename='styles/login_style.css')}}">
 
-    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
-    <div class="form-style-10">
+    <div class="form-style-10" style="margin-top: 10%;">
+
         <h1>Assessment</h1>
+
+        <div id="Content">
+
+            <div class="inner-wrap">
+
         <form action="" method="post">
             {{ form.hidden_tag() }}
-            <div class="section">
-                <div class="inner-wrap">
+
                     {{ form.csrf_token }}
                     <p>
-                    <table>
+                    <table align="center" style="border-spacing: 50px;width: 250px;">
                         <tr>
                             <th>Category</th>
                             <th>Question</th>
@@ -26,12 +29,12 @@
                             </tr>
                         {% endfor %}
                     </table>
-                    </p>
-                    <p>{{ form.submit() }}</p>
-        </form>
-    </div>
+<br><br>
+                    <p align="center">{{ form.submit() }}</p>
 
-    </div>
-    </div>
+
+        </form>
+
+
 
 {% endblock %}

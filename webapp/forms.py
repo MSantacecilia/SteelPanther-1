@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, HiddenField, DateTimeField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, HiddenField, DateTimeField, SelectField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 from webapp.models import User_account
 
@@ -44,7 +44,8 @@ class CategoryForm(FlaskForm):
 class OrganizationForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     loc = StringField('Location', validators=[DataRequired()])
-    size = StringField('Size', validators=[DataRequired()])
+    myChoices = [('low', '0-500'), ('med', '501-2000'), ('high', '2001-5000')]
+    size = SelectField('Number of employees',choices=myChoices, validators=[DataRequired()])
     domain = StringField('Domain', validators=[DataRequired()])
     submit = SubmitField('Add Organization')
 

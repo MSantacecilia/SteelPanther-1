@@ -8,7 +8,13 @@
 	/*margin-top: 10%;*/
 }
 
+body {
 
+	background-image: url('../wiprobg.jpg');
+	background-size: cover;
+	opacity: 0.95;
+
+}
 
 
 .register{
@@ -69,6 +75,7 @@
 	-webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
 	box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
 	border: 1px solid #003873;
+
 }
 .form-style-10 h1 > span{
 	display: block;
@@ -108,6 +115,13 @@
 	-moz-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
 	-webkit-box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.33);
 }
+
+.form-style-10 select{
+
+font-size: 17px;
+
+}
+
 
 .form-style-10 .section{
 	font: normal 20px 'Nanum Gothic', serif;
@@ -155,7 +169,7 @@ a.reg:visited {
 }
 
 .form-style-10 input[type="button"],
-.form-style-10 input[type="submit"]{
+.form-style-10 input[type="submit"],button{
 	background: #6FC04A;
 	padding: 8px 20px 8px 20px;
 	border-radius: 5px;
@@ -171,7 +185,7 @@ a.reg:visited {
 	font-size: 15px;
 }
 .form-style-10 input[type="button"]:hover,
-.form-style-10 input[type="submit"]:hover{
+.form-style-10 input[type="submit"]:hover,button:hover{
 	background: #528f36;
 	-moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
 	-webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);

@@ -1,7 +1,14 @@
-{% extends "base.html" %}
+{% extends "navbar.html" %}
 
 {% block content %}
+
+    <div class="form-style-10" style="margin-top: 10%;">
+
     <h1>Add Question</h1>
+
+        <div id="Content">
+
+            <div class="inner-wrap">
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
@@ -10,15 +17,22 @@
             {% for error in form.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-        </p>
+        </p><br><br>
         <p>
             <select name="cat">\
+            <option>Select category</option>
                 {% for cat in cats%}
                 <option value="{{cat.id}}">{{cat.name}}</option>
                 {% endfor %}
             </select> 
-        </p>
+        </p><br><br>
         <p>{{ form.submit() }}</p>
     </form>
-    <a href="{{ url_for('add_category') }}">Create a New Category</a>
+
+            </div>
+        </div>
+        <a href="{{ url_for('add_category') }}">Create a New Category</a>
+    </div>
+
+
 {% endblock %}

@@ -10,21 +10,23 @@
 
         <div class="inner-wrap">
     <form action="{{ url_for('assess') }}" method="GET">
-        <p>Choose Organization and Category</p>
+        <p>Choose Organization:</p>
         <p><select name="org">
-                <option>Select Org</option>
+                <option></option>
                 {% for entry in org %}
                 <option value="{{entry.id}}">{{ entry.name }}</option>
                 {% endfor %}
             </select>
-        </p>
+        </p><br><br>
+        <p>Choose Category:</p>
         <p><select name="category">
-                <option>Select Category</option>
+                <option></option>
                 {% for entry in cat %}
                 <option value="{{entry.id}}">{{ entry.name }}</option>
                 {% endfor %}
             </select>
         </p>
+    <br><br>
         <p><button>Proceed</button></p>  
     </form>
 </div>

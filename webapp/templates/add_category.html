@@ -1,8 +1,18 @@
-{% extends "base.html" %}
+{% extends "navbar.html" %}
+
+
+
 
 {% block content %}
+
+
+    <div class="form-style-10" style="margin-top: 10%;">
+
     <h1>Add Category</h1>
     <form action="" method="post">
+
+        <div class="inner-wrap">
+
         {{ form.hidden_tag() }}
         <p>
             {{ form.name.label }}<br>
@@ -10,7 +20,11 @@
             {% for error in form.name.errors %}
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
-        </p>
+        </p><br><br>
         <p>{{ form.submit() }}</p>
+        </div>
     </form>
+    </div>
+
+
 {% endblock %}

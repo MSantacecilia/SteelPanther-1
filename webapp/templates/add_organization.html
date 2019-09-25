@@ -36,19 +36,22 @@
                     {% endfor %}
                 </p>
                 <p>
-                    {{ form.size.label }}
-                    {{ form.size(size=32) }}<br><br>
-                    {% for error in form.size.errors %}
-                        <span style="color: red;">[{{ error }}]</span>
-                    {% endfor %}
-                </p>
-                <p>
                     {{ form.domain.label }}
                     {{ form.domain(size=32) }}<br><br>
                     {% for error in form.domain.errors %}
                         <span style="color: red;">[{{ error }}]</span>
                     {% endfor %}
                 </p>
+
+
+                <p>
+                    {{ form.size.label }}
+                    {{ form.size(size=1) }}<br><br>
+                    {% for error in form.size.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </p>
+
 
                 <p>{{ form.submit() }}</p>
             </div>
