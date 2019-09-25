@@ -55,7 +55,7 @@ def reset_password():
         return redirect(url_for('login'))
     if form.validate_on_submit():
         if current_user is None or not current_user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Invalid current password')
             return redirect(url_for('reset_password'))
         current_user.set_password(form.newpassword1.data)
         db.session.commit()
@@ -86,7 +86,7 @@ def add_organization():
         db.session.add(org)
         db.session.commit()
         flash('Success')
-        return redirect(url_for('index'))
+        return redirect(url_for('add_organization'))
     return render_template('add_organization.html', title='Add Organization', form=form)
 
 
@@ -147,7 +147,7 @@ def add_question():
         db.session.add(q)
         db.session.commit()
         flash('Success')
-        return redirect(url_for('index'))
+        return redirect(url_for('add_question'))
     return render_template('add_question.html', title='Add Question', form=form, cats=cats)
 
 #TODO change cat query to pull relevant questions based on category list
@@ -178,7 +178,7 @@ def assess():
             db.session.add(obj)
         db.session.commit()
         flash('Success')
-        return redirect(url_for('index'))
+        return redirect(url_for('select_assessment_category'))
     return render_template('assess.html', title='Assessment', form=form, ql=queslist)
 
 @app.route('/select_visual', methods=['GET'])

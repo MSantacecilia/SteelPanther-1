@@ -5,7 +5,7 @@ from webapp.models import User_account
 
 
 class RegistrationForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()], render_kw={'autofocus': True})
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField(
@@ -24,25 +24,24 @@ class RegistrationForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()], render_kw={'autofocus': True})
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
 class ResetPasswordForm(FlaskForm):
-    # username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()], render_kw={'autofocus': True})
     newpassword1 = PasswordField('New Password', validators=[DataRequired()])
     newpassword2 = PasswordField(
         'Repeat New Password', validators=[DataRequired(), EqualTo('newpassword1')])
     submit = SubmitField('Confirm')
 
 class CategoryForm(FlaskForm):
-    name = StringField('Category', validators=[DataRequired()])
+    name = StringField('Category', validators=[DataRequired()], render_kw={'autofocus': True})
     submit = SubmitField('Add Category')
 
 class OrganizationForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired()])
+    name = StringField('Name', validators=[DataRequired()], render_kw={'autofocus': True})
     loc = StringField('Location', validators=[DataRequired()])
     myChoices = [('0-500', '0-500'), ('501-2000', '501-2000'), ('2001-5000', '2001-5000')]
     size = SelectField('Number of employees',choices=myChoices, validators=[DataRequired()])
@@ -50,7 +49,7 @@ class OrganizationForm(FlaskForm):
     submit = SubmitField('Add Organization')
 
 class QuestionForm(FlaskForm):
-    name = StringField('Question', validators=[DataRequired()])
+    name = StringField('Question', validators=[DataRequired()], render_kw={'autofocus': True})
     submit = SubmitField('Add Question')
 
 
