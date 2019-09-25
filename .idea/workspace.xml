@@ -2,21 +2,15 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b7ef25f0-224e-4eed-9dfa-3329d197a7ff" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/config.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/forms.py" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/forms.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/static/styles/login_style.css" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/static/styles/login_style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/static/styles/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/static/styles/styles.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/webapp/static/css/normalize.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/webapp/static/css/test_category.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/webapp/static/js/jquery-3.4.1.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/webapp/templates/test_category.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/routes.py" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/routes.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webapp/static/wiproLogo.png" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/static/wiproLogo.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/add_category.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/add_category.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/add_organization.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/add_organization.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/add_question.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/add_question.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/assess.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/assess.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/login.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/webapp/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/webapp/templates/navbar.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/navbar.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/reset_password.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/reset_password.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/webapp/templates/select_assessment_category.html" beforeDir="false" afterPath="$PROJECT_DIR$/webapp/templates/select_assessment_category.html" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -109,7 +103,7 @@
         <entry file="file://$PROJECT_DIR$/webapp/static/styles/login_style.css">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="225">
-              <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+              <caret line="15" selection-start-line="15" selection-end-line="15" />
             </state>
           </provider>
         </entry>
@@ -203,13 +197,6 @@
               <item name="SteelPanther" type="b2602c69:ProjectViewProjectNode" />
               <item name="SteelPanther" type="462c0819:PsiDirectoryNode" />
               <item name="webapp" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="styles" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="SteelPanther" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SteelPanther" type="462c0819:PsiDirectoryNode" />
-              <item name="webapp" type="462c0819:PsiDirectoryNode" />
               <item name="templates" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -298,11 +285,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="45238000" />
+    <option name="totallyTimeSpent" value="45489000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26752505" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -555,7 +541,7 @@
     <entry file="file://$PROJECT_DIR$/webapp/static/styles/login_style.css">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="225">
-          <caret line="15" lean-forward="true" selection-start-line="15" selection-end-line="15" />
+          <caret line="15" selection-start-line="15" selection-end-line="15" />
         </state>
       </provider>
     </entry>
