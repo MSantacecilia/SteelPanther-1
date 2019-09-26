@@ -21,7 +21,7 @@ def register():
     if form.validate_on_submit():
         # if form.manager.data is True:
         #     manager_status = 1
-        user = User_account(username=form.username.data, email=form.email.data, manager_status=True)
+        user = User_account(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -171,7 +171,7 @@ def assess():
     ql = Category.query.get(cat)
     queslist = ql.getQuestions()
     if form.validate_on_submit():
-        a = Assessment(user_id=current_user.id, organization_id=org)
+        a = Assessment(user_id=current_user.id, organization_id=org, cat=cat)
         db.session.add(a)
         db.session.commit()
         for q in queslist:

@@ -11,7 +11,7 @@ class User_account(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    manager_status = db.Column(db.Integer, default=0)
+    manager_status = db.Column(db.Integer, default=1)
     assessments = db.relationship('Assessment', backref='user_account', lazy='dynamic')
 
     def __repr__(self):
@@ -48,6 +48,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     questions = db.relationship('Question', backref='category', lazy='dynamic')
+    ass = db.relationship('Assessment', backref='category', lazy='dynamic')
 
     def __repr__(self):
         return '<Category {0}>'.format(self.name)
@@ -79,8 +80,9 @@ class Assessment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=False)
-    ass_detail = db.relationship('AssessmentDetail', backref='assessment', lazy='dynamic')
+    cat = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    ass_detail = db.relationship('AssessmentDetail', backref='assessment', lazy='dynamic')
     question = db.relationship("AssessmentDetail")
 
     def __repr__(self):
