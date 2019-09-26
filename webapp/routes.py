@@ -1,7 +1,7 @@
 from webapp import app, db
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from werkzeug.urls import url_parse
-from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, AssessmentDetailForm, ResetPasswordForm
+from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, AssessmentDetailForm, ResetPasswordForm, DeleteQuestionsForm
 from flask_login import current_user, login_user, logout_user, login_required
 from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentDetail, category_list
 
@@ -237,6 +237,50 @@ def multi_vis():
                     assessDict[k].rating = str(int(round(ratingdict[k] / assessDict[k].count, 1)))
 
     return render_template('multiple_assess_vis.html', title='Multi-Visual', assessDict=assessDict, ratingDict=ratingdict)
+	
+@app.route('/delete_question', methods=['GET', 'POST'])
+def delete_question():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    form = DeleteQuestionsForm()
+    if request.method == 'POST':
+        if request.form['submit_button'] == 'Edit':
+            pass  # do something
+        elif request.form['submit_button'] == 'Delete':
+            pass  # do something else
+        else:
+            pass  # unknown
+    elif request.method == 'GET':
+        form.categories.choices = [(category.id, category.name) for category in Category.query.all()]
+        categories = Category.query.all()
+        return render_template('delete_question.html', title='Delete Question', form=form, categories=categories)
+		
+@app.route('/filter_questions/<categoryId>')
+def filter_questions(categoryId):
+    questions = Question.query.filter_by(category_id=categoryId).all()
+    questionsArray = []
+    for question in questions:
+        questionObj = {}
+        questionObj["id"] = question.id
+        questionObj["name"] = question.name
+        questionsArray.append(questionObj)
+    return jsonify({'questions': questionsArray})
+	
+@app.route('/update_question/<questionId>/<updatedQuestion>')
+def update_questions(questionId, updatedQuestion):
+    question = Question.query.filter_by(id=questionId).first()
+    question.name = updatedQuestion
+    db.session.commit()
+    return jsonify({'result': "success"})
+	
+@app.route('/delete_question/<questionId>')
+def delete_selected_questions(questionId):
+    try:
+        Question.query.filter_by(id=questionId).delete()
+        db.session.commit()
+        return jsonify({'result': "success"})
+    except Exception as e:
+        return jsonify("result", "failure")	
 
 #TODO
 # def export_csv():

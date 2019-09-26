@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete Question</title>
+</head>
+<body>
+
+    <p><select id="category_select">
+        <option disabled=true>Select Category</option>
+        {% for category in categories %}
+        <option value="{{category.id}}">{{ category.name }}</option>
+        {% endfor %}
+        </select>
+    </p>
+    <table id="questions_table" >
+        <tr>
+            <th>Questions</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </table>
+
+    <script>
+        let category_select = document.getElementById("category_select");
+        let questions_table = document.getElementById("questions_table");
+
+        window.onload = function() {
+            loadTable();
+        };
+
+        category_select.onchange = function() {
+            loadTable();
+        }
+
+         function loadTable(){
+            category_id = category_select.value;
+            fetch('/filter_questions/' + category_id).then(function(response){
+                response.json().then(function(data){
+                    let questionHTML = '<tr><th>Question</th><th></th><th></th></tr>';
+                    for(let question of data.questions){
+                        questionHTML += '<tr><td>'+ question.name +'</td>'
+                        questionHTML += '<td><button onclick="editQuestion('+ question.id +')">Edit</button></td>'
+                        questionHTML += '<td><button onclick="deleteQuestion('+ question.id +')">Delete</button></td></tr>'
+                    }
+                    questions_table.innerHTML = questionHTML;
+                });
+            });
+         }
+
+         function editQuestion(questionId) {
+            var updatedQuestion = prompt("Please update the question:");
+            if (updatedQuestion == null || updatedQuestion == "") {
+                if (confirm("Delete the question?")) {
+                    fetch('/delete_question/' +questionId).then(function(response){
+                        response.json().then(function(data){
+                            loadTable();
+                        });
+                    });
+                }
+            } else {
+                fetch('/update_question/' +questionId+ '/' +updatedQuestion).then(function(response){
+                    response.json().then(function(data){
+                        loadTable();
+                    });
+                });
+            }
+         }
+
+         function deleteQuestion(questionId){
+            if (confirm("Delete the question?")) {
+                    fetch('/delete_question/' +questionId).then(function(response){
+                        response.json().then(function(data){
+                            if(data.result == "success"){
+                                loadTable();
+                            }
+                            else{
+                                alert("Unable to delete question !");
+                            }
+                        });
+                    });
+             }
+         }
+
+    </script>
+</body>
+</html>
