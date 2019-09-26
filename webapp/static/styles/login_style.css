@@ -43,8 +43,10 @@ body {
 	/*margin-top: 10%;*/
 
 	/*margin: 1% auto;*/
-	padding:30px;
+	/* padding:30px; */
 	padding-right: 30px;
+	padding-left: 30px;
+	padding-bottom: 30px;
 
 	/*here's where I need to work */
 
