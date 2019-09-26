@@ -182,13 +182,13 @@ def assess():
         return redirect(url_for('select_assessment_category'))
     return render_template('assess.html', title='Assessment', form=form, ql=queslist)
 
-@app.route('/select_visual', methods=['GET'])
+@app.route('/select_vis', methods=['GET'])
 def select_vis():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     orgs = Organization.query.all()
-    assessments = Assessment.query.all()
-    return render_template('select_vis.html', title='Select Visual', assessments=assessments, orgs=orgs)
+    cats = Category.query.all()
+    return render_template('select_vis.html', title='Select Visual', cats=cats, orgs=orgs)
 
 
 @app.route('/vis', methods=['GET'])
