@@ -1,7 +1,7 @@
 from webapp import app, db
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from werkzeug.urls import url_parse
-from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, AssessmentDetailForm, ResetPasswordForm, DeleteQuestionsForm, SelectTimestampForm
+from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, AssessmentDetailForm, ResetPasswordForm, DeleteQuestionsForm, SelectTimestampForm, ViewSingleAssessmentForm
 from flask_login import current_user, login_user, logout_user, login_required
 from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentDetail, category_list
 
@@ -199,9 +199,19 @@ def select_timestamp():
     cats = int(request.args['cats'])
     form = SelectTimestampForm()
     assess_deets = Assessment.query.filter((Assessment.cat == cats) & (Assessment.organization_id == orgs)).all()
-#    assess_cat = Assessment.query.filter(Assessment.cat == Category.query.get(cats)).all()
+#   assess_cat = Assessment.query.filter(Assessment.cat == Category.query.get(cats)).all()
 #   assess_org = Assessment.query.filter(Assessment.organization_id == Organization.query.get(orgs)).all()
     return render_template('select_timestamp.html', title='Relevant Assessments',  form=form, assess_deets=assess_deets)
+    
+@app.route('/view_single_assessment', methods=['GET','POST'])
+def view_single_assessment():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    form = ViewSingleAssessmentForm()
+    if request.method == "POST":
+        ad = request.form["select"]
+    assessdetails = AssessmentDetail.query.filter(ad == AssessmentDetail.assessment_id).all()
+    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetails)
 
 @app.route('/multi_vis',methods=['GET'])
 def multi_vis():

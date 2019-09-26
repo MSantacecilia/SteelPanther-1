@@ -7,7 +7,7 @@
 
 
 
-    <form action="" method="post">
+    <form action="{{ url_for('view_single_assessment') }}" method="post">
         {{ form.hidden_tag() }}
 
                 {{ form.csrf_token }}
@@ -18,6 +18,7 @@
                         <th>Organization</th>
                         <th>Category</th>
                         <th>Timestamp</th>
+                        <th>Select</th>
                     </tr>
                     {% for ad in assess_deets %}
                         <tr>
@@ -25,6 +26,7 @@
                             <td>{{ad.organization.name}}</td>
                             <td>{{ad.category.name}}</td>
                             <td>{{ad.timestamp}}</td>
+                            <td><input type="radio" name="select" value="{{ ad.id }}"></td>
                         </tr>
                     {% endfor %}
                 </table>

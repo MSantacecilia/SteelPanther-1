@@ -65,3 +65,6 @@ class DeleteQuestionsForm(FlaskForm):
 
 class SelectTimestampForm(FlaskForm):
     submit = SubmitField('Submit')
+
+class ViewSingleAssessmentForm(FlaskForm):
+    submit = SubmitField('Submit')
