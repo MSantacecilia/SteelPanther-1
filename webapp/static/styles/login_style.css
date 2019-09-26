@@ -1,11 +1,6 @@
 .wiproLogo{
 
-	/*width:12%;*/
-	/*	height: 16%;*/
-
-	/*position: relative;*/
-	/*margin-left: 10%;*/
-	/*margin-top: 10%;*/
+	opacity:100%;
 }
 
 .index_format {
@@ -24,7 +19,7 @@
 body {
 
 	background-image: url('../wiprobg.jpg');
-	
+
 	max-width: 100%;
 	overflow-x: hidden;
 	background-size: cover;

@@ -18,7 +18,7 @@
   padding-left: 0;
   padding-bottom: 00px;
   border: 3px black;
-  background-color: #3f526c;
+  background-color: #003873;
 
 
 
@@ -27,7 +27,7 @@
   position: relative;
   z-index: 597;
   float: left;
-  background-color: #3f526c;
+  background-color: #003873;
 
 }
 #cssmenu ul li {
@@ -84,11 +84,9 @@
   margin-left: 0;
   position: fixed;
   height: 100%;
+  opacity: 0.9;
 
-
-
-
-  background-color: #3f526c;
+  background-color: #003873;
 }
 #cssmenu ul a,
 #cssmenu ul a:link,
@@ -103,7 +101,7 @@
   float: none;
 }
 #cssmenu ul {
-  background: #3f526c;
+  background: #003873;
 }
 #cssmenu > ul > li {
   border-left: 3px solid #d7d8da;
