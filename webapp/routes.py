@@ -115,10 +115,11 @@ def test_category():
         return redirect(url_for('login'))
     if not current_user.is_admin():
         return redirect(url_for('index'))
+    categories = Category.query.all()
 
     # ==trial======================================================= 
-    if request.method == "POST":
-        category_name = request.form["category_name"]
+    # if request.method == "POST":
+    #     category_name = request.form["category_name"]
         
     # ==endtrial====================================================
 
@@ -130,7 +131,7 @@ def test_category():
     #     db.session.commit()
     #     flash('Success')
     #     return redirect(url_for('index'))
-    return render_template('test_category.html', title='Test Category')
+    return render_template('test_category.html', title='Test Category', categories=categories)
 
 @app.route('/add_question',methods=['GET','POST'])
 def add_question():
