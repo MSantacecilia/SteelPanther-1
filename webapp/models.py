@@ -57,7 +57,6 @@ class Category(db.Model):
         return Question.query.filter(Question.category_id == self.id).all()
 
 class AssessmentDetail(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
     assessment_id = db.Column(db.Integer, db.ForeignKey('assessment.id'), nullable=False, primary_key=True)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False, primary_key=True)
     rating = db.Column(db.Integer)
