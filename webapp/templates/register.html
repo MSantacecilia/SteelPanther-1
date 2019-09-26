@@ -1,51 +1,51 @@
-
-
-
 <link rel="stylesheet" href="{{url_for('static',filename='styles/login_style.css')}}">
 
 <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
-<center><img height="250px" width="250px" class="wiproLogo" src="../static/wiproLogo.png" /></center>
-
+<br /><br />
+<img style='float: left; margin-left:160px;' height="450px" width="450px" class="wiproLogo" src="../static/wiproLogo.png" />
 <center>
-    <div class="form-style-10">
-        {% block content %}
-            <h1 style="background: #003873;" align="left">Register</h1>
-            <form action="" method="post">
+  <div class="form-style-10" style="margin-left:400px;">
+    {% block content %}
+    <h1 style="background: #003873;" align="left">Register</h1>
+    <form action="" method="post">
 
-                <div class="inner-wrap">
-                    {{ form.hidden_tag() }}
-                    <p align="left">
-                        {{ form.username.label }}
-                        {{ form.username(size=32) }}<br><br>
-                        {% for error in form.username.errors %}
-                            <span style="color: red;">[{{ error }}]</span>
-                        {% endfor %}
-                    </p>
-                    <p align="left">
-                        {{ form.email.label }}
-                        {{ form.email(size=64) }}<br><br>
-                        {% for error in form.email.errors %}
-                            <span style="color: red;">[{{ error }}]</span>
-                        {% endfor %}
-                    </p>
-                    <p align="left">
-                        {{ form.password.label }}
-                        {{ form.password(size=32) }}<br><br>
-                        {% for error in form.password.errors %}
-                            <span style="color: red;">[{{ error }}]</span>
-                        {% endfor %}
-                    </p>
-                    <p align="left">
-                        {{ form.password2.label }}
-                        {{ form.password2(size=32) }}<br><br>
-                        {% for error in form.password2.errors %}
-                            <span style="color: red;">[{{ error }}]</span>
-                        {% endfor %}
-                    </p>
-                    <p style="float: right;margin-top: 30px;font: normal 14px 'Nanum Gothic', serif;"><a class="reg" href="{{ url_for('login') }}">Already have an account? Sign in!</a></p>
-                </div>
-                <p align="left">{{ form.submit() }}</p>
-            </form></div>
+      <div class="inner-wrap">
+        {{ form.hidden_tag() }}
+        <p align="left">
+          {{ form.username.label }}
+          {{ form.username(size=32) }}<br><br>
+          {% for error in form.username.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        <p align="left">
+          {{ form.email.label }}
+          {{ form.email(size=64) }}<br><br>
+          {% for error in form.email.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        <p align="left">
+          {{ form.password.label }}
+          {{ form.password(size=32) }}<br><br>
+          {% for error in form.password.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        <p align="left">
+          {{ form.password2.label }}
+          {{ form.password2(size=32) }}<br><br>
+          {% for error in form.password2.errors %}
+          <span style="color: red;">[{{ error }}]</span>
+          {% endfor %}
+        </p>
+        <p style="float: right;margin-top: 30px;font: normal 14px 'Nanum Gothic', serif;"><a class="reg" href="{{ url_for('login') }}">Already have an account? Sign in!</a></p>
+      </div>
+      <p align="left">{{ form.submit() }}</p>
+    </form>
+  </div>
+</center>
 
-        {% endblock %}
 
+
+{% endblock %}
