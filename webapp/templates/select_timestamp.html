@@ -5,16 +5,14 @@
 
     <h1>Select Assessment</h1>
 
-    <div id="Content">
 
-        <div class="inner-wrap">
 
     <form action="" method="post">
         {{ form.hidden_tag() }}
 
                 {{ form.csrf_token }}
                 <p>
-                <table align="center" style="border-spacing: 50px;width: 250px;">
+                <table>
                     <tr>
                         <th>ID</th>
                         <th>Organization</th>
@@ -35,6 +33,7 @@
 
 
     </form>
+
 
 
 {% endblock %}
