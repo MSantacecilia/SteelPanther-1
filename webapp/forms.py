@@ -62,3 +62,6 @@ class AssessmentDetailForm(FlaskForm):
 class DeleteQuestionsForm(FlaskForm):
     categories = SelectField('category', choices=[])
     submit = SubmitField('Submit')
+
+class SelectTimestampForm(FlaskForm):
+    submit = SubmitField('Submit')

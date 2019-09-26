@@ -1,7 +1,7 @@
 from webapp import app, db
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from werkzeug.urls import url_parse
-from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, AssessmentDetailForm, ResetPasswordForm, DeleteQuestionsForm
+from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, AssessmentDetailForm, ResetPasswordForm, DeleteQuestionsForm, SelectTimestampForm
 from flask_login import current_user, login_user, logout_user, login_required
 from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentDetail, category_list
 
@@ -191,21 +191,17 @@ def select_vis():
     return render_template('select_vis.html', title='Select Visual', cats=cats, orgs=orgs)
 
 
-@app.route('/vis', methods=['GET'])
-def indv_vis():
+@app.route('/select_timestamp', methods=['GET'])
+def select_timestamp():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-    
-    assess_id = int(request.args['assessment'])
-    assess_info = Assessment.query.get(assess_id).getAssessmentInfo()
-    for obj in assess_info[0]:
-        for ch in obj.question.name:
-            if ch == '&':
-                obj.question.name = obj.question.name.replace("&", "and")
-                db.session.add(obj)
-                db.session.commit()
-    return render_template('single_assess_vis.html', title='Visual', questions_list_object=assess_info[0], category_list=assess_info[1])
-
+    orgs = int(request.args['orgs'])
+    cats = int(request.args['cats'])
+    form = SelectTimestampForm()
+    assess_deets = Assessment.query.filter((Assessment.cat == cats) & (Assessment.organization_id == orgs)).all()
+#    assess_cat = Assessment.query.filter(Assessment.cat == Category.query.get(cats)).all()
+#   assess_org = Assessment.query.filter(Assessment.organization_id == Organization.query.get(orgs)).all()
+    return render_template('select_timestamp.html', title='Relevant Assessments',  form=form, assess_deets=assess_deets)
 
 @app.route('/multi_vis',methods=['GET'])
 def multi_vis():
