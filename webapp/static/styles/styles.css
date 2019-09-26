@@ -2,6 +2,7 @@
 
 
 
+
 #cssmenu ul li.active a, #cssmenu ul li a:hover {
   text-decoration:none;
   color:#000;
@@ -19,6 +20,7 @@
   padding-bottom: 00px;
   border: 3px black;
   background-color: #003873;
+
 
 
 
@@ -110,6 +112,7 @@
 #cssmenu > ul > li > a {
   padding: 10px 20px;
 
+
 }
 #cssmenu > ul > li:hover {
   border-left: 3px solid #003873;
@@ -170,3 +173,6 @@
 
 
 }
+
+#cssmenu > ul >li > i.material-icons.md-light { color: rgba(255, 255, 255, 1);}
+#cssmenu > ul >li > i.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
