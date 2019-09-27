@@ -107,7 +107,8 @@ def add_category():
         return redirect(url_for('add_question'))
     return render_template('add_category.html', title='Add Category', form=form)
 
-@app.route('/test_category',methods=['GET','POST'])
+""" Category Functionalities ================================================================= """
+@app.route('/category',methods=['GET','POST'])
 # Agile, Cloud, Devop
 def test_category():
     # This functionality is only for managers
@@ -115,23 +116,64 @@ def test_category():
         return redirect(url_for('login'))
     if not current_user.is_admin():
         return redirect(url_for('index'))
-    categories = Category.query.all()
+    form = CategoryForm()
+    categories = Category.query.order_by('name').all()
+    return render_template('test_category.html', title='Assessment Category'.upper(), categories=categories, form=form)
 
-    # ==trial======================================================= 
-    # if request.method == "POST":
-    #     category_name = request.form["category_name"]
-        
-    # ==endtrial====================================================
+def is_categroy_repeat(name):
+    if Category.query.filter_by(name=name).count() != 0:
+        return True
+    else: return False
 
-    # form = QuestionForm()
-    # cats = Category.query.all()
-    # if form.validate_on_submit():
-    #     q = Question(name=form.name.data, category_id=request.form['cat'])
-    #     db.session.add(q)
-    #     db.session.commit()
-    #     flash('Success')
-    #     return redirect(url_for('index'))
-    return render_template('test_category.html', title='Test Category', categories=categories)
+@app.route('/category/add',methods=['POST'])
+# Agile, Cloud, Devop
+def test_insert_category():
+    # This functionality is only for managers
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+    form = CategoryForm()
+    if form.validate_on_submit():
+        new_category_name = form.name.data.title() 
+        if is_categroy_repeat(new_category_name):
+            flash(f"Category '{new_category_name}' already exists. Please make sure category you create has a unique name. ", 'error')
+        else: 
+            cat = Category(name=new_category_name)
+            db.session.add(cat)
+            db.session.commit()
+            flash(f"Category '{new_category_name}' added successfully", 'success')
+        return redirect(url_for('test_category'))
+    return render_template('test_category.html', title='Category', form=form)
+
+@app.route('/category/update',methods=['POST','GET'])
+def update():
+    if request.method == 'POST':
+        new_category_name = request.form['name'].title() 
+        if is_categroy_repeat(new_category_name):
+            flash(f"Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
+        else:
+            cid = request.form['id']
+            cat = Category.query.filter_by(id=cid).one()
+            cat.name = new_category_name
+            flash(f"Category name updated to '{new_category_name}'", 'success')
+            db.session.commit()
+        return redirect(url_for('test_category'))
+
+@app.route('/category/delete/<cid>', methods = ['GET'])
+def test_delete_category(cid):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    delete_category = Category.query.filter_by(id=cid).one()
+    db.session.delete(delete_category)
+    db.session.commit()
+    flash(f"Category '{delete_category.name}' deleted successfully", 'success')
+    
+    return redirect(url_for('test_category'))
+""" EndCategory ============================================================================== """
 
 @app.route('/add_question',methods=['GET','POST'])
 def add_question():
