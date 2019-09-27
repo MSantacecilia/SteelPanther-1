@@ -27,8 +27,8 @@ class User_account(UserMixin, db.Model):
         return self.manager_status == 1
 
 category_list = db.Table('category_list', db.Model.metadata, 
-    db.Column('org_id', db.Integer, db.ForeignKey('organization.id')),
-    db.Column('cat_id', db.Integer, db.ForeignKey('category.id'))
+    db.Column('org_id', db.Integer, db.ForeignKey('organization.id', ondelete='CASCADE')),
+    db.Column('cat_id', db.Integer, db.ForeignKey('category.id', ondelete='CASCADE'))
 )
 
 class Organization(db.Model):
@@ -48,7 +48,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     questions = db.relationship('Question', backref='category', lazy='dynamic')
-    ass = db.relationship('Assessment', backref='category', lazy='dynamic')
+    ass = db.relationship('Assessment', backref='category', lazy='dynamic', passive_deletes=True)
 
     def __repr__(self):
         return '<Category {0}>'.format(self.name)
@@ -68,7 +68,7 @@ class AssessmentDetail(db.Model):
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
-    category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('category.id', ondelete='CASCADE'), nullable=False)
 
     def __repr__(self):
         return '<Question {0}>'.format(self.name)
@@ -79,7 +79,7 @@ class Assessment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=False)
-    cat = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
+    cat = db.Column(db.Integer, db.ForeignKey('category.id', ondelete='CASCADE'), nullable=False)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     ass_detail = db.relationship('AssessmentDetail', backref='assessment', lazy='dynamic')
     question = db.relationship("AssessmentDetail")
