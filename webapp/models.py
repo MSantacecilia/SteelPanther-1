@@ -47,7 +47,7 @@ class Organization(db.Model):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
-    questions = db.relationship('Question', backref='category', lazy='dynamic')
+    questions = db.relationship('Question', backref='category', lazy='dynamic', passive_deletes=True)
     ass = db.relationship('Assessment', backref='category', lazy='dynamic', passive_deletes=True)
 
     def __repr__(self):
