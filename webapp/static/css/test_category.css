@@ -8,6 +8,31 @@ h2 {
   margin-left: 0;
 }
 
+.glyphicon{
+  padding-right: 5px;
+}
+
+.container-fluid{
+  padding-bottom: 1em;
+}
+
+
+table#category_table{
+  border-collapse: collapse;
+  border-radius: .5em;
+  overflow: hidden;
+  
+}
+
+table#category_table th{
+  padding:1em 2em;
+  background-color: #003873;
+}
+
+table#category_table td{
+  padding: .5em 2em;
+}
+
 @media (min-width: 768px){
   .container{
     max-width:700px;
