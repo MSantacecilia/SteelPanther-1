@@ -23,7 +23,7 @@ body {
 	max-width: 100%;
 	overflow-x: hidden;
 	background-size: cover;
-	opacity: 0.95;
+	opacity: 0.9;
 
 
 }
@@ -215,7 +215,7 @@ a.reg:visited {
 	box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
 }
 
-table, th, td {
+#assessment_detail_table > table th td {
   border: 1px solid black;
 	padding: 2px;
 	margin-left:-21px;
