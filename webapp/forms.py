@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, HiddenField, DateTimeField, SelectField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
+from wtforms import validators
 from webapp.models import User_account
 
 
@@ -37,8 +38,8 @@ class ResetPasswordForm(FlaskForm):
     submit = SubmitField('Confirm')
 
 class CategoryForm(FlaskForm):
-    name = StringField('Category', validators=[DataRequired()], render_kw={'autofocus': True})
-    submit = SubmitField('Add Category')
+    name = StringField('', [validators.DataRequired()], render_kw={'autofocus': True})
+    submit = SubmitField('Submit')
 
 class OrganizationForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()], render_kw={'autofocus': True})
