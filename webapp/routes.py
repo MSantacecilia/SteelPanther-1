@@ -1,7 +1,7 @@
 from webapp import app, db
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from werkzeug.urls import url_parse
-from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, AssessmentDetailForm, ResetPasswordForm
+from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, AssessmentDetailForm, ResetPasswordForm, DeleteQuestionsForm, SelectTimestampForm, ViewSingleAssessmentForm
 from flask_login import current_user, login_user, logout_user, login_required
 from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentDetail, category_list
 
@@ -21,7 +21,7 @@ def register():
     if form.validate_on_submit():
         # if form.manager.data is True:
         #     manager_status = 1
-        user = User_account(username=form.username.data, email=form.email.data, manager_status=True)
+        user = User_account(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -201,7 +201,7 @@ def assess():
     ql = Category.query.get(cat)
     queslist = ql.getQuestions()
     if form.validate_on_submit():
-        a = Assessment(user_id=current_user.id, organization_id=org)
+        a = Assessment(user_id=current_user.id, organization_id=org, cat=cat)
         db.session.add(a)
         db.session.commit()
         for q in queslist:
@@ -212,30 +212,36 @@ def assess():
         return redirect(url_for('select_assessment_category'))
     return render_template('assess.html', title='Assessment', form=form, ql=queslist)
 
-@app.route('/select_visual', methods=['GET'])
+@app.route('/select_vis', methods=['GET'])
 def select_vis():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     orgs = Organization.query.all()
-    assessments = Assessment.query.all()
-    return render_template('select_vis.html', title='Select Visual', assessments=assessments, orgs=orgs)
+    cats = Category.query.all()
+    return render_template('select_vis.html', title='Select Visual', cats=cats, orgs=orgs)
 
 
-@app.route('/vis', methods=['GET'])
-def indv_vis():
+@app.route('/select_timestamp', methods=['GET'])
+def select_timestamp():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
+    orgs = int(request.args['orgs'])
+    cats = int(request.args['cats'])
+    form = SelectTimestampForm()
+    assess_deets = Assessment.query.filter((Assessment.cat == cats) & (Assessment.organization_id == orgs)).all()
+#   assess_cat = Assessment.query.filter(Assessment.cat == Category.query.get(cats)).all()
+#   assess_org = Assessment.query.filter(Assessment.organization_id == Organization.query.get(orgs)).all()
+    return render_template('select_timestamp.html', title='Relevant Assessments',  form=form, assess_deets=assess_deets)
     
-    assess_id = int(request.args['assessment'])
-    assess_info = Assessment.query.get(assess_id).getAssessmentInfo()
-    for obj in assess_info[0]:
-        for ch in obj.question.name:
-            if ch == '&':
-                obj.question.name = obj.question.name.replace("&", "and")
-                db.session.add(obj)
-                db.session.commit()
-    return render_template('single_assess_vis.html', title='Visual', questions_list_object=assess_info[0], category_list=assess_info[1])
-
+@app.route('/view_single_assessment', methods=['GET','POST'])
+def view_single_assessment():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    form = ViewSingleAssessmentForm()
+    if request.method == "POST":
+        ad = request.form["select"]
+    assessdetails = AssessmentDetail.query.filter(ad == AssessmentDetail.assessment_id).all()
+    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetails)
 
 @app.route('/multi_vis',methods=['GET'])
 def multi_vis():
@@ -267,6 +273,50 @@ def multi_vis():
                     assessDict[k].rating = str(int(round(ratingdict[k] / assessDict[k].count, 1)))
 
     return render_template('multiple_assess_vis.html', title='Multi-Visual', assessDict=assessDict, ratingDict=ratingdict)
+	
+@app.route('/delete_question', methods=['GET', 'POST'])
+def delete_question():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    form = DeleteQuestionsForm()
+    if request.method == 'POST':
+        if request.form['submit_button'] == 'Edit':
+            pass  # do something
+        elif request.form['submit_button'] == 'Delete':
+            pass  # do something else
+        else:
+            pass  # unknown
+    elif request.method == 'GET':
+        form.categories.choices = [(category.id, category.name) for category in Category.query.all()]
+        categories = Category.query.all()
+        return render_template('delete_question.html', title='Delete Question', form=form, categories=categories)
+		
+@app.route('/filter_questions/<categoryId>')
+def filter_questions(categoryId):
+    questions = Question.query.filter_by(category_id=categoryId).all()
+    questionsArray = []
+    for question in questions:
+        questionObj = {}
+        questionObj["id"] = question.id
+        questionObj["name"] = question.name
+        questionsArray.append(questionObj)
+    return jsonify({'questions': questionsArray})
+	
+@app.route('/update_question/<questionId>/<updatedQuestion>')
+def update_questions(questionId, updatedQuestion):
+    question = Question.query.filter_by(id=questionId).first()
+    question.name = updatedQuestion
+    db.session.commit()
+    return jsonify({'result': "success"})
+	
+@app.route('/delete_question/<questionId>')
+def delete_selected_questions(questionId):
+    try:
+        Question.query.filter_by(id=questionId).delete()
+        db.session.commit()
+        return jsonify({'result': "success"})
+    except Exception as e:
+        return jsonify("result", "failure")	
 
 #TODO
 # def export_csv():

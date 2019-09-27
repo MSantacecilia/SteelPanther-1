@@ -1,11 +1,6 @@
 .wiproLogo{
 
-	/*width:12%;*/
-	/*	height: 16%;*/
-
-	/*position: relative;*/
-	/*margin-left: 10%;*/
-	/*margin-top: 10%;*/
+	opacity:100%;
 }
 
 .index_format {
@@ -24,7 +19,7 @@
 body {
 
 	background-image: url('../wiprobg.jpg');
-	
+
 	max-width: 100%;
 	overflow-x: hidden;
 	background-size: cover;
@@ -48,8 +43,10 @@ body {
 	/*margin-top: 10%;*/
 
 	/*margin: 1% auto;*/
-	padding:30px;
+	/* padding:30px; */
 	padding-right: 30px;
+	padding-left: 30px;
+	padding-bottom: 30px;
 
 	/*here's where I need to work */
 
@@ -72,6 +69,8 @@ body {
 	margin-bottom: 0px;
 	vertical-align: top;
 	position: relative;
+
+
 
 }
 
@@ -214,4 +213,11 @@ a.reg:visited {
 	-moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
 	-webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
 	box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.28);
+}
+
+table, th, td {
+  border: 1px solid black;
+	padding: 2px;
+	margin-left:-21px;
+	text-align:center;
 }

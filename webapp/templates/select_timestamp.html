@@ -1,0 +1,40 @@
+{% extends "navbar.html" %}
+
+{% block content %}
+<div class="form-style-10" style="margin-top: 10%;">
+
+    <h1>Select Assessment</h1>
+
+
+    <form action="{{ url_for('view_single_assessment') }}" method="post">
+        {{ form.hidden_tag() }}
+
+                {{ form.csrf_token }}
+                <p>
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Organization</th>
+                        <th>Category</th>
+                        <th>Timestamp</th>
+                        <th>Select</th>
+                    </tr>
+                    {% for ad in assess_deets %}
+                        <tr>
+                            <td>{{ad.id}}</td>
+                            <td>{{ad.organization.name}}</td>
+                            <td>{{ad.category.name}}</td>
+                            <td>{{ad.timestamp}}</td>
+                            <td><input type="radio" name="select" value="{{ ad.id }}"></td>
+                        </tr>
+                    {% endfor %}
+                </table>
+<br><br>
+                <p align="center">{{ form.submit() }}</p>
+
+
+    </form>
+
+
+
+{% endblock %}

@@ -2,10 +2,12 @@
 
 
 
+
 #cssmenu ul li.active a, #cssmenu ul li a:hover {
   text-decoration:none;
   color:#000;
   background-color: white;
+
 }
 
 
@@ -18,7 +20,8 @@
   padding-left: 0;
   padding-bottom: 00px;
   border: 3px black;
-  background-color: #3f526c;
+  background-color: #003873;
+
 
 
 
@@ -27,7 +30,7 @@
   position: relative;
   z-index: 597;
   float: left;
-  background-color: #3f526c;
+  background-color: #003873;
 
 }
 #cssmenu ul li {
@@ -84,11 +87,9 @@
   margin-left: 0;
   position: fixed;
   height: 100%;
+  opacity: 0.9;
 
-
-
-
-  background-color: #3f526c;
+  background-color: #003873;
 }
 #cssmenu ul a,
 #cssmenu ul a:link,
@@ -103,7 +104,7 @@
   float: none;
 }
 #cssmenu ul {
-  background: #3f526c;
+  background: #003873;
 }
 #cssmenu > ul > li {
   border-left: 3px solid #d7d8da;
@@ -111,6 +112,7 @@
 }
 #cssmenu > ul > li > a {
   padding: 10px 20px;
+
 
 }
 #cssmenu > ul > li:hover {
@@ -172,3 +174,6 @@
 
 
 }
+
+#cssmenu > ul >li > i.material-icons.md-light { color: rgba(255, 255, 255, 1);}
+#cssmenu > ul >li > i.material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
