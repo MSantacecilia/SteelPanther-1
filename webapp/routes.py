@@ -118,7 +118,7 @@ def test_category():
         return redirect(url_for('index'))
     form = CategoryForm()
     categories = Category.query.order_by('name').all()
-    return render_template('test_category.html', title='Test Category', categories=categories, form=form)
+    return render_template('test_category.html', title='Category', categories=categories, form=form)
 
 @app.route('/category/add',methods=['POST'])
 # Agile, Cloud, Devop
@@ -135,7 +135,7 @@ def test_insert_category():
         db.session.commit()
         flash('Category added successfully')
         return redirect(url_for('test_category'))
-    return render_template('test_category.html', title='Test Category', form=form)
+    return render_template('test_category.html', title='Category', form=form)
 
 @app.route('/category/update',methods=['POST','GET'])
 def update():
