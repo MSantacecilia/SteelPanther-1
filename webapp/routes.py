@@ -80,9 +80,6 @@ def add_organization():
     if form.validate_on_submit():
         org = Organization(name=form.name.data, location=form.loc.data, 
             size=form.size.data, domain=form.domain.data)
-        catlist = Category.query.all()
-        for c in catlist:
-            org.cats.append(c)
         db.session.add(org)
         db.session.commit()
         flash('Success')
@@ -168,8 +165,12 @@ def assess():
     org = int(request.args['org'])
     temp = int(request.args['template'])
     form = RatingForm(request.form)
-    ql = Category.query.get(cat)
-    queslist = ql.getQuestions()
+#   cat = Template.query.get(temp)
+    ql = Category.query.filter(Category.templateid == temp).all()
+#    queslist = ql.getQuestions()
+    queslist = []
+    for q in ql:
+      queslist = q.getQuestions()
     if form.validate_on_submit():
         a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
         db.session.add(a)
@@ -187,8 +188,8 @@ def select_vis():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     orgs = Organization.query.all()
-    cats = Category.query.all()
-    return render_template('select_vis.html', title='Select Visual', cats=cats, orgs=orgs)
+    temp = Template.query.all()
+    return render_template('select_vis.html', title='Select Visual', temp=temp, orgs=orgs)
 
 
 @app.route('/select_timestamp', methods=['GET'])
@@ -196,12 +197,14 @@ def select_timestamp():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     orgs = int(request.args['orgs'])
-    cats = int(request.args['cats'])
+    temp = int(request.args['temp'])
+    cats = Category.query.filter(Category.templateid == temp)
     form = SelectTimestampForm()
-    assess_deets = Assessment.query.filter((Assessment.cat == cats) & (Assessment.organization_id == orgs)).all()
+    assess_deets = Assessment.query.filter((Assessment.temp == temp) & (Assessment.organization_id == orgs)).all()
+   
 #   assess_cat = Assessment.query.filter(Assessment.cat == Category.query.get(cats)).all()
 #   assess_org = Assessment.query.filter(Assessment.organization_id == Organization.query.get(orgs)).all()
-    return render_template('select_timestamp.html', title='Relevant Assessments',  form=form, assess_deets=assess_deets)
+    return render_template('select_timestamp.html', title='Relevant Assessments',  form=form, assess_deets=assess_deets, cats=cats)
     
 @app.route('/view_single_assessment', methods=['GET','POST'])
 def view_single_assessment():
@@ -209,8 +212,10 @@ def view_single_assessment():
         return redirect(url_for('login'))
     form = ViewSingleAssessmentForm()
     if request.method == "POST":
-        ad = request.form["select"]
+        ad = int(request.form["select"])
     assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
+    for a in assessdetails:
+        print(a)
     return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetails)
 
 @app.route('/multi_vis',methods=['GET'])

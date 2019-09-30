@@ -65,7 +65,7 @@ class Rating(db.Model):
     quest = db.relationship("Question")
 
     def __repr__(self):
-        return '<Rating {0} {1} {2}>'.format(Question.query.get(self.question_id).name, Asessment.query.get(self.assessment_id.id), self.rating)
+        return '<Rating {0} {1} {2}>'.format(Question.query.get(self.question_id).name, Assessment.query.get(self.assessment_id), self.rating)
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
