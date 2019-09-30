@@ -1,9 +1,9 @@
 from webapp import app, db
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from werkzeug.urls import url_parse
-from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, AssessmentDetailForm, ResetPasswordForm, DeleteQuestionsForm, SelectTimestampForm, ViewSingleAssessmentForm
+from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, RatingForm, ResetPasswordForm, DeleteQuestionsForm, SelectTimestampForm, ViewSingleAssessmentForm
 from flask_login import current_user, login_user, logout_user, login_required
-from webapp.models import User_account, Category, Organization, Question, Assessment, AssessmentDetail, category_list
+from webapp.models import UserAccount, Category, Organization, Question, Assessment, Rating, Template
 
 
 @app.route('/')
@@ -157,8 +157,8 @@ def select_assessment_category():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     org = Organization.query.all()
-    cat = Category.query.all()
-    return render_template('select_assessment_category.html', title='Select Template', org=org, cat=cat)
+    temp = Template.query.all()
+    return render_template('select_assessment_category.html', title='Select Template', org=org, temp=temp)
 
 
 @app.route('/assess',methods=['GET','POST'])
@@ -166,16 +166,16 @@ def assess():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     org = int(request.args['org'])
-    cat = int(request.args['category'])
-    form = AssessmentDetailForm(request.form)
+    temp = int(request.args['template'])
+    form = RatingForm(request.form)
     ql = Category.query.get(cat)
     queslist = ql.getQuestions()
     if form.validate_on_submit():
-        a = Assessment(user_id=current_user.id, organization_id=org, cat=cat)
+        a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
         db.session.add(a)
         db.session.commit()
         for q in queslist:
-            obj = AssessmentDetail(assessment_id=a.id, question_id=q.id,rating=request.form[str(q.id)])
+            obj = Rating(assessment_id=a.id, question_id=q.id,rating=request.form[str(q.id)])
             db.session.add(obj)
         db.session.commit()
         flash('Success')
@@ -210,7 +210,7 @@ def view_single_assessment():
     form = ViewSingleAssessmentForm()
     if request.method == "POST":
         ad = request.form["select"]
-    assessdetails = AssessmentDetail.query.filter(ad == AssessmentDetail.assessment_id).all()
+    assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
     return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetails)
 
 @app.route('/multi_vis',methods=['GET'])
@@ -219,10 +219,10 @@ def multi_vis():
         return redirect(url_for('login'))
     organization_id = int(request.args['org'])
     # assessmentList = Assessment.query.all()
-    AssessmentDetail = AssessmentDetail.query.all()
+    Rating = Rating.query.all()
     assessDict = {}
     ratingdict = {}
-    for q in AssessmentDetail:
+    for q in Rating:
         if q.assessment.organization.id == organization_id:
             if q.assessment.id not in assessDict:
                 q.count = 1

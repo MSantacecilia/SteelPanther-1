@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, HiddenField, DateTimeField, SelectField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
-from webapp.models import User_account
+from webapp.models import UserAccount
 
 
 class RegistrationForm(FlaskForm):
@@ -56,7 +56,7 @@ class QuestionForm(FlaskForm):
 class AssessmentForm(FlaskForm):
     submit = SubmitField('Add Assessment')
 
-class AssessmentDetailForm(FlaskForm):
+class RatingForm(FlaskForm):
     submit = SubmitField('Submit')
 	
 class DeleteQuestionsForm(FlaskForm):

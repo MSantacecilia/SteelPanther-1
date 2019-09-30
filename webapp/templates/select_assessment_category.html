@@ -18,10 +18,10 @@
                 {% endfor %}
             </select>
         </p><br><br>
-        <p><label>Choose Category:</label></p>
-        <p><select name="category">
+        <p><label>Choose Template:</label></p>
+        <p><select name="template">
                 <option></option>
-                {% for entry in cat %}
+                {% for entry in temp %}
                 <option value="{{entry.id}}">{{ entry.name }}</option>
                 {% endfor %}
             </select>
