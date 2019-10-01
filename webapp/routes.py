@@ -398,7 +398,7 @@ def transform_view():
             question = Question.query.filter_by(name=question_name, category_id=category_id).first()
 
             if question is None:
-                question = Question(name=question_name, category_id=category_id, maximum=question_max)
+                question = Question(name=question_name, category_id=category_id)
                 db.session.add(question)
                 db.session.commit()
 
