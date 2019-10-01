@@ -94,15 +94,15 @@ def add_category():
         return redirect(url_for('login'))
     if not current_user.is_admin():
         return redirect(url_for('index'))
-
     form = CategoryForm()
+    temp = Template.query.all()
     if form.validate_on_submit():
-        cat = Category(name=form.name.data)
+        cat = Category(name=form.name.data, templateid=request.form['temp'])
         db.session.add(cat)
         db.session.commit()
         flash('Success')
         return redirect(url_for('add_question'))
-    return render_template('add_category.html', title='Add Category', form=form)
+    return render_template('add_category.html', title='Add Category', form=form, temp=temp)
 
 @app.route('/test_category',methods=['GET','POST'])
 # Agile, Cloud, Devop
@@ -166,11 +166,15 @@ def assess():
     temp = int(request.args['template'])
     form = RatingForm(request.form)
 #   cat = Template.query.get(temp)
-    ql = Category.query.filter(Category.templateid == temp).all()
+    categorylist = []
+    cl = Category.query.filter(Category.templateid == temp).all()
+    categorylist.append(cl)
+    print(categorylist)
 #    queslist = ql.getQuestions()
     queslist = []
-    for q in ql:
-      queslist = q.getQuestions()
+    for cat in categorylist:
+        for question in cat:
+            queslist.extend(question.getQuestions())
     if form.validate_on_submit():
         a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
         db.session.add(a)
@@ -265,7 +269,14 @@ def delete_question():
         form.categories.choices = [(category.id, category.name) for category in Category.query.all()]
         categories = Category.query.all()
         return render_template('delete_question.html', title='Delete Question', form=form, categories=categories)
-		
+
+@app.route('/guidelines', methods=['GET', 'POST'])
+def filter_guidelines():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    guidelines = Guidelines.query.all()
+    return render_template()('guidelines.html', title='Guidelines for Rating', guidelines=guidelines)
+
 @app.route('/filter_questions/<categoryId>')
 def filter_questions(categoryId):
     questions = Question.query.filter_by(category_id=categoryId).all()
