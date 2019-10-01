@@ -171,7 +171,6 @@ def assess():
     categorylist = []
     cl = Category.query.filter(Category.templateid == temp).all()
     categorylist.append(cl)
-    print(categorylist)
 #    queslist = ql.getQuestions()
     queslist = []
     for cat in categorylist:

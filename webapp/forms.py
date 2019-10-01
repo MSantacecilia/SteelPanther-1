@@ -52,7 +52,6 @@ class QuestionForm(FlaskForm):
     name = StringField('Question', validators=[DataRequired()], render_kw={'autofocus': True})
     submit = SubmitField('Add Question')
 
-
 class AssessmentForm(FlaskForm):
     submit = SubmitField('Add Assessment')
 
