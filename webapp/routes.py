@@ -229,6 +229,10 @@ def assess():
     for cat in categorylist:
         queslist.extend(cat.getQuestions())
 
+    guidelist = []
+    for ques in queslist:
+        guidelist.extend(ques.getGuidelines())
+
     if form.validate_on_submit():
         a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
         db.session.add(a)

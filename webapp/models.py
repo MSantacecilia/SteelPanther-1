@@ -75,6 +75,9 @@ class Question(db.Model):
 
     def __repr__(self):
         return '<Question {0}>'.format(self.name)
+
+    def getGuidelines(self):
+        return Guideline.query.filter(Guideline.quest_id == self.id).all()
     
 class Guideline(db.Model):
     id = db.Column(db.Integer, primary_key=True)
