@@ -1,9 +1,11 @@
 from webapp import app, db
-from flask import render_template, flash, redirect, url_for, request, jsonify
+from flask import render_template, flash, redirect, url_for, request, jsonify, make_response
 from werkzeug.urls import url_parse
 from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, RatingForm, ResetPasswordForm, DeleteQuestionsForm, SelectTimestampForm, ViewSingleAssessmentForm
 from flask_login import current_user, login_user, logout_user, login_required
-from webapp.models import UserAccount, Category, Organization, Question, Assessment, Rating, Template
+from webapp.models import UserAccount, Category, Organization, Question, Assessment, Rating, Template, Guideline
+import io,csv
+from sqlalchemy import and_
 
 
 @app.route('/')
@@ -21,7 +23,7 @@ def register():
     if form.validate_on_submit():
         # if form.manager.data is True:
         #     manager_status = 1
-        user = User_account(username=form.username.data, email=form.email.data)
+        user = UserAccount(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
@@ -37,7 +39,7 @@ def login():
     
     form = LoginForm()
     if form.validate_on_submit():
-        user = User_account.query.filter_by(username=form.username.data).first()
+        user = UserAccount.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
@@ -302,7 +304,65 @@ def delete_selected_questions(questionId):
         db.session.commit()
         return jsonify({'result': "success"})
     except Exception as e:
-        return jsonify("result", "failure")	
+        return jsonify("result", "failure")
+
+@app.route('/transform', methods=["POST"])
+def transform_view():
+    f = request.files['data_file']
+    if not f:
+        return "No file"
+    stream = io.StringIO(f.stream.read().decode("UTF8"), newline=None)
+    csv_input = csv.reader(stream)
+    currentRow = 1
+    firstRow = 10
+    # TODO first, create/find template id
+    template_name = 'NewTemplate'
+    template = Template(name=template_name)
+    db.session.add(template)
+    db.session.commit()
+    template_id = template.id
+    category_id = -1
+    # TODO should we store a list of items to add first, or will this work?
+    for row in csv_input:
+        if currentRow < firstRow:
+            currentRow = currentRow + 1
+            continue
+        # Look at category, create if it does not yet exist
+        if row[1] == "":
+            category_name = row[0]
+            category = Category.query.filter_by(name=category_name).filter_by(templateid=template_id).first()
+            if category is None:
+                category = Category(name=category_name, templateid=template_id)
+                db.session.add(category)
+                db.session.commit()
+            category_id = category.id
+            db.session.commit()
+        # Look at question, create if it does not yet exist
+        else:
+            question_name = row[0]
+            question_max = int(row[2])
+            print(question_max)
+            question_weightage = row[4]
+            question = Question.query.filter_by(name=question_name, category_id=category_id).first()
+            if question is None:
+                question = Question(name=question_name, category_id=category_id)
+                db.session.add(question)
+                db.session.commit()
+                question_id = question.id
+                guidelines = row[1].split('\n')
+                for i in range(question_max+1):
+                    guideline = Guideline(guideline=guidelines[i], quest_id=question_id)
+                    db.session.add(guideline)
+                    db.session.commit()
+    
+    stream.seek(0)
+    result = transform(stream.read())
+    response = make_response(result)
+    response.headers["Content-Disposition"] = "attachment; filename=result.csv"
+    return response
+	
+def transform(text_file_contents):
+    return text_file_contents.replace("=", ",")		
 
 #TODO
 # def export_csv():
