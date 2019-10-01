@@ -326,6 +326,7 @@ def filter_questions(categoryId):
     questions = Question.query.filter_by(category_id=categoryId).all()
     questionsArray = []
     for question in questions:
+        # TODO add question.maximum to the objects
         questionObj = {}
         questionObj["id"] = question.id
         questionObj["name"] = question.name
@@ -355,53 +356,63 @@ def transform_view():
         return "No file"
     stream = io.StringIO(f.stream.read().decode("UTF8"), newline=None)
     csv_input = csv.reader(stream)
+
+    # Keep track of row to skip the first 10 rows
     currentRow = 1
     firstRow = 10
-    # TODO first, create/find template id
+
+    # Add a template to the database
+    # TODO use input field to get the actual name of the template
     template_name = 'NewTemplate'
     template = Template(name=template_name)
     db.session.add(template)
     db.session.commit()
+
+    # Use the id to create new categories and questions
     template_id = template.id
     category_id = -1
-    # TODO should we store a list of items to add first, or will this work?
+
     for row in csv_input:
         if currentRow < firstRow:
             currentRow = currentRow + 1
             continue
-        # Look at category, create if it does not yet exist
+
+        # This row corresponds to a category
         if row[1] == "":
             category_name = row[0]
-            category = Category.query.filter_by(name=category_name).filter_by(templateid=template_id).first()
+            category = Category.query.filter_by(name=category_name, templateid=template_id).first()
+
             if category is None:
                 category = Category(name=category_name, templateid=template_id)
                 db.session.add(category)
                 db.session.commit()
+
+            # This will be used to create questions if necessary
             category_id = category.id
-            db.session.commit()
-        # Look at question, create if it does not yet exist
+
+        # This row corresponds to a question
         else:
             question_name = row[0]
             question_max = int(row[2])
-            print(question_max)
             question_weightage = row[4]
             question = Question.query.filter_by(name=question_name, category_id=category_id).first()
+
             if question is None:
-                question = Question(name=question_name, category_id=category_id)
+                question = Question(name=question_name, category_id=category_id, maximum=question_max)
                 db.session.add(question)
                 db.session.commit()
+
+                # A new question also means the guidelines must be added
                 question_id = question.id
                 guidelines = row[1].split('\n')
-                for i in range(question_max+1):
-                    guideline = Guideline(guideline=guidelines[i], quest_id=question_id)
+
+                for g in guidelines:
+                    guideline = Guideline(guideline=g, quest_id=question_id)
                     db.session.add(guideline)
-                    db.session.commit()
+
+                db.session.commit()
     
-    stream.seek(0)
-    result = transform(stream.read())
-    response = make_response(result)
-    response.headers["Content-Disposition"] = "attachment; filename=result.csv"
-    return response
+    return ""
 	
 def transform(text_file_contents):
     return text_file_contents.replace("=", ",")		
