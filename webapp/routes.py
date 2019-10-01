@@ -175,7 +175,6 @@ def assess():
     for cat in categorylist:
         for question in cat:
             queslist.extend(question.getQuestions())
-    print(queslist)
     if form.validate_on_submit():
         a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
         db.session.add(a)
