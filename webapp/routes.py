@@ -173,8 +173,9 @@ def assess():
 #    queslist = ql.getQuestions()
     queslist = []
     for cat in categorylist:
-        for q in cat:
-            queslist = q.getQuestions()
+        for question in cat:
+            queslist.extend(question.getQuestions())
+    print(queslist)
     if form.validate_on_submit():
         a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
         db.session.add(a)
@@ -185,7 +186,7 @@ def assess():
         db.session.commit()
         flash('Success')
         return redirect(url_for('select_assessment_category'))
-    return render_template('assess.html', title='Assessment', form=form, ql=categorylist)
+    return render_template('assess.html', title='Assessment', form=form, ql=queslist)
 
 @app.route('/select_vis', methods=['GET'])
 def select_vis():
