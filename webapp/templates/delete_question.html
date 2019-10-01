@@ -1,11 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Delete Question</title>
-</head>
-<body>
+{% extends "navbar.html" %}
 
+
+
+
+{% block content %}
+
+
+    <div class="form-style-10" style="margin-top: 10%;">
+
+    <h1>Delete Questions</h1>
     <p><select id="category_select">
         <option disabled=true>Select Category</option>
         {% for category in categories %}
@@ -13,13 +16,21 @@
         {% endfor %}
         </select>
     </p>
-    <table id="questions_table" >
-        <tr>
-            <th>Questions</th>
-            <th></th>
-            <th></th>
-        </tr>
+    <table  class="table table-light" id="questions_table" >
+         <thead class="thead-dark">
+
     </table>
+    </div>
+
+    <div>
+        <h1>Transform a file demo</h1>
+
+                <form action="/transform" method="post" enctype="multipart/form-data">
+                    <input type="file" name="data_file" />
+                    <input type="submit" />
+                </form>
+    </div>
+
 
     <script>
         let category_select = document.getElementById("category_select");
@@ -40,9 +51,10 @@
                     let questionHTML = '<tr><th>Question</th><th></th><th></th></tr>';
                     for(let question of data.questions){
                         questionHTML += '<tr><td>'+ question.name +'</td>'
-                        questionHTML += '<td><button onclick="editQuestion('+ question.id +')">Edit</button></td>'
-                        questionHTML += '<td><button onclick="deleteQuestion('+ question.id +')">Delete</button></td></tr>'
+                        questionHTML += '<td><button class="btn btn-info btn-sm" onclick="editQuestion('+ question.id +')">Edit</button></td>'
+                        questionHTML += '<td><button class="btn btn-info btn-sm" onclick="deleteQuestion('+ question.id +')">Delete</button></td></tr>'
                     }
+
                     questions_table.innerHTML = questionHTML;
                 });
             });
@@ -83,5 +95,5 @@
          }
 
     </script>
-</body>
-</html>
+
+{% endblock %}
