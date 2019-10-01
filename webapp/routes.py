@@ -5,7 +5,7 @@ from webapp.forms import LoginForm, RegistrationForm, CategoryForm, Organization
 from flask_login import current_user, login_user, logout_user, login_required
 from webapp.models import UserAccount, Category, Organization, Question, Assessment, Rating, Template, Guideline
 import io,csv
-from sqlalchemy import and_
+from sqlalchemy import and_, subquery
 
 
 @app.route('/')
@@ -210,29 +210,16 @@ def assess():
     temp = int(request.args['template'])
     form = RatingForm(request.form)
 #   cat = Template.query.get(temp)
-#     categorylist = []
-#     cl = Category.query.filter(Category.templateid == temp).all()
-#     categorylist.append(cl)
-#     print(categorylist)
-# #    queslist = ql.getQuestions()
-#     queslist = []
-#     for cat in categorylist:
-#         print("in cat list: ")
-#         print(cat)
-#         for question in cat:
-#             queslist.extend(question.getQuestions())
-
-    categorylist = Category.query.filter(Category.templateid == temp).all()
-    print(categorylist)
+    categorylist = []
+    cl = Category.query.filter(Category.templateid == temp).all()
+    categorylist.append(cl)
+    counter = 0
 #    queslist = ql.getQuestions()
     queslist = []
     for cat in categorylist:
-        queslist.extend(cat.getQuestions())
-
-    guidelist = []
-    for ques in queslist:
-        guidelist.extend(ques.getGuidelines())
-
+        counter += 1
+        for question in cat:
+            queslist.extend(question.getQuestions())
     if form.validate_on_submit():
         a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
         db.session.add(a)
@@ -243,7 +230,7 @@ def assess():
         db.session.commit()
         flash('Success')
         return redirect(url_for('select_assessment_category'))
-    return render_template('assess.html', title='Assessment', form=form, ql=queslist)
+    return render_template('assess.html', title='Assessment', form=form, ql=queslist, counter=counter)
 
 @app.route('/select_vis', methods=['GET'])
 def select_vis():
@@ -275,10 +262,10 @@ def view_single_assessment():
     form = ViewSingleAssessmentForm()
     if request.method == "POST":
         ad = int(request.form["select"])
-    assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
-    for a in assessdetails:
-        print(a)
-    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetails)
+    assessdetail = db.session.query(Rating, Question, Guideline).filter(ad == Rating.assessment_id).filter(Rating.question_id == Question.id).filter(Question.id == Guideline.quest_id).all()
+    print(assessdetail)
+#    assessd = Guideline.query.outerjoin(subq, Guideline.quest_id == subq.rating_question_id)
+    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetail)
 
 @app.route('/multi_vis',methods=['GET'])
 def multi_vis():
