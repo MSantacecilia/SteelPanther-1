@@ -210,15 +210,25 @@ def assess():
     temp = int(request.args['template'])
     form = RatingForm(request.form)
 #   cat = Template.query.get(temp)
-    categorylist = []
-    cl = Category.query.filter(Category.templateid == temp).all()
-    categorylist.append(cl)
+#     categorylist = []
+#     cl = Category.query.filter(Category.templateid == temp).all()
+#     categorylist.append(cl)
+#     print(categorylist)
+# #    queslist = ql.getQuestions()
+#     queslist = []
+#     for cat in categorylist:
+#         print("in cat list: ")
+#         print(cat)
+#         for question in cat:
+#             queslist.extend(question.getQuestions())
+
+    categorylist = Category.query.filter(Category.templateid == temp).all()
     print(categorylist)
 #    queslist = ql.getQuestions()
     queslist = []
     for cat in categorylist:
-        for question in cat:
-            queslist.extend(question.getQuestions())
+        queslist.extend(cat.getQuestions())
+
     if form.validate_on_submit():
         a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
         db.session.add(a)
@@ -393,12 +403,13 @@ def transform_view():
         # This row corresponds to a question
         else:
             question_name = row[0]
-            question_max = int(row[2])
+            # question_max = int(row[2])
             question_weightage = row[4]
             question = Question.query.filter_by(name=question_name, category_id=category_id).first()
 
             if question is None:
-                question = Question(name=question_name, category_id=category_id, maximum=question_max)
+                # question = Question(name=question_name, category_id=category_id, maximum=question_max)
+                question = Question(name=question_name, category_id=category_id)
                 db.session.add(question)
                 db.session.commit()
 
