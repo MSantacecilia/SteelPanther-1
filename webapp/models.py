@@ -70,6 +70,7 @@ class Rating(db.Model):
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
+    maximum = db.Column(db.Integer, default=3)
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'), nullable=False)
     guideline = db.relationship('Guideline', backref='question', lazy='dynamic')
 
