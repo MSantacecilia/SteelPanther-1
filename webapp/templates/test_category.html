@@ -3,7 +3,7 @@
 
 {% block head %}
   {{super()}}
-  <link rel="stylesheet" href="{{url_for('static',filename='css/test_category.css')}}">
+
 {% endblock %}
 
 
@@ -24,7 +24,7 @@
                             <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
                             <input class="form-control" type="text" placeholder="Search"
                             aria-label="Search" style="width:95%">
-                        </form
+                        </form>
                             <br>
                     </div>
                     <div class="col-md-3 col-xs-3">  
@@ -75,11 +75,17 @@
                             </td>
                         </tr>
                         {% endfor %}
+                        <button data-toggle="collapse" data-target="#demo">Collapsible</button>
+                        <div id="demo" class="collapse">
+                            Lorem ipsum dolor text....
+                        </div>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+
+
     
 <div id="cat_modal" class="modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
@@ -105,6 +111,7 @@
     </div>
 </div>
 
+
 {% for category in categories%}
 <div id="modaledit{{category.id}}" class="modal fade" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
@@ -129,6 +136,7 @@
             </div>
         </div>
     </div>
-{% endfor %} 
+{% endfor %}
+
 
 {% endblock %}

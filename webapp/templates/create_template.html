@@ -1,7 +1,24 @@
 {% extends "base.html" %}
 
+
 {% block content %}
-    <h1>Create Assessment Template</h1>
+
+
+
+
+
+    <div class="container-fluid" id="sidebar">
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-1">
+                {% include 'navbar.html' %}
+            </div>
+            <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main">
+
+
+                <div class="row align-items-center">
+
+                    <div class="col-md-9 col-xs-9">
+
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
