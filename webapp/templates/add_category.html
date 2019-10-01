@@ -21,6 +21,14 @@
             <span style="color: red;">[{{ error }}]</span>
             {% endfor %}
         </p><br><br>
+        <p>
+            <select name="temp">\
+            <option>Select Template</option>
+                {% for t in temp %}
+                <option class="dropdown" value="{{t.id}}">{{t.name}}</option>
+                {% endfor %}
+            </select>
+        </p><br><br>
         <p>{{ form.submit() }}</p>
         </div>
     </form>

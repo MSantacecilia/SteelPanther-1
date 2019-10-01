@@ -21,12 +21,14 @@
                             <th>Question</th>
                             <th>Rating</th>
                         </tr>
-                        {% for q in ql %}
-                            <tr>
-                                <td>{{q.category.name}}</td>
-                                <td>{{q.name}}</td>
-                                <td><input id="{{q.id}}" name="{{q.id}}" type="number" max=3 min=0 required=true></td>
-                            </tr>
+                        {% for ql in questionlist %}
+                            {% for q in ql %}
+                                <tr>
+                                    <td>{{q.category.name}}</td>
+                                    <td>{{q.name}}</td>
+                                    <td><input id="{{q.id}}" name="{{q.id}}" type="number" max=3 min=0 required=true></td>
+                                </tr>
+                            {% endfor %}
                         {% endfor %}
                     </table>
 <br><br>
