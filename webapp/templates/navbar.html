@@ -1,21 +1,4 @@
-
-
-<!DOCTYPE html>
-<html lang="en">
-<head><title>Wipro Organization Assessment</title>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <link rel="stylesheet" href="{{url_for('static',filename='styles/login_style.css')}}">
-    <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{{url_for('static',filename='styles/styles.css')}}">
-    <script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-
-    <script type="text/javascript">
+<script type="text/javascript">
         $(function() {
             // this will get the full URL at the address bar
             var url = window.location.href;
@@ -32,26 +15,18 @@
         });
     </script>
 
-
-</head>
-
-
-<body>
-
-
-
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
 
 
 <div id='cssmenu'>
-    <center><img style="vertical-align: bottom;" height="70%" width="70%" class="wiproLogo" src="../static/wiproLogo.png"></center>
+    <center><img style="vertical-align: bottom;" height="30%" width="30%" class="wiproLogo" src="../static/wiproLogo.png"></center>
     <ul>
         <li><a href="{{ url_for('index') }}"><span><i class="material-icons" style="top: 3px;position: relative">home</i>Home</span></a></li>
         <li><a href="{{ url_for('select_assessment_category') }}"><span><i class="material-icons" style="top: 3px;position: relative">done</i>Assessment</span></a></li>
         <li><a href="{{ url_for('select_vis') }}"><span><i class="material-icons" style="top: 3px;position: relative">bar_chart</i>Visualization</span></a></li>
+        <li class='last'><a href="{{ url_for('test_category') }}"><span><i class="material-icons" style="top: 3px;position: relative">build</i>Category</span></a></li>
         <li class='last'><a href='{{ url_for('add_question') }}'><span><i class="material-icons" style="top: 3px;position: relative">question_answer</i>Question</span></a></li>
-        <li class='last'><a href="{{ url_for('test_category') }}"><span><i class="material-icons" style="top: 3px;position: relative">build</i>Test Category</span></a></li>
         <li class='last'><a href='{{ url_for('add_organization') }}'><span><i class="material-icons" style="top: 3px;position: relative">home_work</i>Organization</span></a></li>
         <li class='last'><a href='#'><span><i class="material-icons">perm_identity</i>My Account</span></a>
             <ul>
@@ -71,18 +46,3 @@
         </li>
     </ul>
 </div>
-
-
-<div class="container h-100" style="margin-left: 40%;">
-    <div class="row h-100 justify-content-center align-items-center">
-{% block content %}
-
-
-
-
-{% endblock %}
-    </div></div>
-
-</body>
-
-</html>

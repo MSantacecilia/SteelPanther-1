@@ -1,27 +1,37 @@
-{% extends "navbar.html" %}
-
-
-
-
-
-<link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
-
+{% extends "base.html" %}
 
 
 {% block content %}
 
 
+
+
+
+    <div class="container-fluid" id="sidebar" style="color: white;">
+    <div class="row">
+    <div class="col-xs-4 col-sm-4 col-md-1">
+        {% include 'navbar.html' %}
+    </div>
+    <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main">
+
+
+    <div class="row align-items-center">
+
+    <div class="col-md-9 col-xs-9">
+
   <div class="index_format">
 
 
-    <h1>Hello, {{ current_user.username }} and welcome to Steel Panther, Wipro's finest organization assessment application.  Please click an option to the left!</h1>
+    <h1 style="margin-top:150px; margin-left:120px;">Hello, {{ current_user.username }}!</h1>
     {% for post in posts %}
         <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
 
     {% endfor %}
 
-</div>
+    <h3 style="text-align:center; padding-left:-200px;">Welcome to Steel Panther, Wipro's finest organization assessment application.</h3>
 
+  </div></div></div></div></div></div>
+<!-- \* hellloooooo */ -->
 
 
 

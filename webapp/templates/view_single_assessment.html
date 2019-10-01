@@ -1,7 +1,26 @@
-{% extends "navbar.html" %}
+{% extends "base.html" %}
+
 
 {% block content %}
-<div class="form-style-10" style="margin-top: 10%;">
+
+
+
+
+
+    <div class="container-fluid" id="sidebar" style="color: white;">
+    <div class="row">
+    <div class="col-xs-4 col-sm-4 col-md-1">
+        {% include 'navbar.html' %}
+    </div>
+    <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main">
+
+
+    <div class="row align-items-center">
+
+    <div class="col-md-9 col-xs-9">
+
+
+<div class="form-style-10">
 
     <h1>Assessment Information</h1>
 
@@ -14,7 +33,7 @@
 
                 {{ form.csrf_token }}
                 <p>
-                <table align="center" style="border-spacing: 50px;width: 250px;">
+                <table align="center" style="border-spacing: 50px;width: 250px; margin-left:10px;">
                     <tr>
                         <th>Question</th>
                         <th>Rating</th>
@@ -27,10 +46,10 @@
                     {% endfor %}
                 </table>
 <br><br>
-                
+
 
 
     </form>
 
-
+        </div></div></div></div></div></div></div></div>
 {% endblock %}
