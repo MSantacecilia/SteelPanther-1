@@ -240,9 +240,7 @@ def assess():
 #         print(cat)
 #         for question in cat:
 #             queslist.extend(question.getQuestions())
-
     categorylist = Category.query.filter(Category.templateid == temp).all()
-    print(categorylist)
     queslist = []
     for cat in categorylist:
         queslist.extend(cat.getQuestions())
@@ -252,13 +250,17 @@ def assess():
         guidelist.extend(ques.getGuidelines())
 
     if form.validate_on_submit():
+        print(temp)
         a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
+        print(a.temp)
         db.session.add(a)
         db.session.commit()
-
         for q in queslist:
-            print(q.name)
-            obj = Rating(assessment_id=a.id, question_id=q.id,rating=request.form[str(q.id)])
+#            rating = Rating.query.filter(Rating.question_id == )
+            print(q.id)
+            if request.method == "POST":
+                rate = int(request.form['rating' + str(q.id)])
+            obj = Rating(assessment_id=a.id, question_id=q.id, rating=rate)
             db.session.add(obj)
         db.session.commit()
         flash('Success')
