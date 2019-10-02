@@ -1,5 +1,9 @@
 {% extends "base.html" %}
-
+{% block head %}
+    {{super()}}
+    <link rel="stylesheet" href="{{url_for('static',filename='css/assess.css')}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% endblock %}
 
 {% block content %}
 
@@ -12,22 +16,74 @@
     <div class="col-xs-4 col-sm-4 col-md-1">
         {% include 'navbar.html' %}
     </div>
-    <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main">
+    <div class="col-xs-8 col-xs-offset-2 col-sm-8 col-sm-offset-2 col-md-8 col-md-offset-2 main">
 
 
     <div class="row align-items-center">
 
-    <div class="col-md-9 col-xs-9">
+    <div class="col-md-12 col-xs-12">
 
     <div class="form-style-10">
 
         <h1>Assessment</h1>
 
         <div id="Content">
-
             <div class="inner-wrap">
+                <!-- ================================================================================== -->
+                {% for c in cl %}
+                <div>
+                    <button class="btn btn-outline-secondary btn-block" type="button" data-toggle="collapse" data-target="#{{c.id}}" aria-expanded="false" aria-controls="collapseExample" style="border-radius:0; font-weight: bold;">
+                        {{ c.name }}
+                    </button>
+                </div>
+                <div class="collapse" id="{{c.id}}">
+                    <div class="card card-body">
+                        <table>
+                                <form action="" method="POST" class="form">
+                        {% for q in ql %}
+                        {% if q.category_id == c.id %}
+                            <tr>
+                            <td style="font-weight:bold;">{{ q.name }} </td>
+                            {% set count = [0] %}
+                            <td>
+                                    <div class="form-group">
+                            {% for g in gl %}
+                            {% if g.quest_id == q.id %}
+                                {% set c = count.pop() %}
+                                
+                                    {% if c==0 %}
+                                        <input type="radio" name="rating{{q.category_id}}" value="{{ c }}" checked> {{ g.guideline }} <br>
+                                    {% else %}
+                                        <input type="radio" name="rating{{q.category_id}}" value="{{ c }}"> {{ g.guideline }} <br>
+                                    {% endif %}
+                                
+                                
+                                {% if count.append(c + 1) %}{% endif %}
+                              
+                            {% endif %}
+                            {% endfor %}
+                                <textarea class="form-control" id="observation" placeholder="Enter your observation here" rows="2"></textarea>
+                            </div>
+                            <tr>
+                                <td colspan="2"><hr/></td>
+                            </tr>
+                            
+                        
+                        </td>
+                    </tr> 
+                        {% endif %}
+                        {% endfor %}
+                        <tr>
+                            <td colspan="2"><button type="submit" class="btn btn-success btn-block">Submit</button></td></tr>
+                        
+                    </form>
+                        </table>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- ================================================================================== -->
 
-        <form action="" method="post">
+        <!-- <form action="" method="post">
             {{ form.hidden_tag() }}
 
                     {{ form.csrf_token }}
@@ -38,6 +94,11 @@
                             <th>Question</th>
                             <th>Rating</th>
                         </tr>
+                        {% for c in cl %}
+                        <tr>
+                            <td> {{ c.name }}</td>
+                        </tr>
+                        {% endfor %}
                         {% for q in ql %}
                             <tr>
                                 <td>{{ q.category.name }}</td>
@@ -50,8 +111,14 @@
                     <p align="center">{{ form.submit() }}</p>
 
 
-        </form>
-            </div></div></div></div></div></div></div></div>
+        </form> -->
+        <br>
+        <button type="submit" class="btn btn-success btn-block">Submit</button>
+            </div>
+        </div>
+            
+        </div>
+        </div></div></div></div></div>
 
 
 {% endblock %}
