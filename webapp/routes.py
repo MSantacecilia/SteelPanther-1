@@ -224,22 +224,27 @@ def assess():
 
     categorylist = Category.query.filter(Category.templateid == temp).all()
     print(categorylist)
-#    queslist = ql.getQuestions()
     queslist = []
     for cat in categorylist:
         queslist.extend(cat.getQuestions())
+
+    guidelist = []
+    for ques in queslist:
+        guidelist.extend(ques.getGuidelines())
 
     if form.validate_on_submit():
         a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
         db.session.add(a)
         db.session.commit()
+
         for q in queslist:
+            print(q.name)
             obj = Rating(assessment_id=a.id, question_id=q.id,rating=request.form[str(q.id)])
             db.session.add(obj)
         db.session.commit()
         flash('Success')
         return redirect(url_for('select_assessment_category'))
-    return render_template('assess.html', title='Assessment', form=form, ql=queslist)
+    return render_template('assess.html', title='Assessment', form=form, ql=queslist, cl=categorylist, gl=guidelist)
 
 @app.route('/select_vis', methods=['GET'])
 def select_vis():
