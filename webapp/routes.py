@@ -218,6 +218,7 @@ def select_assessment_category():
     org = Organization.query.all()
     temp = Template.query.all()
     gl = Guideline.query.all()
+    flash('Successful assessment')
     return render_template('select_assessment_category.html', title='Select Template', org=org, temp=temp, gl=gl)
 
 
@@ -259,9 +260,12 @@ def assess():
 #            rating = Rating.query.filter(Rating.question_id == )
             print(q.id)
             if request.method == "POST":
-                rate = int(request.form['rating' + str(q.id)])
-            obj = Rating(assessment_id=a.id, question_id=q.id, rating=rate)
-            db.session.add(obj)
+                #print(request.form['rating' + str(q.id)])
+                if 'rating' + str(q.id) in request.form:
+                    rate = int(request.form['rating' + str(q.id)])
+                    print(rate)
+                    obj = Rating(assessment_id=a.id, question_id=q.id, rating=rate)
+                    db.session.add(obj)
         db.session.commit()
         flash('Success')
         return redirect(url_for('select_assessment_category'))
