@@ -30,8 +30,9 @@
             {{ form.csrf_token }}
         <div id="Content">
             <div class="inner-wrap">
-                <!-- ================================================================================== -->
-                {% for c in cl %}
+                {% for o1 in categories %}
+                {% set c = o1.data %}
+                {% set qList = o1.info %}
                 <div>
                     <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#{{c.id}}" aria-expanded="false" aria-controls="collapseExample" style="border-radius:0; font-weight: bold;background-color: black; font-size:15px;">
                         {{ c.name }}
@@ -40,15 +41,16 @@
                 <div class="collapse" id="{{c.id}}">
                     <div class="card card-body">
                         <table>
-                        {% for q in ql %}
-                        {% if q.category_id == c.id %}
+                        {% for o2 in qList %}
+                        {% set q = o2.data %}
+                        {% set gList = o2.info %}
                             <tr>
                             <td style="font-weight:bold;">{{ q.name }} </td>
                             {% set count = [0] %}
                             <td>
                                     <div class="form-group">
-                            {% for g in gl %}
-                            {% if g.quest_id == q.id %}
+                            {% for o3 in gList %}
+                            {% set g = o3.data %}
                                 {% set c = count.pop() %}
                                 
                                     {% if c==0 %}
@@ -60,7 +62,6 @@
                                 
                                 {% if count.append(c + 1) %}{% endif %}
                               
-                            {% endif %}
                             {% endfor %}
                                 <textarea class="form-control" id="observation" placeholder="Enter your observation here" rows="2"></textarea>
                             </div>
@@ -71,7 +72,6 @@
                         
                         </td>
                     </tr> 
-                        {% endif %}
                         {% endfor %}
                         <tr>
                             <td colspan="2"><button type="submit" class="btn btn-success btn-block">Submit</button></td></tr>
@@ -81,39 +81,8 @@
                     </div>
                 </div>
                 {% endfor %}
-                <!-- ================================================================================== -->
 
-        <!-- <form action="" method="post">
-            {{ form.hidden_tag() }}
-
-                    {{ form.csrf_token }}
-                    <p>
-                    <table align="center" style="border-spacing: 50px;width: 250px; margin-left:10px;">
-                        <tr>
-                            <th>Category</th>
-                            <th>Question</th>
-                            <th>Rating</th>
-                        </tr>
-                        {% for c in cl %}
-                        <tr>
-                            <td> {{ c.name }}</td>
-                        </tr>
-                        {% endfor %}
-                        {% for q in ql %}
-                            <tr>
-                                <td>{{ q.category.name }}</td>
-                                <td>{{q.name}}</td>
-                                <td><input id="{{q.id}}" name="{{q.id}}" type="number" max=3 min=0 required=true></td>
-                            </tr>
-                        {% endfor %}
-                    </table>
-<br><br>
-                    <p align="center">{{ form.submit() }}</p>
-
-
-        </form> -->
         <br>
-        <!-- <button type="submit" class="btn btn-success btn-block">Submit</button> -->
             </div>
         </div>
             

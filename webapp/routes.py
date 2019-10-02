@@ -221,33 +221,45 @@ def select_assessment_category():
     return render_template('select_assessment_category.html', title='Select Template', org=org, temp=temp, gl=gl)
 
 
+class DataWithInfo(object):
+    def __init__(self, data, info):
+        self.data = data
+        self.info = info
+
+    def getData(self):
+        return self.data
+
+    def getInfo(self):
+        return self.info
+
+    def __str__(self):
+        return "%s has %i items associated with it" % (self.data, len(self.info))
+
+
 @app.route('/assess',methods=['GET','POST'])
 def assess():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
+
     org = int(request.args['org'])
     temp = int(request.args['template'])
     form = RatingForm(request.form)
-#   cat = Template.query.get(temp)
-#     categorylist = []
-#     cl = Category.query.filter(Category.templateid == temp).all()
-#     categorylist.append(cl)
-#     print(categorylist)
-# #    queslist = ql.getQuestions()
-#     queslist = []
-#     for cat in categorylist:
-#         print("in cat list: ")
-#         print(cat)
-#         for question in cat:
-#             queslist.extend(question.getQuestions())
-    categorylist = Category.query.filter(Category.templateid == temp).all()
-    queslist = []
-    for cat in categorylist:
-        queslist.extend(cat.getQuestions())
 
-    guidelist = []
-    for ques in queslist:
-        guidelist.extend(ques.getGuidelines())
+    cL = Category.query.filter(Category.templateid == temp).order_by(Category.name).all()
+    categoryListTest = []
+    for c in cL:
+        qL = Question.query.filter(Question.category_id == c.id).order_by(Question.name).all()
+        questionList = []
+        for q in qL:
+            gL = Guideline.query.filter(Guideline.quest_id == q.id).order_by(Guideline.guideline).all()
+            guidelineList = []
+            for g in gL:
+                gObj = DataWithInfo(g, [])
+                guidelineList.append(gObj)
+            qObj = DataWithInfo(q, guidelineList)
+            questionList.append(qObj)
+        cObj = DataWithInfo(c, questionList)
+        categoryListTest.append(cObj)
 
     if form.validate_on_submit():
         print(temp)
@@ -256,7 +268,6 @@ def assess():
         db.session.add(a)
         db.session.commit()
         for q in queslist:
-#            rating = Rating.query.filter(Rating.question_id == )
             print(q.id)
             if request.method == "POST":
                 rate = int(request.form['rating' + str(q.id)])
@@ -265,7 +276,7 @@ def assess():
         db.session.commit()
         flash('Success')
         return redirect(url_for('select_assessment_category'))
-    return render_template('assess.html', title='Assessment', form=form, ql=queslist, cl=categorylist, gl=guidelist)
+    return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest)
 
 @app.route('/select_vis', methods=['GET'])
 def select_vis():
@@ -298,7 +309,6 @@ def view_single_assessment():
     if request.method == "POST":
         ad = int(request.form["select"])
     assessdetail = db.session.query(Rating, Question, Guideline).filter(ad == Rating.assessment_id).filter(Rating.question_id == Question.id).filter(Question.id == Guideline.quest_id).all()
-    print(assessdetail)
 #    assessd = Guideline.query.outerjoin(subq, Guideline.quest_id == subq.rating_question_id)
     return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetail)
 
@@ -332,7 +342,7 @@ def multi_vis():
                     assessDict[k].rating = str(int(round(ratingdict[k] / assessDict[k].count, 1)))
 
     return render_template('multiple_assess_vis.html', title='Multi-Visual', assessDict=assessDict, ratingDict=ratingdict)
-	
+    
 @app.route('/delete_question', methods=['GET', 'POST'])
 def delete_question():
     if not current_user.is_authenticated:
@@ -368,14 +378,14 @@ def filter_questions(categoryId):
         questionObj["name"] = question.name
         questionsArray.append(questionObj)
     return jsonify({'questions': questionsArray})
-	
+    
 @app.route('/update_question/<questionId>/<updatedQuestion>')
 def update_questions(questionId, updatedQuestion):
     question = Question.query.filter_by(id=questionId).first()
     question.name = updatedQuestion
     db.session.commit()
     return jsonify({'result': "success"})
-	
+    
 @app.route('/delete_question/<questionId>')
 def delete_selected_questions(questionId):
     try:
@@ -449,10 +459,10 @@ def transform_view():
 
                 db.session.commit()
     
-    return ""
-	
+    return redirect(url_for('delete_question'))
+    
 def transform(text_file_contents):
-    return text_file_contents.replace("=", ",")		
+    return text_file_contents.replace("=", ",")     
 
 #TODO
 # def export_csv():
