@@ -191,7 +191,25 @@ def add_question():
         flash('Success')
         return redirect(url_for('add_question'))
     return render_template('add_question.html', title='Add Question', form=form, cats=cats)
+""" 
+@app.route('/add_guidelines',methods=['GET','POST'])
+def add_question():
+    # This functionality is only for managers
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
 
+    form = GuidelineForm()
+    cats = Category.query.all()
+    if form.validate_on_submit():
+        q = Question(name=form.name.data, category_id=request.form['cat'])
+        db.session.add(q)
+        db.session.commit()
+        flash('Success')
+        return redirect(url_for('add_question'))
+    return render_template('add_question.html', title='Add Guideline', form=form, cats=cats)
+ """
 #TODO change cat query to pull relevant questions based on category list
 @app.route('/select_assessment_category',methods=['GET','POST'])
 def select_assessment_category():
@@ -199,7 +217,8 @@ def select_assessment_category():
         return redirect(url_for('login'))
     org = Organization.query.all()
     temp = Template.query.all()
-    return render_template('select_assessment_category.html', title='Select Template', org=org, temp=temp)
+    gl = Guideline.query.all()
+    return render_template('select_assessment_category.html', title='Select Template', org=org, temp=temp, gl=gl)
 
 
 @app.route('/assess',methods=['GET','POST'])
