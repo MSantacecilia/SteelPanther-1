@@ -4,7 +4,7 @@ from werkzeug.urls import url_parse
 from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, RatingForm, ResetPasswordForm, DeleteQuestionsForm, SelectTimestampForm, ViewSingleAssessmentForm
 from flask_login import current_user, login_user, logout_user, login_required
 from webapp.models import UserAccount, Category, Organization, Question, Assessment, Rating, Template, Guideline
-import io,csv
+import io,csv, json
 from sqlalchemy import and_, subquery
 
 
@@ -318,9 +318,17 @@ def view_single_assessment():
     form = ViewSingleAssessmentForm()
     if request.method == "POST":
         ad = int(request.form["select"])
-    assessdetail = db.session.query(Rating, Question, Guideline).filter(ad == Rating.assessment_id).filter(Rating.question_id == Question.id).filter(Question.id == Guideline.quest_id).all()
+    assessdetail = db.session.query(Rating, Question, Guideline, Category).filter(ad == Rating.assessment_id).filter(Rating.question_id == Question.id).filter(Question.id == Guideline.quest_id).filter(Category.id == Question.category_id).distinct()
 #    assessd = Guideline.query.outerjoin(subq, Guideline.quest_id == subq.rating_question_id)
-    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetail)
+    assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
+    questionsArray = []
+    for a in assessdetails:
+        questionObj = {}
+        questionObj["question"] = a.quest.name
+        questionObj["Value"] = a.rating
+        questionsArray.append(questionObj)
+    json_data = json.dumps(questionsArray)
+    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetail, json_data=json_data)
 
 @app.route('/multi_vis',methods=['GET'])
 def multi_vis():

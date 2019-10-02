@@ -9,7 +9,7 @@
 
 {% block content %}   
 
-    <div class="container-fluid" id="sidebar" style="color: white;">
+    <div class="container-fluid" id="sidebar" style="color: black;">
         <div class="row">
             <div class="col-xs-4 col-sm-4 col-md-4">
                 {% include 'navbar.html' %}
@@ -68,12 +68,16 @@
                         
                         {% for category in categories%}
                         <tr style="color: black">
-                            <td> {{category.name}} </td>
+                            <td data-toggle="collapse" data-target="#demo"> {{category.name}} </td>
                             <td class="text-right">
                                 <a href="/category/update/{{category.id}}" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modaledit{{category.id}}">Edit</a>
                                 <a href="/category/delete/{{ category.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Click OK to delete {{category.name}}')">Delete</a>
                             </td>
+
                         </tr>
+                            <tr><td id="demo" class="collapse">
+                                Lorem ipsum dolor text....
+                            </td></tr>
                         {% endfor %}
 
                     </table>
