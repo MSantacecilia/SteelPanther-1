@@ -32,7 +32,7 @@
                 <!-- ================================================================================== -->
                 {% for c in cl %}
                 <div>
-                    <button class="btn btn-outline-secondary btn-block" type="button" data-toggle="collapse" data-target="#{{c.id}}" aria-expanded="false" aria-controls="collapseExample" style="border-radius:0; font-weight: bold;">
+                    <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#{{c.id}}" aria-expanded="false" aria-controls="collapseExample" style="border-radius:0; font-weight: bold;background-color: black; font-size:15px;">
                         {{ c.name }}
                     </button>
                 </div>
@@ -52,9 +52,9 @@
                                 {% set c = count.pop() %}
                                 
                                     {% if c==0 %}
-                                        <input type="radio" name="rating{{q.category_id}}" value="{{ c }}" checked> {{ g.guideline }} <br>
+                                        <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
                                     {% else %}
-                                        <input type="radio" name="rating{{q.category_id}}" value="{{ c }}"> {{ g.guideline }} <br>
+                                        <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
                                     {% endif %}
                                 
                                 
