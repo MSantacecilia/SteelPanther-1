@@ -5,7 +5,7 @@ from webapp.forms import LoginForm, RegistrationForm, CategoryForm, Organization
 from flask_login import current_user, login_user, logout_user, login_required
 from webapp.models import UserAccount, Category, Organization, Question, Assessment, Rating, Template, Guideline
 import io,csv
-from sqlalchemy import and_
+from sqlalchemy import and_, subquery
 
 
 @app.route('/')
@@ -191,7 +191,25 @@ def add_question():
         flash('Success')
         return redirect(url_for('add_question'))
     return render_template('add_question.html', title='Add Question', form=form, cats=cats)
+""" 
+@app.route('/add_guidelines',methods=['GET','POST'])
+def add_question():
+    # This functionality is only for managers
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
 
+    form = GuidelineForm()
+    cats = Category.query.all()
+    if form.validate_on_submit():
+        q = Question(name=form.name.data, category_id=request.form['cat'])
+        db.session.add(q)
+        db.session.commit()
+        flash('Success')
+        return redirect(url_for('add_question'))
+    return render_template('add_question.html', title='Add Guideline', form=form, cats=cats)
+ """
 #TODO change cat query to pull relevant questions based on category list
 @app.route('/select_assessment_category',methods=['GET','POST'])
 def select_assessment_category():
@@ -199,7 +217,8 @@ def select_assessment_category():
         return redirect(url_for('login'))
     org = Organization.query.all()
     temp = Template.query.all()
-    return render_template('select_assessment_category.html', title='Select Template', org=org, temp=temp)
+    gl = Guideline.query.all()
+    return render_template('select_assessment_category.html', title='Select Template', org=org, temp=temp, gl=gl)
 
 
 @app.route('/assess',methods=['GET','POST'])
@@ -276,10 +295,10 @@ def view_single_assessment():
     form = ViewSingleAssessmentForm()
     if request.method == "POST":
         ad = int(request.form["select"])
-    assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
-    for a in assessdetails:
-        print(a)
-    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetails)
+    assessdetail = db.session.query(Rating, Question, Guideline).filter(ad == Rating.assessment_id).filter(Rating.question_id == Question.id).filter(Question.id == Guideline.quest_id).all()
+    print(assessdetail)
+#    assessd = Guideline.query.outerjoin(subq, Guideline.quest_id == subq.rating_question_id)
+    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetail)
 
 @app.route('/multi_vis',methods=['GET'])
 def multi_vis():
@@ -413,7 +432,7 @@ def transform_view():
             question = Question.query.filter_by(name=question_name, category_id=category_id).first()
 
             if question is None:
-                # question = Question(name=question_name, category_id=category_id, maximum=question_max)
+
                 question = Question(name=question_name, category_id=category_id)
                 db.session.add(question)
                 db.session.commit()
