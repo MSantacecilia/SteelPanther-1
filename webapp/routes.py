@@ -267,6 +267,12 @@ def assess():
         print(a.temp)
         db.session.add(a)
         db.session.commit()
+
+        queslist = []
+        for catQuestions in categoryListTest:
+            for question in catQuestions.info:
+                queslist.append(question.data)
+        
         for q in queslist:
             print(q.id)
             if request.method == "POST":
