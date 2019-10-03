@@ -86,7 +86,7 @@ body {
 	-moz-border-radius: 10px 10px 0 0;
 	color: #fff;
 	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.12);
-	font: normal 30px 'Nanum Gothic', serif;
+	font: normal 25px 'Nanum Gothic', serif;
 	-moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
 	-webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
 	box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
@@ -100,10 +100,11 @@ body {
 }
 .form-style-10 label{
 	display: block;
-	font: normal 14px 'Nanum Gothic', serif;
+	font: normal 18px 'Nanum Gothic', serif;
 	color: #888;
 	margin-bottom: 4px;
 }
+
 .form-style-10 input[type="text"],
 .form-style-10 input[type="date"],
 .form-style-10 input[type="datetime"],
@@ -134,7 +135,7 @@ body {
 
 .form-style-10 select{
 
-    font: normal 16px 'Nanum Gothic';
+    font: normal 18px 'Nanum Gothic';
     color: #888;
 
 }

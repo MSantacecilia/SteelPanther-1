@@ -25,8 +25,8 @@
 
     <div class="form-style-10">
 
-        <h1>Assessment</h1>
-        <form action="" method="POST" class="form">
+        <i onclick="goBack()" class="material-icons md-48" style="cursor: pointer;top: 25px;position: relative;color: white;">arrow_back</i> <center><h1>Assessment</h1></center>
+        <form action="{{ url_for('select_vis') }}" method="POST" class="form">
             {{ form.csrf_token }}
         <div id="Content">
             <div class="inner-wrap">
@@ -73,14 +73,16 @@
                         </td>
                     </tr> 
                         {% endfor %}
-                        <tr>
-                            <td colspan="2"><button type="submit" class="btn btn-success btn-block">Submit</button></td></tr>
-                        
-                    </form>
+
+
                         </table>
+
                     </div>
                 </div>
                 {% endfor %}
+            <br>
+                <button type="submit" class="btn btn-success btn-block">Submit</button>
+        </form>
 
         <br>
             </div>
