@@ -24,32 +24,75 @@
     <div class="form-style-10">
 
     <h1>Delete Questions</h1>
-    <p><select id="category_select">
-        <option disabled=true>Select Category</option>
-        {% for category in categories %}
-        <option value="{{category.id}}">{{ category.name }}</option>
+    <p><select id="template_select">l
+        <option disabled=true>Select Template</option>
+        {% for template in templates %}
+        <option value="{{template.id}}">{{ template.name }}</option>
         {% endfor %}
         </select>
     </p>
+    <p><select id="category_select">l
+
+        </select>
+    </p><br>
+    <button onclick="loadTable()">Fetch data</button>
     <table  class="table table-light" id="questions_table" >
          <thead class="thead-dark">
 
     </table>
     </div>
 
+	<div>
+        <h1>Upload CSV module</h1>
 
+                <form action="/transform" method="post" enctype="multipart/form-data">
+                   Assessment name: <input type="text" name="template_name" id="template_name"><br>
+                    <input type="file" id="file" name="data_file" /><br>
+                    <input type="submit" value="submit" onClick="return empty()"/>
+                </form>
+    </div>
 
 
     <script>
+	
+		//Code for upload csv
+         function empty() {
+            var templateName = document.getElementById("template_name").value;
+            if (templateName == "") {
+               alert("Enter a valid assessment name !");
+               return false;
+            };
+            if( document.getElementById("file").files.length == 0 ){
+               alert("Please select a file !");
+               return false;
+            }
+         }
+		 
+		//Code for delete question 
         let category_select = document.getElementById("category_select");
         let questions_table = document.getElementById("questions_table");
 
         window.onload = function() {
-            loadTable();
+            loadCategories();
         };
 
-        category_select.onchange = function() {
-            loadTable();
+        template_select.onchange = function() {
+            loadCategories();
+        }
+
+        function loadCategories(){
+            template_id = template_select.value;
+            fetch('/filter_category/' + template_id).then(function(response){
+                response.json().then(function(data){
+                    let categoryHTML = '<option disabled=true>Select Category</option>';
+                    for(let category of data.categories){
+                        categoryHTML += '<option value='+category.id+'>'+category.name+'</option>'
+                    }
+
+                    category_select.innerHTML = categoryHTML;
+                });
+            });
+
         }
 
          function loadTable(){
