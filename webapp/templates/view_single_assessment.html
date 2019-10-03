@@ -98,13 +98,19 @@
                     <tr>
                         <th>Category</th>
                         <th>Question</th>
+                        <th>Guidelines</th>
                         <th>Rating</th>
                     </tr>
                     {% for ad in assessdetails %}
                         <tr>
                             <td>{{ ad.Category.name }}</td>
-                            <td>{{ad.Question.name}}</td>
-                            <td>{{ad.Rating.rating}}</td>
+                            <td>{{ ad.Question.name }}</td>
+                            <td>
+                            {% for g in guideline %}
+                                <pre>{{ g.guideline }} </pre>
+                            {% endfor %}
+                            </td>
+                            <td>{{ ad.Rating.rating }}</td>
                         </tr>
                     {% endfor %}
                 </table>

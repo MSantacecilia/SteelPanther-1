@@ -318,17 +318,23 @@ def view_single_assessment():
     form = ViewSingleAssessmentForm()
     if request.method == "POST":
         ad = int(request.form["select"])
-    assessdetail = db.session.query(Rating, Question, Guideline, Category).filter(ad == Rating.assessment_id).filter(Rating.question_id == Question.id).filter(Question.id == Guideline.quest_id).filter(Category.id == Question.category_id).distinct()
+    assessdetail = db.session.query(Rating, Question, Category).filter(ad == Rating.assessment_id).filter(Rating.question_id == Question.id).filter(Question.category_id == Category.id).all()
+    print(assessdetail)
 #    assessd = Guideline.query.outerjoin(subq, Guideline.quest_id == subq.rating_question_id)
-    assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
+#   assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
     questionsArray = []
-    for a in assessdetails:
+    for a in assessdetail:
+        print(a)
         questionObj = {}
-        questionObj["question"] = a.quest.name
-        questionObj["Value"] = a.rating
+ #       guideLinesObj = []
+        questionObj["question"] = a.Question.name
+        questionObj["Value"] = a.Rating.rating
+        questionObj["category"] = a.Category.name
+        guidedetail = db.session.query(Guideline).filter(a.Question.id==Guideline.quest_id).all()
+        print(guidedetail)
         questionsArray.append(questionObj)
     json_data = json.dumps(questionsArray)
-    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetail, json_data=json_data)
+    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetail, json_data=json_data, guideline=guidedetail)
 
 @app.route('/multi_vis',methods=['GET'])
 def multi_vis():
