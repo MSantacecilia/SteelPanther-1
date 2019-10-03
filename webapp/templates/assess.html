@@ -29,6 +29,7 @@
         <form action="{{ url_for('select_vis') }}" method="POST" class="form">
             {{ form.csrf_token }}
         <div id="Content">
+            
             <div class="inner-wrap">
                 {% for o1 in categories %}
                 {% set c = o1.data %}
@@ -36,6 +37,7 @@
                 <div>
                     <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#{{c.id}}" aria-expanded="false" aria-controls="collapseExample" style="border-radius:0; font-weight: bold;background-color: black; font-size:15px;">
                         {{ c.name }}
+                        <button class="btn btn-save">Save</button>
                     </button>
                 </div>
                 <div class="collapse" id="{{c.id}}">
@@ -54,7 +56,7 @@
                                 {% set c = count.pop() %}
                                 
                                     {% if c==0 %}
-                                        <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
+                                        <input type="radio" name="rating{{q.id}}" value="{{ c }}" checked> {{ g.guideline }} <br>
                                     {% else %}
                                         <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
                                     {% endif %}

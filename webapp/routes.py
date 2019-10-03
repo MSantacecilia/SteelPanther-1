@@ -259,8 +259,8 @@ def assess():
     cL = Category.query.filter(Category.templateid == temp).all()
     categoryListTest = []
     for c in cL:
-        qL = Question.query.filter(Question.category_id == c.id).all()
-        questionList = []
+        qL = Question.query.filter(Question.category_id == c.id).order_by(Question.name).all()
+        queslist = []
         for q in qL:
             gL = Guideline.query.filter(Guideline.quest_id == q.id).order_by(Guideline.guideline).all()
             guidelineList = []
@@ -268,8 +268,8 @@ def assess():
                 gObj = DataWithInfo(g, [])
                 guidelineList.append(gObj)
             qObj = DataWithInfo(q, guidelineList)
-            questionList.append(qObj)
-        cObj = DataWithInfo(c, questionList)
+            queslist.append(qObj)
+        cObj = DataWithInfo(c, queslist)
         categoryListTest.append(cObj)
 
     if form.validate_on_submit():
@@ -285,7 +285,6 @@ def assess():
                 queslist.append(question.data)
 
         for q in queslist:
-            print(q.id)
             if request.method == "POST":
                 #print(request.form['rating' + str(q.id)])
                 if 'rating' + str(q.id) in request.form:
