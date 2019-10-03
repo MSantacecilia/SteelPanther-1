@@ -454,7 +454,7 @@ def transform_view():
 
     # Add a template to the database
     # TODO use input field to get the actual name of the template
-    template_name = 'Agile'
+    template_name = request.form['template_name']
     template = Template(name=template_name)
     db.session.add(template)
     db.session.commit()
@@ -504,7 +504,7 @@ def transform_view():
 
                 db.session.commit()
     
-    return redirect(url_for('delete_question'))
+    return redirect(url_for('select_assessment_category'))
     
 def transform(text_file_contents):
     return text_file_contents.replace("=", ",")     

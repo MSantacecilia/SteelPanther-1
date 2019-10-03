@@ -54,18 +54,40 @@
     </form>
 
 <hr>
+
+
+
+
+
+
+
+
         <form action="/transform" method="post" enctype="multipart/form-data">
+
             <h3>Upload a new assessment (.csv) file:</h3>
-                <input class="input-sm" type="file" name="data_file" /><br>
-            <button type="submit">Upload</button>
+            Assessment name: <input type="text" name="template_name" id="template_name"><br>
+                <input class="input-sm" type="file" id="file" name="data_file" /><br>
+            <button type="submit" value="submit" onclick="return empty()">Upload</button>
         </form>
         </div></div></div></div></div></div></div></div>
 
 
+<script>
 
+    //Code for upload csv
+    function empty() {
+    var templateName = document.getElementById("template_name").value;
+    if (templateName == "") {
+    alert("Enter a valid assessment name !");
+    return false;
+    };
+    if( document.getElementById("file").files.length == 0 ){
+    alert("Please select a file !");
+    return false;
+    }
+    }
 
-
-
+</script>
 
 
 

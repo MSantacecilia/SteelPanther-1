@@ -25,9 +25,9 @@
 
     <h1>Delete Questions</h1>
     <p><select id="template_select">l
-        <option disabled=true>Select Template</option>
+        <option>Select Template</option><br><br>
         {% for template in templates %}
-        <option value="{{template.id}}">{{ template.name }}</option>
+        <option value="{{template.id}}">{{ template.name }}</option><br><br>
         {% endfor %}
         </select>
     </p>
@@ -42,31 +42,11 @@
     </table>
     </div>
 
-	<div>
-        <h1>Upload CSV module</h1>
-
-                <form action="/transform" method="post" enctype="multipart/form-data">
-                   Assessment name: <input type="text" name="template_name" id="template_name"><br>
-                    <input type="file" id="file" name="data_file" /><br>
-                    <input type="submit" value="submit" onClick="return empty()"/>
-                </form>
-    </div>
 
 
     <script>
 	
-		//Code for upload csv
-         function empty() {
-            var templateName = document.getElementById("template_name").value;
-            if (templateName == "") {
-               alert("Enter a valid assessment name !");
-               return false;
-            };
-            if( document.getElementById("file").files.length == 0 ){
-               alert("Please select a file !");
-               return false;
-            }
-         }
+
 		 
 		//Code for delete question 
         let category_select = document.getElementById("category_select");
