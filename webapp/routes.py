@@ -107,7 +107,15 @@ def add_category():
     return render_template('add_category.html', title='Add Category', form=form, temp=temp)
 
 """ Category Functionalities ================================================================= """
-@app.route('/category',methods=['GET','POST'])
+@app.route('/edit_assessment/select',methods=['GET','POST'])
+def select_template():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    temp = Template.query.all()
+    flash('Successful assessment')
+    return render_template('select_template.html', title='Select Template', temp=temp)
+
+@app.route('/edit_assessment',methods=['GET','POST'])
 # Agile, Cloud, Devop
 def test_category():
     # This functionality is only for managers
@@ -115,8 +123,10 @@ def test_category():
         return redirect(url_for('login'))
     if not current_user.is_admin():
         return redirect(url_for('index'))
+
+    temp = int(request.args['assessment'])
     form = CategoryForm()
-    categories = Category.query.order_by('name').all()
+    categories = Category.query.filter(Category.templateid == temp).order_by(Category.name).all()
     return render_template('test_category.html', title='Assessment Category'.upper(), categories=categories, form=form)
 
 def is_categroy_repeat(name):
@@ -210,7 +220,7 @@ def add_question():
         return redirect(url_for('add_question'))
     return render_template('add_question.html', title='Add Guideline', form=form, cats=cats)
  """
-#TODO change cat query to pull relevant questions based on category list
+
 @app.route('/select_assessment_category',methods=['GET','POST'])
 def select_assessment_category():
     if not current_user.is_authenticated:
@@ -246,10 +256,10 @@ def assess():
     temp = int(request.args['template'])
     form = RatingForm(request.form)
 
-    cL = Category.query.filter(Category.templateid == temp).order_by(Category.name).all()
+    cL = Category.query.filter(Category.templateid == temp).all()
     categoryListTest = []
     for c in cL:
-        qL = Question.query.filter(Question.category_id == c.id).order_by(Question.name).all()
+        qL = Question.query.filter(Question.category_id == c.id).all()
         questionList = []
         for q in qL:
             gL = Guideline.query.filter(Guideline.quest_id == q.id).order_by(Guideline.guideline).all()
@@ -273,7 +283,7 @@ def assess():
         for catQuestions in categoryListTest:
             for question in catQuestions.info:
                 queslist.append(question.data)
-        
+
         for q in queslist:
             print(q.id)
             if request.method == "POST":
