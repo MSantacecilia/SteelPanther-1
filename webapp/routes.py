@@ -391,9 +391,8 @@ def delete_question():
         else:
             pass  # unknown
     elif request.method == 'GET':
-        form.categories.choices = [(category.id, category.name) for category in Category.query.all()]
-        categories = Category.query.all()
-        return render_template('delete_question.html', title='Delete Question', form=form, categories=categories)
+        templates = Template.query.all()
+        return render_template('delete_question.html', title='Delete Question', form=form, templates=templates)
 
 @app.route('/guidelines', methods=['GET', 'POST'])
 def filter_guidelines():
@@ -401,6 +400,17 @@ def filter_guidelines():
         return redirect(url_for('login'))
     guidelines = Guidelines.query.all()
     return render_template()('guidelines.html', title='Guidelines for Rating', guidelines=guidelines)
+
+@app.route('/filter_category/<templateId>')
+def filter_category(templateId):
+    categories = Category.query.filter_by(templateid=templateId).all()
+    categoryArray = []
+    for category in categories:
+        categoryObj = {}
+        categoryObj["id"] = category.id
+        categoryObj["name"] = category.name
+        categoryArray.append(categoryObj)
+    return jsonify({'categories': categoryArray})
 
 @app.route('/filter_questions/<categoryId>')
 def filter_questions(categoryId):
