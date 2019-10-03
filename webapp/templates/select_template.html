@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+
+
+
+    <div class="container-fluid" id="sidebar" style="color: white;">
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-1">
+                {% include 'navbar.html' %}
+            </div>
+            <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main">
+
+
+                <div class="row align-items-center">
+
+                    <div class="col-md-9 col-xs-9">
+
+
+
+
+
+
+
+    <div class="form-style-10">
+
+
+<h1>Select Assessment</h1>
+<div id="Content">
+
+        <div class="inner-wrap">
+    <form action="{{ url_for('test_category') }}" method="GET">
+        <p><label>Choose Assessment:</label></p>
+        <p><select name="assessment">
+                <option></option>
+                {% for entry in temp %}
+                <option value="{{entry.id}}">{{ entry.name }}</option>
+                {% endfor %}
+            </select>
+        </p>
+    <br><br>
+        <p><button>Proceed</button></p>  
+    </form>
+</div>
+</div>
+    </div>
+
+
+
+
+
+                    </div></div></div></div></div>
+{% endblock %}
