@@ -427,7 +427,7 @@ def transform_view():
 
     # Add a template to the database
     # TODO use input field to get the actual name of the template
-    template_name = 'NewTemplate'
+    template_name = 'Agile'
     template = Template(name=template_name)
     db.session.add(template)
     db.session.commit()
