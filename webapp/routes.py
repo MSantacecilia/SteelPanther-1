@@ -136,12 +136,12 @@ def test_insert_category():
     if form.validate_on_submit():
         new_category_name = form.name.data.title() 
         if is_categroy_repeat(new_category_name):
-            flash("Category '{new_category_name}' already exists. Please make sure category you create has a unique name. ", 'error')
+            flash(f"Category '{new_category_name}' already exists. Please make sure category you create has a unique name. ", 'error')
         else: 
             cat = Category(name=new_category_name)
             db.session.add(cat)
             db.session.commit()
-            flash("Category '{new_category_name}' added successfully", 'success')
+            flash(f"Category '{new_category_name}' added successfully", 'success')
         return redirect(url_for('test_category'))
     return render_template('test_category.html', title='Category', form=form)
 
@@ -150,12 +150,12 @@ def update():
     if request.method == 'POST':
         new_category_name = request.form['name'].title() 
         if is_categroy_repeat(new_category_name):
-            flash("Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
+            flash(f"Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
         else:
             cid = request.form['id']
             cat = Category.query.filter_by(id=cid).one()
             cat.name = new_category_name
-            flash("Category name updated to '{new_category_name}'", 'success')
+            flash(f"Category name updated to '{new_category_name}'", 'success')
             db.session.commit()
         return redirect(url_for('test_category'))
 
@@ -169,7 +169,7 @@ def test_delete_category(cid):
     delete_category = Category.query.filter_by(id=cid).one()
     db.session.delete(delete_category)
     db.session.commit()
-    flash("Category '{delete_category.name}' deleted successfully", 'success')
+    flash(f"Category '{delete_category.name}' deleted successfully", 'success')
     
     return redirect(url_for('test_category'))
 """ EndCategory ============================================================================== """
@@ -324,6 +324,7 @@ def view_single_assessment():
 #   assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
     questionsArray = []
     for a in assessdetail:
+        print("UWWWWWWWWWWWWWWWWWWWWWWWWU")
         print(a)
         questionObj = {}
  #       guideLinesObj = []
