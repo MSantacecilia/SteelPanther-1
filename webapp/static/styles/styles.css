@@ -5,8 +5,8 @@
 
 #cssmenu ul li.active a, #cssmenu ul li a:hover {
   text-decoration:none;
-  color:#000;
-  background-color: white;
+  color:#fff;
+  background-color: #000;
 
 }
 
@@ -20,7 +20,7 @@
   padding-left: 0;
   padding-bottom: 00px;
   border: 3px black;
-  background-color: #003873;
+  background-color: #ffffff;
 
 
 
@@ -30,7 +30,7 @@
   position: relative;
   z-index: 597;
   float: left;
-  background-color: #003873;
+  background-color: #ffffff;
 
 }
 #cssmenu ul li {
@@ -89,13 +89,13 @@
   height: 100%;
   opacity: 0.9;
 
-  background-color: #003873;
+  background-color: #ffffff;
 }
 #cssmenu ul a,
 #cssmenu ul a:link,
 #cssmenu ul a:visited {
   display: block;
-  color: #fff;
+  color: #000;
   text-decoration: none;
   font-weight: 300;
 
@@ -104,10 +104,10 @@
   float: none;
 }
 #cssmenu ul {
-  background: #003873;
+  background: #ffffff;
 }
 #cssmenu > ul > li {
-  border-left: 3px solid #d7d8da;
+  border-left: 3px solid #000;
 
 }
 #cssmenu > ul > li > a {
@@ -116,14 +116,12 @@
 
 }
 #cssmenu > ul > li:hover {
-  border-left: 3px solid #003873;
+  border-left: 3px solid #000;
+  background: #ffffff;
 }
-#cssmenu ul li:hover > a {
-  color: #003873;
-}
-#cssmenu > ul > li:hover {
-  background: #f6f6f6;
-}
+
+
+
 /* Sub Menu */
 #cssmenu ul ul a:link,
 #cssmenu ul ul a:visited {
@@ -168,8 +166,17 @@
   border-top: 10px solid transparent;
 }
 
-#cssmenu ul li ul li.has-sub a:hover {
-  color: black;
+
+
+#cssmenu ul li.last ul li.has-sub a {
+  color: #000;
+  background-color: white;
+
+
+}
+
+#cssmenu ul li ul li.has-sub a:hover{
+  color: #003873;
   background-color: white;
 
 

@@ -288,7 +288,7 @@ def assess():
         return redirect(url_for('select_assessment_category'))
     return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest)
 
-@app.route('/select_vis', methods=['GET'])
+@app.route('/select_vis', methods=['GET','POST'])
 def select_vis():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
