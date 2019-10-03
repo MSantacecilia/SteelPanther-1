@@ -7,58 +7,66 @@
 
 
 
-    <div class="container-fluid" id="sidebar" style="color: white;">
+    <div class="container-fluid" id="sidebar" style="color: black;">
+
         <div class="row">
-            <div class="col-xs-4 col-sm-4 col-md-1">
+
+            <div class="col-xs-1 col-sm-1 col-md-1">
                 {% include 'navbar.html' %}
             </div>
-            <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main">
+
+                <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main">
+
+                    <div class="row align-items-center">
+
+                        <div class="col-md-9 col-xs-9">
+
+                            <div class="form-style-10">
 
 
-                <div class="row align-items-center">
+                            <center><h1>Create an Assessment</h1></center>
 
-                    <div class="col-md-9 col-xs-9">
+                                <div id="Content">
+
+                                     <div class="inner-wrap">
+
+                                     <form action="{{ url_for('assess') }}" method="GET">
+                                     <p><label>Choose Organization:</label></p>
+                                     <p><select name="org">
+                                     <option></option>
+                                     {% for entry in org %}
+                                     <option value="{{entry.id}}">{{ entry.name }}</option>
+                                     {% endfor %}
+                                     </select></p>
+                                     <br><br>
+
+                                     <p><label>Choose Assessment Type:</label></p>
+                                     <p><select name="template">
+                                     <option></option>
+                                     {% for entry in temp %}
+                                     <option value="{{entry.id}}">{{ entry.name }}</option>
+                                     {% endfor %}
+                                     </select><br><br><br>
+                                     </p>
 
 
-
-
-
-
-
-    <div class="form-style-10">
-
-
-<center><h1>Create an Assessment</h1></center>
-<div id="Content">
-
-        <div class="inner-wrap">
-    <form action="{{ url_for('assess') }}" method="GET">
-        <p><label>Choose Organization:</label></p>
-        <p><select name="org">
-                <option></option>
-                {% for entry in org %}
-                <option value="{{entry.id}}">{{ entry.name }}</option>
-                {% endfor %}
-            </select>
-        </p><br><br>
-        <p><label>Choose Assessment Type:</label></p>
-        <p><select name="template">
-                <option></option>
-                {% for entry in temp %}
-                <option value="{{entry.id}}">{{ entry.name }}</option>
-                {% endfor %}
-            </select>
-        </p>
-    <br><br><br>
-        <p><button>Proceed</button></p>  
+                                         <center><button type="submit">Proceed</button></center>
     </form>
-</div>
-</div>
-    </div>
+
+<hr>
+        <form action="/transform" method="post" enctype="multipart/form-data">
+            <h3>Upload a new assessment (.csv) file:</h3>
+                <input class="input-sm" type="file" name="data_file" /><br>
+            <button type="submit">Upload</button>
+        </form>
+        </div></div></div></div></div></div></div></div>
 
 
 
 
 
-                    </div></div></div></div></div>
+
+
+
+
 {% endblock %}

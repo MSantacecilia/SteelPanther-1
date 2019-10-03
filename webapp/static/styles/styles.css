@@ -87,8 +87,8 @@
   margin-left: 0;
   position: fixed;
   height: 100%;
-  opacity: 0.9;
-
+  opacity: 1;
+  z-index: 1;
   background-color: #ffffff;
 }
 #cssmenu ul a,
@@ -167,6 +167,13 @@
 }
 
 
+#cssmenu ul li ul li{
+
+
+  width: 200px;
+
+
+}
 
 #cssmenu ul li.last ul li.has-sub a {
   color: #000;
