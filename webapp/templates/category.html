@@ -61,10 +61,11 @@
                     <table id="category_table" class="table table-light table-hover">
                         {% for category in categories%}
                         <tr style="color: black">
-                            <td data-toggle="collapse" data-target="#demo"> 
+                            <!-- <td data-toggle="collapse" data-target="#demo">  -->
+                            <td> 
                                 <label class="text_label">{{category.name}}</label>
                                 <input type="text" value="{{category.name}}" />
-                                <i class="material-icons save" style="top: 3px;position: relative;display:none">save</i>
+                                <i class="material-icons save" style="top: 3px;position: relative; display: none;">save</i>
                             </td>
                             <td class="text-right">
                                 <i class="material-icons delete" style="top: 3px;position: relative">delete</i>
