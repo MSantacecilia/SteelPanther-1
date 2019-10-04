@@ -15,25 +15,13 @@
                 {% include 'navbar.html' %}
             </div>
             <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-3 main">
-                <h1 class="page-header" style="color:white">{{title}}</h1>
-                <div class="row align-items-center">
-                        
-                    <div class="col-md-9 col-xs-9">
-                    </div>
-                    <div class="col-md-3 col-xs-3">  
-                        <button type="button" class="btn btn-success float-md-right" data-toggle="modal" data-target="#cat_modal">
-                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span> New Category
-                        </button>
-                    </div>
-                </div>
-                <br>
-
+                <h1 class="page-header" style="color: white">{{title}}</h1>
                 {% with messages = get_flashed_messages(category_filter=["success"]) %}
                 {% if messages %}
                 {% for message in messages %}
-                <div class="alert alert-success alert-dismissable" role="alert">
-                    <a class="close" data-dismiss="alert" href="#">×</a>
-                    {{message}}
+                <div class="alert alert-success">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>{{ message }}
                 </div>
                 {% endfor %}
                 {% endif %}
@@ -42,7 +30,7 @@
                 {% with errors = get_flashed_messages(category_filter=["error"]) %}
                 {% if errors %}
                 {%- for message in errors %}
-                <div class="alert alert-danger alert-dismissable">
+                <div class="alert alert-danger">
                     <a class="close" data-dismiss="alert" href="#">×</a>
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>{{ message }}
                 </div>
@@ -50,31 +38,41 @@
                 {% endif %}
                 {% endwith %}
                 
-                <div>
-                    <table id="category_table" class="table table-light table-hover">
-                        {% for category in categories%}
-                        <tr style="color: black">
-                            <!-- <td data-toggle="collapse" data-target="#demo">  -->
-                            <td> 
-                                <label class="text_label">{{category.name}}</label>
-                                <input type="text" value="{{category.name}}" />
-                                <!-- <i class="material-icons save" style="top: 3px;position: relative; display: none;">save</i> -->
-                            </td>
-                            <td class="text-right">
-                                <i class="material-icons delete" style="top: 3px;position: relative">delete</i>
-                                <i class="material-icons edit" style="top: 3px;position: relative">edit</i>
-                                <i class="material-icons save" style="top: 3px;position: relative; float: right; display: none;">save</i>
-                                <!-- <a href="/category/delete/{{ category.id }}" class="btn btn-danger btn-sm" onclick="return confirm('Click OK to delete {{category.name}}')">Delete</a> -->
-                            </td>
-
+                <table id="category_table" class="table table-light table-hover">
+                    <thead class="thead-dark">
+                        <tr class="m-0">
+                            <form action="{{url_for('insert_category',id=id)}}" method="POST">
+                                <th colspan="2">
+                                    <div class="input-group mb-3" style="padding: 0;">
+                                        <input type="text" class="form-control" name="new_cat" placeholder="Enter category name...">
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-success">
+                                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                                                Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                </th>
+                            </form>
                         </tr>
-                            <tr><td id="demo" class="collapse">
-                                Lorem ipsum dolor text....
-                            </td></tr>
-                        {% endfor %}
+                    </thead>
+                    
+                    {% for category in categories%}
+                    <tr style="color: black">
+                        <td> 
+                            <label class="text_label">{{category.name}}</label>
+                            <input class="edit_input" type="text" value="{{category.name}}" />
+                        </td>
+                        <td class="text-right">
+                            <i class="material-icons delete" style="top: 3px;position: relative">delete</i>
+                            <i class="material-icons edit" style="top: 3px;position: relative">edit</i>
+                            <i class="material-icons save" style="top: 3px;position: relative; float: right; display: none;">save</i>
+                        </td>
 
-                    </table>
-                </div>
+                    </tr>
+                    {% endfor %}
+
+                </table>
             </div>
         </div>
     </div>
@@ -96,7 +94,7 @@
                 
             </div>
             <div class="modal-body" style="padding-bottom: 7%;">
-                <form action="{{url_for('test_insert_category')}}" method="POST" class="form">
+                <form action="{{url_for('insert_category',id=id)}}" method="POST" class="form">
                         {{ form.hidden_tag() }}
                             {{ wtf.quick_form(form, form_type="inline", button_map={'submit': 'success'}) }}
                 </form>

@@ -17,7 +17,7 @@ $(document).ready(function(){
 
 	});
 	
-	$('input[type="text"]').blur(function() {
+	$('.edit_input').blur(function() {
          if ($.trim(this.value) == ''){
 			 this.value = (this.defaultValue ? this.defaultValue : '');
 		 }
@@ -33,7 +33,7 @@ $(document).ready(function(){
 		 $(this).parent().next().children().first().next().next().hide();
      });
 
-	  $('input[type="text"]').keypress(function(event) {
+	  $('.edit_input').keypress(function(event) {
 		  if (event.keyCode == '13') {
 			  if ($.trim(this.value) == ''){
 				 this.value = (this.defaultValue ? this.defaultValue : '');

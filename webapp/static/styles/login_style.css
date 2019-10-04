@@ -225,7 +225,7 @@ a.reg:visited {
 	width: auto;
 }
 
-input[type=text]
+.edit_input
 {
 	margin-top:8px;
 	font-size:18px;
