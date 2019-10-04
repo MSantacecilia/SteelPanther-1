@@ -48,8 +48,8 @@ class Organization(db.Model):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
-    templateid = db.Column(db.Integer, db.ForeignKey("template.id"), nullable=True, passive_deletes=True)
-    questions = db.relationship('Question', backref='category', lazy='dynamic', passive_deletes=True)
+    templateid = db.Column(db.Integer, db.ForeignKey("template.id"), nullable=True)
+    questions = db.relationship('Question', backref='category', lazy='dynamic')
 
     def __repr__(self):
         return '<Category {0}>'.format(self.name)
