@@ -251,12 +251,32 @@ label
 
 .edit
 {
-	float:left;
+	float:right;
 	/*background:url(../images/edit.png) no-repeat;*/
 	width:32px;
 	height:32px;
 	display:block;
 	cursor: pointer;
+	margin-left:10px;
+}
+
+.delete
+{
+	float:right;
+	width:32px;
+	height:32px;
+	display:block;
+	cursor: pointer;
+	margin-left:10px;
+}
+
+.save
+{
+	float:left;
+	width:32px;
+	height:32px;
+	cursor: pointer;
+	display:none;
 	margin-left:10px;
 }
 

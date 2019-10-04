@@ -2,9 +2,10 @@ $(document).ready(function(){
 	
 	$('.edit').click(function(){
 		$(this).hide();
-		$(this).prev().prev().hide();
-		$(this).next().show();
-		$(this).next().select();
+		$(this).parent().prev().children().first().hide();
+		$(this).parent().prev().children().first().next().next().show();
+		$(this).parent().prev().children().first().next().show();
+		$(this).parent().prev().children().first().next().select();
 	});
 	
 	
@@ -13,13 +14,14 @@ $(document).ready(function(){
 			 this.value = (this.defaultValue ? this.defaultValue : '');  
 		 }
 		 else{
-			 $(this).prev().prev().html(this.value);
+			 $(this).prev().html(this.value);
 			 // TODO send this.value to database
 		 }
 		 
 		 $(this).hide();
+		 $(this).next().hide();
 		 $(this).prev().show();
-		 $(this).prev().prev().show();
+		 $(this).parent().next().children().first().next().show();
      });
 	  
 	  $('input[type="text"]').keypress(function(event) {
@@ -29,13 +31,14 @@ $(document).ready(function(){
 			 }
 			 else
 			 {
-				 $(this).prev().prev().html(this.value);
+				 $(this).prev().html(this.value);
 				 // TODO send this.value to database
 			 }
 			 
 			 $(this).hide();
+			 $(this).next().hide();
 			 $(this).prev().show();
-			 $(this).prev().prev().show();
+			 $(this).parent().next().children().first().next().show();
 		  }
 	  });
 		  
