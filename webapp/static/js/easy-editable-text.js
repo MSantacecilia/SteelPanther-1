@@ -2,13 +2,21 @@ $(document).ready(function(){
 
 	$('.edit').click(function(){
 		$(this).hide();
+		$(this).next().show();
 		$(this).parent().prev().children().first().hide();
 		$(this).parent().prev().children().first().next().next().show();
 		$(this).parent().prev().children().first().next().show();
 		$(this).parent().prev().children().first().next().select();
 	});
+	
+	$('.save').click(function(){
+		$(this).hide();
+		$(this).prev().hide();
+		$(this).prev().prev().show();
+		$(this).parent().next().children().first().next().show();
 
-
+	})
+	
 	$('input[type="text"]').blur(function() {
          if ($.trim(this.value) == ''){
 			 this.value = (this.defaultValue ? this.defaultValue : '');
@@ -23,6 +31,7 @@ $(document).ready(function(){
 		 $(this).next().hide();
 		 $(this).prev().show();
 		 $(this).parent().next().children().first().next().show();
+		 $(this).parent().next().children().first().next().next().hide();
      });
 
 	  $('input[type="text"]').keypress(function(event) {
@@ -40,7 +49,7 @@ $(document).ready(function(){
 			 $(this).hide();
 			 $(this).next().hide();
 			 $(this).prev().show();
-			 $(this).parent().next().children().first().next().show();
+			 $(this).parent().next().children().first().show();
 		  }
 	  });
 
