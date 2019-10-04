@@ -15,7 +15,7 @@ $(document).ready(function(){
 		$(this).prev().prev().show();
 		$(this).parent().next().children().first().next().show();
 
-	})
+	});
 	
 	$('input[type="text"]').blur(function() {
          if ($.trim(this.value) == ''){
