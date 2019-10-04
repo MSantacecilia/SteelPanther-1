@@ -11,9 +11,9 @@ $(document).ready(function(){
 	
 	$('.save').click(function(){
 		$(this).hide();
-		$(this).prev().hide();
-		$(this).prev().prev().show();
-		$(this).parent().next().children().first().next().show();
+		$(this).prev().show();
+		$(this).parent().prev().children().first().next().show();
+		$(this).parent().prev().children().first().next().next().show();
 
 	});
 	
@@ -28,7 +28,6 @@ $(document).ready(function(){
 		 }
 
 		 $(this).hide();
-		 $(this).next().hide();
 		 $(this).prev().show();
 		 $(this).parent().next().children().first().next().show();
 		 $(this).parent().next().children().first().next().next().hide();
@@ -49,7 +48,8 @@ $(document).ready(function(){
 			 $(this).hide();
 			 $(this).next().hide();
 			 $(this).prev().show();
-			 $(this).parent().next().children().first().show();
+			 $(this).parent().next().children().first().next().show();
+			 $(this).parent().next().children().first().next().next().hide();
 		  }
 	  });
 
