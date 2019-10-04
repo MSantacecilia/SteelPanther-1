@@ -7,6 +7,13 @@ from webapp.models import UserAccount, Category, Organization, Question, Assessm
 import io,csv, json
 from sqlalchemy import and_, subquery
 
+def check_privilege_user(user):
+    if not user.is_authenticated:
+        return redirect(url_for('login'))
+        
+def check_privilege_manager(user):
+    if not user.is_admin():
+        return redirect(url_for('index'))
 
 @app.route('/')
 @app.route('/index')
@@ -76,8 +83,8 @@ def logout():
 #TODO: add functionality to select relevant categories
 @app.route('/add_organization',methods=['GET','POST'])
 def add_organization():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
+    check_privilege_user(current_user)
+
     form = OrganizationForm()
     if form.validate_on_submit():
         org = Organization(name=form.name.data, location=form.loc.data, 
@@ -106,54 +113,50 @@ def add_category():
         return redirect(url_for('add_question'))
     return render_template('add_category.html', title='Add Category', form=form, temp=temp)
 
-""" Category Functionalities ================================================================= """
-@app.route('/edit_assessment/select',methods=['GET','POST'])
+""" Assessment Functionalities ================================================================= """
+@app.route('/assessment',methods=['GET','POST'])
 def select_template():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
+    check_privilege_user(current_user)
+
+    if request.method == 'POST':
+        print("IN POST")
+        assessment_type_id = request.form['assessment_type_id']
+        # assessment_type_name = request.form['assessment_type_name']
+        return redirect(url_for('category',id=assessment_type_id))
     temp = Template.query.all()
     flash('Successful assessment')
     return render_template('select_template.html', title='Select Template', temp=temp)
 
-@app.route('/edit_assessment',methods=['GET','POST'])
+@app.route('/assessment/<id>',methods=['GET','POST'])
 # Agile, Cloud, Devop
-def test_category():
-    # This functionality is only for managers
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
+def category(id):
+    check_privilege_user(current_user)
+    check_privilege_manager(current_user)
 
-    temp = int(request.args['assessment'])
     form = CategoryForm()
-    categories = Category.query.filter(Category.templateid == temp).order_by(Category.name).all()
-    return render_template('test_category.html', title='Assessment Category'.upper(), categories=categories, form=form)
+    categories = Category.query.filter(Category.templateid == id).order_by(Category.name).all()
+    temp_name = Template.query.filter_by(id=id).one()
+    print(temp_name.name)
+    return render_template('test_category.html', title=f'{temp_name.name.title()} Template', categories=categories, form=form, id=id)
 
 def is_categroy_repeat(name):
     if Category.query.filter_by(name=name).count() != 0:
         return True
-    else: return False
+    return False
 
-@app.route('/category/add',methods=['POST'])
+@app.route('/assessment/<id>/category/add',methods=['POST'])
 # Agile, Cloud, Devop
-def test_insert_category():
-    # This functionality is only for managers
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-    form = CategoryForm()
-    if form.validate_on_submit():
-        new_category_name = form.name.data.title() 
+def insert_category(id):
+    if request.method == 'POST':
+        new_category_name = request.form['new_cat'] 
         if is_categroy_repeat(new_category_name):
             flash(f"Category '{new_category_name}' already exists. Please make sure category you create has a unique name. ", 'error')
         else: 
-            cat = Category(name=new_category_name)
+            cat = Category(name=new_category_name, templateid=id)
             db.session.add(cat)
             db.session.commit()
             flash(f"Category '{new_category_name}' added successfully", 'success')
-        return redirect(url_for('test_category'))
-    return render_template('test_category.html', title='Category', form=form)
+        return redirect(url_for('category', id=id))
 
 @app.route('/category/update',methods=['POST','GET'])
 def update():
@@ -167,21 +170,19 @@ def update():
             cat.name = new_category_name
             flash(f"Category name updated to '{new_category_name}'", 'success')
             db.session.commit()
-        return redirect(url_for('test_category'))
+        return redirect(url_for('category'))
 
-@app.route('/category/delete/<cid>', methods = ['GET'])
-def test_delete_category(cid):
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
+@app.route('/assessment/<id>/category/delete/<cid>', methods = ['GET'])
+def delete_category(id, cid):
+    check_privilege_user(current_user)
+    check_privilege_manager(current_user)
 
     delete_category = Category.query.filter_by(id=cid).one()
     db.session.delete(delete_category)
     db.session.commit()
     flash(f"Category '{delete_category.name}' deleted successfully", 'success')
     
-    return redirect(url_for('test_category'))
+    return redirect(url_for('category', id=id))
 """ EndCategory ============================================================================== """
 
 @app.route('/add_question',methods=['GET','POST'])
