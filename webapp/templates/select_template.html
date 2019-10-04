@@ -32,17 +32,18 @@
 <div id="Content">
 
         <div class="inner-wrap">
-    <form action="{{ url_for('test_category') }}" method="GET">
+    <form action="{{url_for('select_template')}}" method="POST">
         <p><label>Choose Assessment:</label></p>
-        <p><select name="assessment">
+        <p><select name="assessment_type_id">
                 <option></option>
                 {% for entry in temp %}
                 <option value="{{entry.id}}">{{ entry.name }}</option>
+                <input type="hidden"  name="assessment_type_name" value="{{entry.name}}">
                 {% endfor %}
             </select>
         </p>
     <br><br>
-        <p><button>Proceed</button></p>  
+        <p><input type="submit" value="Proceed"></p>  
     </form>
 </div>
 </div>
