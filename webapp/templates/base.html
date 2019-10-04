@@ -1,5 +1,13 @@
 {% extends "bootstrap/base.html" %}
 
+
+
+
+
+
+
+
+
 <html>
 {% block title %}
   {% if title %}
@@ -10,6 +18,20 @@
 {% endblock %}
 
 {% block head %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                    <span>{{ message }}</span>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
   {{super()}}
     <link rel="stylesheet" href="{{url_for('static',filename='css/normalize.css')}}">
     <link rel="stylesheet" href="{{url_for('static',filename='styles/styles.css')}}">
@@ -23,6 +45,7 @@
 
 
     <body>
+
         {% block content %}
 
 
@@ -58,6 +81,7 @@
             });
         });
     </script>
+
 {% endblock %}
 
 

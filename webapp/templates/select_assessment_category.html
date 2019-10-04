@@ -32,7 +32,7 @@
 
                                      <form action="{{ url_for('assess') }}" method="GET">
                                      <p><label>Choose Organization:</label></p>
-                                     <p><select name="org">
+                                     <p><select name="org" required>
                                      <option></option>
                                      {% for entry in org %}
                                      <option value="{{entry.id}}">{{ entry.name }}</option>
@@ -41,7 +41,7 @@
                                      <br><br>
 
                                      <p><label>Choose Assessment Type:</label></p>
-                                     <p><select name="template">
+                                     <p><select name="template" required>
                                      <option></option>
                                      {% for entry in temp %}
                                      <option value="{{entry.id}}">{{ entry.name }}</option>
@@ -65,29 +65,28 @@
         <form action="/transform" method="post" enctype="multipart/form-data">
 
             <h3>Upload a new assessment (.csv) file:</h3>
-            Assessment name: <input type="text" name="template_name" id="template_name"><br>
-                <input class="input-sm" type="file" id="file" name="data_file" /><br>
-            <button type="submit" value="submit" onclick="return empty()">Upload</button>
+            Assessment name: <input type="text" name="template_name" id="template_name" required><br>
+                <input class="input-sm" type="file" id="file" name="data_file" required/><br>
+            <button type="submit" value="submit">Upload</button>
         </form>
         </div></div></div></div></div></div></div></div>
 
 
-<script>
+    <script>
+        //Code for upload csv
+        function empty() {
+            var templateName = document.getElementById("template_name").value;
+            if (templateName == "") {
+                //alert("Enter a valid assessment name !");
+                return false;
+            };
+            if( document.getElementById("file").files.length == 0 ){
+                //alert("Please select a file !");
+                return false;
+            }
+        }
+    </script>
 
-    //Code for upload csv
-    function empty() {
-    var templateName = document.getElementById("template_name").value;
-    if (templateName == "") {
-    alert("Enter a valid assessment name !");
-    return false;
-    };
-    if( document.getElementById("file").files.length == 0 ){
-    alert("Please select a file !");
-    return false;
-    }
-    }
-
-</script>
 
 
 

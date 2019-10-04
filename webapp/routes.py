@@ -27,7 +27,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Congratulations, you are now a registered user!')
+        flash('Congratulations, you are now a registered user!', "success")
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
@@ -41,7 +41,7 @@ def login():
     if form.validate_on_submit():
         user = UserAccount.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
+            flash('Invalid username or password', "danger")
             return redirect(url_for('login'))
         login_user(user, remember=form.remember_me.data)
         next_page = request.args.get('next')
@@ -57,13 +57,14 @@ def reset_password():
         return redirect(url_for('login'))
     if form.validate_on_submit():
         if current_user is None or not current_user.check_password(form.password.data):
-            flash('Invalid current password')
+            flash('Invalid current password', "danger")
             return redirect(url_for('reset_password'))
         current_user.set_password(form.newpassword1.data)
         db.session.commit()
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
+            flash('Your password was reset successfully!', "success")
         return redirect(next_page)
     return render_template('reset_password.html', title='Reset Password', form=form)
 
@@ -71,6 +72,7 @@ def reset_password():
 @app.route('/logout')
 def logout():
     logout_user()
+    flash('You have been signed out!', "success")
     return redirect(url_for('index'))
 
 #TODO: add functionality to select relevant categories
@@ -84,7 +86,7 @@ def add_organization():
             size=form.size.data, domain=form.domain.data)
         db.session.add(org)
         db.session.commit()
-        flash('Success')
+        flash('Organization was added successfully!', "success")
         return redirect(url_for('add_organization'))
     return render_template('add_organization.html', title='Add Organization', form=form)
 
@@ -102,7 +104,7 @@ def add_category():
         cat = Category(name=form.name.data, templateid=request.form['temp'])
         db.session.add(cat)
         db.session.commit()
-        flash('Success')
+        flash('Success', "success")
         return redirect(url_for('add_question'))
     return render_template('add_category.html', title='Add Category', form=form, temp=temp)
 
@@ -112,7 +114,7 @@ def select_template():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     temp = Template.query.all()
-    flash('Successful assessment')
+    # flash('Successful assessment')
     return render_template('select_template.html', title='Select Template', temp=temp)
 
 @app.route('/edit_assessment',methods=['GET','POST'])
@@ -146,12 +148,12 @@ def test_insert_category():
     if form.validate_on_submit():
         new_category_name = form.name.data.title() 
         if is_categroy_repeat(new_category_name):
-            flash("Category '{new_category_name}' already exists. Please make sure category you create has a unique name", 'error')
+            flash("Category '{new_category_name}' already exists! Please enter a unique name.", "danger")
         else: 
             cat = Category(name=new_category_name)
             db.session.add(cat)
             db.session.commit()
-            flash("Category '{new_category_name}' added successfully", 'success')
+            flash("Category '{new_category_name}' added successfully!", 'success')
         return redirect(url_for('test_category'))
     return render_template('test_category.html', title='Category', form=form)
 
@@ -160,12 +162,12 @@ def update():
     if request.method == 'POST':
         new_category_name = request.form['name'].title() 
         if is_categroy_repeat(new_category_name):
-            flash("Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
+            flash("Category '{new_category_name}' already exists! Please enter a unique name. ", "danger")
         else:
             cid = request.form['id']
             cat = Category.query.filter_by(id=cid).one()
             cat.name = new_category_name
-            flash("Category name updated to '{new_category_name}'", 'success')
+            flash("Category name updated to '{new_category_name}'!", 'success')
             db.session.commit()
         return redirect(url_for('test_category'))
 
@@ -179,7 +181,7 @@ def test_delete_category(cid):
     delete_category = Category.query.filter_by(id=cid).one()
     db.session.delete(delete_category)
     db.session.commit()
-    flash("Category '{delete_category.name}' deleted successfully", 'success')
+    flash("Category '{delete_category.name}' deleted successfully!", 'success')
     
     return redirect(url_for('test_category'))
 """ EndCategory ============================================================================== """
@@ -228,7 +230,7 @@ def select_assessment_category():
     org = Organization.query.all()
     temp = Template.query.all()
     gl = Guideline.query.all()
-    flash('Successful assessment')
+    # flash('Successful assessment!', "success")
     return render_template('select_assessment_category.html', title='Select Template', org=org, temp=temp, gl=gl)
 
 
@@ -247,7 +249,7 @@ class DataWithInfo(object):
         return "%s has %i items associated with it" % (self.data, len(self.info))
 
 
-@app.route('/assess',methods=['GET','POST'])
+@app.route('/assess', methods=['GET','POST'])
 def assess():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
@@ -293,8 +295,9 @@ def assess():
                     obj = Rating(assessment_id=a.id, question_id=q.id, rating=rate)
                     db.session.add(obj)
         db.session.commit()
-        flash('Success')
-        return redirect(url_for('select_assessment_category'))
+        flash('The assessment was successful!', "success")
+        return redirect(url_for('select_vis'))
+
     return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest)
 
 @app.route('/select_vis', methods=['GET','POST'])
@@ -438,6 +441,11 @@ def delete_selected_questions(questionId):
         return jsonify({'result': "success"})
     except Exception as e:
         return jsonify("result", "failure")
+
+@app.route('/throwerror/<errormessage>', methods=['POST', 'GET'])
+def throwerror(errormessage):
+    flash(errormessage, 'warning')
+    return render_template('select_assessment_category.html', errormessage=errormessage)
 
 @app.route('/transform', methods=["POST"])
 def transform_view():

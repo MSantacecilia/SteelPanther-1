@@ -43,7 +43,7 @@ class CategoryForm(FlaskForm):
 class OrganizationForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()], render_kw={'autofocus': True})
     loc = StringField('Location', validators=[DataRequired()])
-    myChoices = [('0-500', '0-500'), ('501-2000', '501-2000'), ('2001-5000', '2001-5000')]
+    myChoices = [('0-500', '0-500'), ('501-2000', '501-2000'), ('2001-5000', '2001-5000'),('5000+', '5000+')]
     size = SelectField('Number of employees',choices=myChoices, validators=[DataRequired()])
     domain = StringField('Domain', validators=[DataRequired()])
     submit = SubmitField('Add Organization')
