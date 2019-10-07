@@ -170,10 +170,12 @@ def update():
 
 @app.route('/assessment/<id>/category/delete/<cid>', methods = ['GET'])
 def delete_category(id, cid):
-    check_privilege_user(current_user)
-    check_privilege_manager(current_user)
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
 
-    delete_category = Category.query.filter_by(id=cid).one()
+    delete_category = Category.query.filter_by(id=cid, templateid=id).one()
     db.session.delete(delete_category)
     db.session.commit()
     flash(f"Category '{delete_category.name}' deleted successfully", 'success')

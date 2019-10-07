@@ -49,7 +49,7 @@ class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
     templateid = db.Column(db.Integer, db.ForeignKey("template.id"), nullable=True)
-    questions = db.relationship('Question', backref='category', lazy='dynamic')
+    questions = db.relationship('Question', backref='category', lazy='dynamic', cascade='all, delete-orphan')
 
     def __repr__(self):
         return '<Category {0}>'.format(self.name)
@@ -59,10 +59,9 @@ class Category(db.Model):
 
 class Rating(db.Model):
     assessment_id = db.Column(db.Integer, db.ForeignKey('assessment.id'), nullable=False, primary_key=True)
-    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False, primary_key=True)
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id', ondelete='CASCADE'), nullable=False, primary_key=True)
     rating = db.Column(db.Integer)
     observation = db.Column(db.String(256))
-    quest = db.relationship("Question")
 
     def __repr__(self):
         return '<Rating {0} {1} {2}>'.format(Question.query.get(self.question_id).name, Assessment.query.get(self.assessment_id), self.rating)
@@ -71,7 +70,8 @@ class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(120))
     category_id = db.Column(db.Integer, db.ForeignKey('category.id', ondelete='CASCADE'), nullable=False)
-    guideline = db.relationship('Guideline', backref='question', lazy='dynamic')
+    guideline = db.relationship('Guideline', backref='question', lazy='dynamic', cascade='all, delete-orphan')
+    ratings = db.relationship('Rating', backref='question', lazy='dynamic', cascade='all, delete-orphan')
 
     def __repr__(self):
         return '<Question {0}>'.format(self.name)
@@ -82,7 +82,7 @@ class Question(db.Model):
 class Guideline(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     guideline = db.Column(db.String(256))
-    quest_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
+    quest_id = db.Column(db.Integer, db.ForeignKey('question.id', ondelete='CASCADE'), nullable=False)
 
     def __repr__(self):
         return '<Guideline {0}>'.format(self.guideline)

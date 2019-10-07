@@ -62,7 +62,9 @@
                             <input class="edit_input" type="text" value="{{category.name}}" />
                         </td>
                         <td class="text-right">
-                            <i class="material-icons delete" style="top: 3px;position: relative">delete</i>
+                            <a href="{{url_for('delete_category', id=id, cid=category.id)}}" onclick="return confirm('Click OK to delete {{category.name}}')" style="color: red;">
+                                <i class="material-icons delete" style="top: 3px;position: relative">delete</i>
+                            </a>
                             <i class="material-icons edit" style="top: 3px;position: relative">edit</i>
                             <i class="material-icons save" style="top: 3px;position: relative; float: right; display: none;">save</i>
                         </td>
