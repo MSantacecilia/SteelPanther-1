@@ -124,6 +124,27 @@ def select_template():
     # flash('Successful assessment')
     return render_template('select_template.html', title='Select Template', temp=temp)
 
+@app.route('/assessment/add',methods=['GET','POST'])
+def create_template():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        assessment_type_name = request.form['template_name']
+
+    newTemplate = Template(name=assessment_type_name)
+    db.session.add(newTemplate)
+    db.session.commit()
+    newTempId=Template.query.filter_by(name=assessment_type_name).first().id
+
+
+    flash(f"Template '{assessment_type_name}' created successfully", 'success')
+    return redirect(url_for('category', id=newTempId))
+
+
+
 @app.route('/assessment/<id>',methods=['GET','POST'])
 # Agile, Cloud, Devop
 def category(id):
