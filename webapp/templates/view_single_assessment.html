@@ -25,10 +25,20 @@
     <i onclick="goBack()" class="material-icons md-48" style="cursor: pointer;top: 25px;position: relative;color: white;">arrow_back</i><center><h1>Assessment Information</h1></center>
 
     <div id="Content">
+        <h3>Select type of graph:</h3>
+        <select id="graph_select" name="hi">
+            <option value="bar">Bar Graph</option>
+            <option value="pie">Pie Graph</option>
+            <option value="spider">Spider Graph</option><br><br>
+        </select>
+        <h1></h1>
+
 
         <div class="inner-wrap">
 
-            <div  align="center" class="container-fluid ui-resizable" id="my_dataviz"></div>
+            <div align="center" class="container-fluid ui-resizable" id="canvas_div">
+
+            </div>
 
 
 
@@ -68,60 +78,178 @@
 
 
 
-
-
-
     <script src="https://d3js.org/d3.v4.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+
     <script>
-        var jsonData = '';
-        window.onload = function() {
-            var temp = '{{json_data}}';
-            jsonData = temp.replace(/&#34;/g, '"');
-            generateGraph();
-        };
-        function generateGraph(){
-// set the dimensions and margins of the graph
-            var margin = {top: 30, right: 30, bottom: 120, left: 60},
-                width = 460 - margin.left - margin.right,
-                height = 400 - margin.top - margin.bottom;
-// append the svg object to the body of the page
-            var svg = d3.select("#my_dataviz")
-                .append("svg")
-                .attr("preserveAspectRatio", "xMinYMin meet")
-                .attr("viewBox", "0 0 460 400")
-                .append("g")
-                .attr("transform",
-                    "translate(" + margin.left + "," + margin.top + ")");
-            var data = JSON.parse(jsonData);
-            // X axis
-            var x = d3.scaleBand()
-                .range([ 0, width ])
-                .domain(data.map(function(d) { return d.question; }))
-                .padding(0.2);
-            svg.append("g")
-                .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x))
-                .selectAll("text")
-                .attr("transform", "translate(-10,0)rotate(-45)")
-                .style("text-anchor", "end");
-            // Add Y axis
-            var y = d3.scaleLinear()
-                .domain([0, 3])
-                .range([ height, 0]);
-            svg.append("g")
-                .call(d3.axisLeft(y));
-            // Bars
-            svg.selectAll("mybar")
-                .data(data)
-                .enter()
-                .append("rect")
-                .attr("x", function(d) { return x(d.question); })
-                .attr("y", function(d) { return y(d.Value); })
-                .attr("width", x.bandwidth())
-                .attr("height", function(d) { return height - y(d.Value); })
-                .attr("fill", "#003873")
+
+        let canvasHTML = '';
+        graph_select.onchange = function() {
+            loadGraph();
         }
-    </script>
+
+        function loadGraph(){
+            graph_type = graph_select.value;
+            if(graph_type == "bar"){
+                generateBarGraph('bar');
+            }
+            else if(graph_type == "pie"){
+                generateBarGraph('pie');
+            }
+            else{
+                generateSpiderGraph();
+            }
+        }
+
+       window.onload = function() {
+           var temp = '{{json_data}}';
+           jsonData = temp.replace(/&#34;/g, '"');
+           generateBarGraph('bar');
+       };
+
+
+        // Generates a random value between 0 and 255
+     function randomNum() {
+       return Math.floor(Math.random() * 256);
+     }
+     // Returns an array of 3 values for rgb
+     function randomRGB() {
+       var red = randomNum();
+       var green = randomNum();
+       var blue = randomNum();
+       return "rgba(" + red + ", " + green + ", " + blue + ", 0.5)";
+     }
+
+
+
+
+    function generateBarGraph(graphType){
+
+       var labelArray =[], valueArray=[], colorArray=[];
+
+       canvasHTML = '';
+        {% for category in categories %}
+            canvasHTML += '<canvas height="300px" id="{{category}}" style="border:1px solid" width="500px"></canvas>';
+        {% endfor %}
+
+       canvas_div.innerHTML = canvasHTML;
+
+        {% for category in categories %}
+       labelArray =[];
+       valueArray=[];
+        colorArray=[];
+
+        var chartData = JSON.parse(jsonData);
+
+       for (var i = 0, len = chartData.length; i < len; ++i) {
+           if(chartData[i].category == "{{category}}"){
+                labelArray.push(chartData[i].question);
+                valueArray.push(chartData[i].Value);
+                colorArray.push(randomRGB());
+           }
+       }
+
+        new Chart(document.getElementById("{{category}}"), {
+    type: graphType,
+    data: {
+      labels: labelArray,
+      datasets: [
+        {
+          label: "bar",
+          backgroundColor: colorArray,
+          data: valueArray
+        }
+      ]
+    },
+    options: {
+      legend: { display: false },
+      title: {
+        display: true,
+        text: '{{category}}'
+      }
+    }
+	});
+	 {% endfor %}
+
+    }
+
+
+
+
+
+
+
+
+
+
+     function generateSpiderGraph(){
+        canvasHTML = '';
+        {% for category in categories %}
+            canvasHTML += '<canvas height="300px" id="{{category}}" style="border:1px solid" width="500px"></canvas>';
+        {% endfor %}
+
+       canvas_div.innerHTML = canvasHTML;
+
+       var myChart
+       var chart
+       var chartData = JSON.parse(jsonData);
+       var labelArray =[], valueArray=[];
+
+       //alert(valueArray);
+       {% for category in categories %}
+       labelArray =[];
+       valueArray=[];
+       for (var i = 0, len = chartData.length; i < len; ++i) {
+           if(chartData[i].category == "{{category}}"){
+                labelArray.push(chartData[i].question);
+                valueArray.push(chartData[i].Value);
+           }
+       }
+       myChart = document.getElementById("{{category}}").getContext("2d");
+       chart = new Chart(myChart,{
+           type:'radar',
+           data:{
+               labels:labelArray,
+               datasets:[{
+                   label:['Rating'],
+                   data:valueArray,
+                   backgroundColor:[randomRGB()]
+               }]
+           },
+           options:{
+               title:{
+                   display:true,
+                   text:["{{category}}"],
+                   fontsize:20
+               },
+               legend:{
+                   position:'bottom'
+               },
+               layout:{
+                   padding:{
+                       left:50,
+                       right:0,
+                       bottom:0,
+                       top:0
+                   }
+               },
+               tooltips:{
+                   display:false
+               },
+               scale:{
+                   ticks: {
+                       beginAtZero: true,
+                       min: 0,
+                       max: 3
+                   }
+               }
+           }
+       });
+       {% endfor %}
+     }
+       </script>
         </div></div></div></div></div></div></div></div>
 
 {% endblock %}

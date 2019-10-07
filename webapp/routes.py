@@ -5,6 +5,7 @@ from webapp.forms import LoginForm, RegistrationForm, CategoryForm, Organization
 from flask_login import current_user, login_user, logout_user, login_required
 from webapp.models import UserAccount, Category, Organization, Question, Assessment, Rating, Template, Guideline
 import io,csv, json
+import re
 from sqlalchemy import and_, subquery
 
 
@@ -366,6 +367,7 @@ def view_single_assessment():
 #    assessd = Guideline.query.outerjoin(subq, Guideline.quest_id == subq.rating_question_id)
 #   assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
     questionsArray = []
+	categories = []
     for a in assessdetail:
         print("UWWWWWWWWWWWWWWWWWWWWWWWWU")
         print(a)
@@ -374,11 +376,14 @@ def view_single_assessment():
         questionObj["question"] = a.Question.name
         questionObj["Value"] = a.Rating.rating
         questionObj["category"] = a.Category.name
+		category_name = re.sub(r"[^a-zA-Z0-9]+", ' ', a.Category.name)
+        if category_name not in categories:
+            categories.append(category_name)
         guidedetail = db.session.query(Guideline).filter(a.Question.id==Guideline.quest_id).all()
         print(guidedetail)
         questionsArray.append(questionObj)
     json_data = json.dumps(questionsArray)
-    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetail, json_data=json_data, guideline=guidedetail)
+    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetail, json_data=json_data, guideline=guidedetail, categories=categories)
 
 @app.route('/multi_vis',methods=['GET'])
 def multi_vis():
