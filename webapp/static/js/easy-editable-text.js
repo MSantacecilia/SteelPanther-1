@@ -33,7 +33,9 @@ $(document).ready(function(){
 	});
 	
 	$('.edit_input').blur(function() {
-		if(!$(this).parent().next().children().first().next().next().children().first().data('clicked')){
+		var editIcon = $(this).parent().next().children().first().next();
+
+		if(!editIcon.next().data('clicked')){
 			this.value = (this.defaultValue ? this.defaultValue : '');
 		}else{
 			var cid = $(this).attr('id');
@@ -46,8 +48,8 @@ $(document).ready(function(){
 		$(this).prev().show();
 
 		// Show edit icon, hide save icon
-		$(this).parent().next().children().first().next().show();
-		$(this).parent().next().children().first().next().next().children().first().hide();
+		editIcon.show();
+		editIcon.next().hide();
 			
 		// }
 		// else{

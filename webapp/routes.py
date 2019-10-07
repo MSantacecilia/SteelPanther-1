@@ -168,7 +168,7 @@ def update(id, cid):
 
     print('in the method with cid=' + cid)
     if request.method == 'POST':
-        new_category_name = request.form[f'cat_name{cid}']
+        new_category_name = request.form[f"cat_name{cid}"]
         print(new_category_name)
         if is_category_repeat(new_category_name):
             flash(f"Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
