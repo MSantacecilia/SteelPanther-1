@@ -7,7 +7,7 @@
 
 
 
-    <div class="container-fluid" id="sidebar" style="color: white;">
+    <div class="container-fluid" id="sidebar">
         <div class="row">
             <div class="col-xs-4 col-sm-4 col-md-1">
                 {% include 'navbar.html' %}
@@ -40,17 +40,28 @@
                 <option value="{{entry.id}}">{{ entry.name }}</option>
                 {% endfor %}
             </select>
+
         </p>
-    <br><br>
-        <p><button>Proceed</button></p>  
+    <br/><br/>
+        <center><button type="submit">Proceed</button></center>
     </form>
-</div>
-</div>
-    </div>
+    <hr>
 
 
 
 
 
-                    </div></div></div></div></div>
+
+
+
+            <form action="/transform" method="post" enctype="multipart/form-data">
+
+                <h3>Create New Template</h3>
+                <p>Assessment name: </p><input type="text" name="template_name" id="template_name" required><br>
+                <br />
+                <br />
+                <button type="submit" value="submit">Proceed</button>
+            </form>
+            </div></div></div></div></div></div></div></div>
+
 {% endblock %}

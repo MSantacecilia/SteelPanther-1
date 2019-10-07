@@ -36,7 +36,7 @@ def register():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
-    
+
     form = LoginForm()
     if form.validate_on_submit():
         user = UserAccount.query.filter_by(username=form.username.data).first()
@@ -49,7 +49,7 @@ def login():
             next_page = url_for('index')
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
-   
+
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     form = ResetPasswordForm()
@@ -82,7 +82,7 @@ def add_organization():
         return redirect(url_for('login'))
     form = OrganizationForm()
     if form.validate_on_submit():
-        org = Organization(name=form.name.data, location=form.loc.data, 
+        org = Organization(name=form.name.data, location=form.loc.data,
             size=form.size.data, domain=form.domain.data)
         db.session.add(org)
         db.session.commit()
@@ -149,28 +149,15 @@ def insert_category(id):
         return redirect(url_for('login'))
     if not current_user.is_admin():
         return redirect(url_for('index'))
-<<<<<<< HEAD
-    form = CategoryForm()
-    if form.validate_on_submit():
-        new_category_name = form.name.data.title() 
-        if is_categroy_repeat(new_category_name):
-            flash("Category '{new_category_name}' already exists! Please enter a unique name.", "danger")
-=======
 
     if request.method == 'POST':
-        new_category_name = request.form['new_cat'] 
+        new_category_name = request.form['new_cat']
         if is_category_repeat(new_category_name):
             flash(f"Category '{new_category_name}' already exists. Please make sure category you create has a unique name. ", 'error')
->>>>>>> b82f18f804bdbd069fd7ed5b500b41c8e4778713
-        else: 
+        else:
             cat = Category(name=new_category_name, templateid=id)
             db.session.add(cat)
             db.session.commit()
-<<<<<<< HEAD
-            flash("Category '{new_category_name}' added successfully!", 'success')
-        return redirect(url_for('test_category'))
-    return render_template('test_category.html', title='Category', form=form)
-=======
             flash(f"Category '{new_category_name}' added successfully", 'success')
         return redirect(url_for('category', id=id))
 
@@ -180,28 +167,17 @@ def update(id, cid):
         return redirect(url_for('login'))
     if not current_user.is_admin():
         return redirect(url_for('index'))
->>>>>>> b82f18f804bdbd069fd7ed5b500b41c8e4778713
 
     print('in the method with cid=' + cid)
     if request.method == 'POST':
-<<<<<<< HEAD
-        new_category_name = request.form['name'].title() 
-        if is_categroy_repeat(new_category_name):
-            flash("Category '{new_category_name}' already exists! Please enter a unique name. ", "danger")
-=======
         new_category_name = request.form[f"cat_name{cid}"]
         print(new_category_name)
         if is_category_repeat(new_category_name):
             flash(f"Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
->>>>>>> b82f18f804bdbd069fd7ed5b500b41c8e4778713
         else:
             cat = Category.query.filter_by(id=cid, templateid=id).first()
             cat.name = new_category_name
-<<<<<<< HEAD
-            flash("Category name updated to '{new_category_name}'!", 'success')
-=======
             flash(f"Category name updated to '{new_category_name}'", 'success')
->>>>>>> b82f18f804bdbd069fd7ed5b500b41c8e4778713
             db.session.commit()
         return redirect(url_for('category', id=id))
 
@@ -215,12 +191,8 @@ def delete_category(id, cid):
     delete_category = Category.query.filter_by(id=cid, templateid=id).one()
     db.session.delete(delete_category)
     db.session.commit()
-<<<<<<< HEAD
-    flash("Category '{delete_category.name}' deleted successfully!", 'success')
-=======
     flash(f"Category '{delete_category.name}' deleted successfully", 'success')
->>>>>>> b82f18f804bdbd069fd7ed5b500b41c8e4778713
-    
+
     return redirect(url_for('category', id=id))
 """ EndCategory ============================================================================== """
 
@@ -241,7 +213,7 @@ def add_question():
         flash('Success')
         return redirect(url_for('add_question'))
     return render_template('add_question.html', title='Add Question', form=form, cats=cats)
-""" 
+"""
 @app.route('/add_guidelines',methods=['GET','POST'])
 def add_question():
     # This functionality is only for managers
@@ -356,11 +328,11 @@ def select_timestamp():
     cats = Category.query.filter(Category.templateid == temp)
     form = SelectTimestampForm()
     assess_deets = Assessment.query.filter((Assessment.temp == temp) & (Assessment.organization_id == orgs)).all()
-   
+
 #   assess_cat = Assessment.query.filter(Assessment.cat == Category.query.get(cats)).all()
 #   assess_org = Assessment.query.filter(Assessment.organization_id == Organization.query.get(orgs)).all()
     return render_template('select_timestamp.html', title='Relevant Assessments',  form=form, assess_deets=assess_deets, cats=cats)
-    
+
 @app.route('/view_single_assessment', methods=['GET','POST'])
 def view_single_assessment():
     if not current_user.is_authenticated:
@@ -417,7 +389,7 @@ def multi_vis():
                     assessDict[k].rating = str(int(round(ratingdict[k] / assessDict[k].count, 1)))
 
     return render_template('multiple_assess_vis.html', title='Multi-Visual', assessDict=assessDict, ratingDict=ratingdict)
-    
+
 @app.route('/delete_question', methods=['GET', 'POST'])
 def delete_question():
     if not current_user.is_authenticated:
@@ -463,14 +435,14 @@ def filter_questions(categoryId):
         questionObj["name"] = question.name
         questionsArray.append(questionObj)
     return jsonify({'questions': questionsArray})
-    
+
 @app.route('/update_question/<questionId>/<updatedQuestion>')
 def update_questions(questionId, updatedQuestion):
     question = Question.query.filter_by(id=questionId).first()
     question.name = updatedQuestion
     db.session.commit()
     return jsonify({'result': "success"})
-    
+
 @app.route('/delete_question/<questionId>')
 def delete_selected_questions(questionId):
     try:
@@ -548,11 +520,11 @@ def transform_view():
                     db.session.add(guideline)
 
                 db.session.commit()
-    
+
     return redirect(url_for('select_assessment_category'))
-    
+
 def transform(text_file_contents):
-    return text_file_contents.replace("=", ",")     
+    return text_file_contents.replace("=", ",")
 
 #TODO
 # def export_csv():
