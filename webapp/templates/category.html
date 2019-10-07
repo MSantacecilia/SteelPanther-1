@@ -56,8 +56,8 @@
                     </tr>
                     
                     {% for category in categories%}
+                    <form action="{{url_for('update',id=id,cid=category.id)}}" method="POST" id="update_category{{category.id}}">
                     <tr style="color: black">
-                        <form action="{{url_for('update',id=id,cid=category.id)}}" method="POST" id="update_category{{category.id}}">
                         <td>
                             <label class="text_label">{{category.name}}</label>
                             <input class="edit_input" name="cat_name{{category.id}}" id="{{category.id}}" type="text" value="{{category.name}}" />
@@ -67,15 +67,11 @@
                             <a href="{{url_for('delete_category', id=id, cid=category.id)}}" onclick="return confirm('Click OK to delete {{category.name}}')" style="color: red;">
                                 <i class="material-icons delete" style="top: 3px;position: relative">delete</i>
                             </a>
-                            <i class="material-icons edit" style="top: 3px;position: relative">edit</i>
-                            <!-- <a href="javascript:{}" onclick="document.getElementById('update_category').submit(); return false;"> -->
-                            <div>
-                                <i class="material-icons save" id="{{category.id}}" style="top: 3px;position: relative; float: right; display: none;">save</i>
-                            </div>
-                            <!-- </a> -->
+                            <i class="material-icons edit" style="top: 3px;position: relative;color: green">edit</i>
+                            <i class="material-icons save" id="{{category.id}}" style="top: 3px;position: relative; float: right; display: none;color: green">save</i>
                         </td>
-                        </form>
                     </tr>
+                    </form>
                     {% endfor %}
 
                 </table>
