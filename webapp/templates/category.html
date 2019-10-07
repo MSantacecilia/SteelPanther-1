@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+  {{super()}}
+
+{% endblock %}
+
+
+{% block content %}   
+
+    <div class="container-fluid" id="sidebar" style="color: black;">
+        <div class="row">
+            <div class="col-xs-4 col-sm-4 col-md-4">
+                {% include 'navbar.html' %}
+            </div>
+            <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-3 main">
+                <h1 class="page-header" style="color: white">{{title}}</h1>
+                {% with messages = get_flashed_messages(category_filter=["success"]) %}
+                {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-success">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>{{ message }}
+                </div>
+                {% endfor %}
+                {% endif %}
+                {% endwith %}
+
+                {% with errors = get_flashed_messages(category_filter=["error"]) %}
+                {% if errors %}
+                {%- for message in errors %}
+                <div class="alert alert-danger">
+                    <a class="close" data-dismiss="alert" href="#">×</a>
+                    <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>{{ message }}
+                </div>
+                {% endfor -%}
+                {% endif %}
+                {% endwith %}
+                
+                <table id="category_table" class="table table-light table-hover">
+                    <form action="{{url_for('insert_category',id=id)}}" id="add_category" method="POST">
+                    <tr>
+                        <td>
+                            <input class="add_input" type="text" name="new_cat" placeholder="Enter category name...">
+                        </td>
+                        <td>
+                            <i class="material-icons add" style="top: 3px;position: relative;">add_box</i>
+                        </td>
+                    </tr>
+                    </form>
+                    
+                    {% for category in categories%}
+                    <form action="{{url_for('update',id=id,cid=category.id)}}" method="POST" id="update_category{{category.id}}">
+                    <tr style="color: black">
+                        <td>
+                            <label class="text_label">{{category.name}}</label>
+                            <input class="edit_input" name="cat_name{{category.id}}" id="{{category.id}}" type="text" value="{{category.name}}" />
+                            <!-- <input name="cat_id" type="hidden" value="{{category.id}}"> -->
+                        </td>
+                        <td class="text-right">
+                            <a href="{{url_for('delete_category', id=id, cid=category.id)}}" onclick="return confirm('Click OK to delete {{category.name}}')" style="color: black">
+                                <i class="material-icons delete" style="top: 3px;position: relative">delete</i>
+                            </a>
+                            <i class="material-icons edit" style="top: 3px;position: relative;">edit</i>
+                            <i class="material-icons save" id="{{category.id}}" style="top: 3px;position: relative; float: right; display: none;">save</i>
+                        </td>
+                    </tr>
+                    </form>
+                    {% endfor %}
+
+                </table>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    {{super()}}
+    <script type="text/javascript" src="../static/js/easy-editable-text.js"></script>
+{% endblock %}
