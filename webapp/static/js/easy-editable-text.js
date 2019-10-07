@@ -1,20 +1,24 @@
 $(document).ready(function(){
 
 	$('.edit').click(function(){
+		// Hide edit icon, show save icon
 		$(this).hide();
-		$(this).next().show();
+		$(this).next().children().first().show();
+
+		// Hide text, show and select input field
 		$(this).parent().prev().children().first().hide();
-		$(this).parent().prev().children().first().next().next().show();
 		$(this).parent().prev().children().first().next().show();
 		$(this).parent().prev().children().first().next().select();
 	});
 	
 	$('.save').click(function(){
+		// Hide save icon, show edit icon
 		$(this).hide();
-		$(this).prev().show();
-		$(this).parent().prev().children().first().next().show();
-		$(this).parent().prev().children().first().next().next().show();
+		$(this).parent().prev().show();
 
+		// Hide input field, show text
+		$(this).parent().prev().children().first().show();
+		$(this).parent().prev().children().first().next().show();
 	});
 	
 	$('.edit_input').blur(function() {
@@ -27,10 +31,13 @@ $(document).ready(function(){
 			 this.defaultValue=this.value;
 		 }
 
+		 // Hide input field, show text
 		 $(this).hide();
 		 $(this).prev().show();
+
+		 // Show edit icon, hide save icon
 		 $(this).parent().next().children().first().next().show();
-		 $(this).parent().next().children().first().next().next().hide();
+		 $(this).parent().next().children().first().next().next().children().first().hide();
      });
 
 	  $('.edit_input').keypress(function(event) {
@@ -45,11 +52,13 @@ $(document).ready(function(){
 				 this.defaultValue=this.value;
 			 }
 
+			 // Hide input field, show text
 			 $(this).hide();
-			 $(this).next().hide();
 			 $(this).prev().show();
+
+			 // Show edit icon, 
 			 $(this).parent().next().children().first().next().show();
-			 $(this).parent().next().children().first().next().next().hide();
+			 $(this).parent().next().children().first().next().next().children().first().hide();
 		  }
 	  });
 

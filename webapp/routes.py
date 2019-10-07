@@ -143,6 +143,11 @@ def is_category_repeat(name):
 @app.route('/assessment/<id>/category/add',methods=['POST'])
 # Agile, Cloud, Devop
 def insert_category(id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
     if request.method == 'POST':
         new_category_name = request.form['new_cat'] 
         if is_category_repeat(new_category_name):
@@ -154,10 +159,16 @@ def insert_category(id):
             flash(f"Category '{new_category_name}' added successfully", 'success')
         return redirect(url_for('category', id=id))
 
-@app.route('/edit_assessment/update',methods=['POST','GET'])
+@app.route('/assessment/<id>/category/update/<cid>',methods=['POST'])
 def update():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    print('in the method')
     if request.method == 'POST':
-        new_category_name = request.form['name'].title() 
+        new_category_name = request.form['name'].title()
         if is_category_repeat(new_category_name):
             flash(f"Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
         else:
