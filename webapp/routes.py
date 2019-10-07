@@ -15,7 +15,6 @@ from sqlalchemy import and_, subquery
 def index():
     return render_template("index.html", title="Home")
 
-
 @app.route('/register',methods=['GET','POST'])
 def register():
     if current_user.is_authenticated:
@@ -367,7 +366,7 @@ def view_single_assessment():
 #    assessd = Guideline.query.outerjoin(subq, Guideline.quest_id == subq.rating_question_id)
 #   assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
     questionsArray = []
-	categories = []
+    categories = []
     for a in assessdetail:
         print("UWWWWWWWWWWWWWWWWWWWWWWWWU")
         print(a)
@@ -376,7 +375,7 @@ def view_single_assessment():
         questionObj["question"] = a.Question.name
         questionObj["Value"] = a.Rating.rating
         questionObj["category"] = a.Category.name
-		category_name = re.sub(r"[^a-zA-Z0-9]+", ' ', a.Category.name)
+        category_name = re.sub(r"[^a-zA-Z0-9]+", ' ', a.Category.name)
         if category_name not in categories:
             categories.append(category_name)
         guidedetail = db.session.query(Guideline).filter(a.Question.id==Guideline.quest_id).all()
