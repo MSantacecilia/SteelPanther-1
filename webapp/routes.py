@@ -143,9 +143,7 @@ def is_category_repeat(name):
 @app.route('/assessment/<id>/category/add',methods=['POST'])
 # Agile, Cloud, Devop
 def insert_category(id):
-    print('not post?')
     if request.method == 'POST':
-        print('hi')
         new_category_name = request.form['new_cat'] 
         if is_category_repeat(new_category_name):
             flash(f"Category '{new_category_name}' already exists. Please make sure category you create has a unique name. ", 'error')

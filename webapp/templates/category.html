@@ -39,23 +39,21 @@
                 {% endwith %}
                 
                 <table id="category_table" class="table table-light table-hover">
-                    <thead class="thead-dark">
-                        <tr class="m-0">
-                            <form action="{{url_for('insert_category',id=id)}}" method="POST">
-                                <th colspan="2">
-                                    <div class="input-group mb-3" style="padding: 0;">
-                                        <input type="text" class="form-control" name="new_cat" placeholder="Enter category name...">
-                                        <div class="input-group-append">
-                                            <button type="submit" class="btn btn-success">
-                                                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                                                Add
-                                            </button>
-                                        </div>
+                    <tr>
+                        <form action="{{url_for('insert_category',id=id)}}" method="POST">
+                            <th colspan="2">
+                                <div class="input-group" style="padding: 0;">
+                                    <input type="text" class="form-control" name="new_cat" placeholder="Enter category name...">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-success">
+                                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
+                                            Add
+                                        </button>
                                     </div>
-                                </th>
-                            </form>
-                        </tr>
-                    </thead>
+                                </div>
+                            </th>
+                        </form>
+                    </tr>
                     
                     {% for category in categories%}
                     <tr style="color: black">
