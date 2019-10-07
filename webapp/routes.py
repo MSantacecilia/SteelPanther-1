@@ -108,7 +108,7 @@ def add_category():
         return redirect(url_for('add_question'))
     return render_template('add_category.html', title='Add Category', form=form, temp=temp)
 
-""" Assessment Functionalities ================================================================= """
+""" Edit Assessment Functionalities ================================================================= """
 @app.route('/assessment',methods=['GET','POST'])
 def select_template():
     if not current_user.is_authenticated:
@@ -155,6 +155,23 @@ def category(id):
 
     form = CategoryForm()
     categories = Category.query.filter(Category.templateid == id).order_by(Category.name).all()
+
+    cL = Category.query.filter(Category.templateid == id).order_by(Category.name).all()
+    categories = []
+    for c in cL:
+        qL = Question.query.filter(Question.category_id == c.id).order_by(Question.name).all()
+        queslist = []
+        for q in qL:
+            gL = Guideline.query.filter(Guideline.quest_id == q.id).order_by(Guideline.guideline).all()
+            guidelineList = []
+            for g in gL:
+                gObj = DataWithInfo(g, [])
+                guidelineList.append(gObj)
+            qObj = DataWithInfo(q, guidelineList)
+            queslist.append(qObj)
+        cObj = DataWithInfo(c, queslist)
+        categories.append(cObj)
+    
     temp_name = Template.query.filter_by(id=id).one()
     return render_template('category.html', title=f'{temp_name.name.title()} Assessment Type', categories=categories, form=form, id=id)
 
