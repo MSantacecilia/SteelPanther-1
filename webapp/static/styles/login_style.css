@@ -225,6 +225,18 @@ a.reg:visited {
 	width: auto;
 }
 
+.add_input
+{
+	margin-top:8px;
+	font-size:18px;
+	color:#545454;
+	-moz-border-radius: 2px;
+	-webkit-border-radius: 2px;
+	-border-radius: 2px;
+	width:100%;
+
+}
+
 .edit_input
 {
 	margin-top:8px;
@@ -234,7 +246,7 @@ a.reg:visited {
 	-webkit-border-radius: 2px;
 	-border-radius: 2px;
 	display:none;
-	width:280px;
+	width:100%;
 
 }
 
@@ -247,6 +259,16 @@ label
 	-moz-border-radius: 2px;
 	-webkit-border-radius: 2px;
 	-border-radius: 2px;
+}
+
+.add
+{
+	float:right;
+	width:32px;
+	height:32px;
+	display:block;
+	cursor: pointer;
+	margin-left:10px;
 }
 
 .edit
