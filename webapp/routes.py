@@ -160,24 +160,23 @@ def insert_category(id):
         return redirect(url_for('category', id=id))
 
 @app.route('/assessment/<id>/category/update/<cid>',methods=['POST'])
-def update():
+def update(id, cid):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     if not current_user.is_admin():
         return redirect(url_for('index'))
 
-    print('in the method')
+    print('in the method with cid=' + cid)
     if request.method == 'POST':
-        new_category_name = request.form['name'].title()
+        new_category_name = request.form['cat_name']
         if is_category_repeat(new_category_name):
             flash(f"Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
         else:
-            cid = request.form['id']
-            cat = Category.query.filter_by(id=cid).one()
+            cat = Category.query.filter_by(id=cid, templateid=id).first()
             cat.name = new_category_name
-            flash("Category name updated to '{new_category_name}'", 'success')
+            flash(f"Category name updated to '{new_category_name}'", 'success')
             db.session.commit()
-        return redirect(url_for('category'))
+        return redirect(url_for('category', id=id))
 
 @app.route('/assessment/<id>/category/delete/<cid>', methods = ['GET'])
 def delete_category(id, cid):

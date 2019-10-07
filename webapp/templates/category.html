@@ -60,7 +60,7 @@
                         <form action="{{url_for('update',id=id,cid=category.id)}}" method="POST" id="update_category">
                         <td>
                             <label class="text_label">{{category.name}}</label>
-                            <input class="edit_input" type="text" value="{{category.name}}" />
+                            <input class="edit_input" id="cid{{category.id}}" name="cat_name" type="text" value="{{category.name}}" />
                             <!-- <input name="cat_id" type="hidden" value="{{category.id}}"> -->
                         </td>
                         <td class="text-right">
@@ -68,9 +68,11 @@
                                 <i class="material-icons delete" style="top: 3px;position: relative">delete</i>
                             </a>
                             <i class="material-icons edit" style="top: 3px;position: relative">edit</i>
-                            <a href="javascript:{}" onclick="document.getElementById('update_category').submit(); return false;">
+                            <!-- <a href="javascript:{}" onclick="document.getElementById('update_category').submit(); return false;"> -->
+                            <div>
                                 <i class="material-icons save" style="top: 3px;position: relative; float: right; display: none;">save</i>
-                            </a>
+                            </div>
+                            <!-- </a> -->
                         </td>
                         </form>
                     </tr>
