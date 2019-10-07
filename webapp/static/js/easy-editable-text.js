@@ -1,5 +1,9 @@
 $(document).ready(function(){
 
+	$('.add').click(function(){
+		document.getElementById("add_category").submit();
+	});
+
 	$('.edit').click(function(){
 		var textField = $(this).parent().prev().children().first();
 

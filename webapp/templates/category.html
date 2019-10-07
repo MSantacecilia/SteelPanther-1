@@ -39,21 +39,16 @@
                 {% endwith %}
                 
                 <table id="category_table" class="table table-light table-hover">
+                    <form action="{{url_for('insert_category',id=id)}}" id="add_category" method="POST">
                     <tr>
-                        <form action="{{url_for('insert_category',id=id)}}" method="POST">
-                            <th colspan="2">
-                                <div class="input-group" style="padding: 0;">
-                                    <input type="text" class="form-control" name="new_cat" placeholder="Enter category name...">
-                                    <div class="input-group-append">
-                                        <button type="submit" class="btn btn-success">
-                                            <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"></span>
-                                            Add
-                                        </button>
-                                    </div>
-                                </div>
-                            </th>
-                        </form>
+                        <td>
+                            <input class="add_input" type="text" name="new_cat" placeholder="Enter category name...">
+                        </td>
+                        <td>
+                            <i class="material-icons add" style="top: 3px;position: relative;">add_box</i>
+                        </td>
                     </tr>
+                    </form>
                     
                     {% for category in categories%}
                     <form action="{{url_for('update',id=id,cid=category.id)}}" method="POST" id="update_category{{category.id}}">
@@ -64,11 +59,11 @@
                             <!-- <input name="cat_id" type="hidden" value="{{category.id}}"> -->
                         </td>
                         <td class="text-right">
-                            <a href="{{url_for('delete_category', id=id, cid=category.id)}}" onclick="return confirm('Click OK to delete {{category.name}}')" style="color: red;">
+                            <a href="{{url_for('delete_category', id=id, cid=category.id)}}" onclick="return confirm('Click OK to delete {{category.name}}')" style="color: black">
                                 <i class="material-icons delete" style="top: 3px;position: relative">delete</i>
                             </a>
-                            <i class="material-icons edit" style="top: 3px;position: relative;color: green">edit</i>
-                            <i class="material-icons save" id="{{category.id}}" style="top: 3px;position: relative; float: right; display: none;color: green">save</i>
+                            <i class="material-icons edit" style="top: 3px;position: relative;">edit</i>
+                            <i class="material-icons save" id="{{category.id}}" style="top: 3px;position: relative; float: right; display: none;">save</i>
                         </td>
                     </tr>
                     </form>

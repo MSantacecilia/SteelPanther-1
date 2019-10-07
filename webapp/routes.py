@@ -148,6 +148,8 @@ def insert_category(id):
     if not current_user.is_admin():
         return redirect(url_for('index'))
 
+    print('doin it')
+
     if request.method == 'POST':
         new_category_name = request.form['new_cat'] 
         if is_category_repeat(new_category_name):
