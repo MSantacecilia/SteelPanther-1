@@ -57,7 +57,7 @@
                                         {% if c==myrating[l - 1] %}
                                             <input type="radio" name="rating{{q.id}}" value="{{ c }}" checked> {{ g.guideline }} <br>
                                         {% elif c==0 %}
-                                            <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
+                                            <input type="radio" name="rating{{q.id}}" value="{{ c }}" checked> {{ g.guideline }} <br>
                                         {% else %}
                                             <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
                                         {% endif %}
