@@ -282,8 +282,8 @@ class DataWithInfo(object):
         return "%s has %i items associated with it" % (self.data, len(self.info))
 
 
-@app.route('/select_assessment_category',methods=['GET','POST'])
-def select_assessment_category():
+@app.route('/assess',methods=['GET','POST'])
+def assess():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
@@ -294,13 +294,13 @@ def select_assessment_category():
     if request.method == 'POST':
         org_id = request.form['org']
         assmt_id = request.form['template']
-        return redirect(url_for('assess',o_id=org_id, a_id=assmt_id))
+        return redirect(url_for('assess_start',o_id=org_id, a_id=assmt_id))
 
-    return render_template('select_assessment_category.html', title='Select Template', org=org, temp=assmt, gl=gl)
+    return render_template('assess.html', title='Select Template', org=org, temp=assmt, gl=gl)
 
 
 @app.route('/assess/<o_id>&<a_id>', methods=['GET','POST'])
-def assess(o_id, a_id):
+def assess_start(o_id, a_id):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
@@ -337,7 +337,7 @@ def assess(o_id, a_id):
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
             session['myratings']=ratinglist
-            return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest)
+            return render_template('assess_start.html', title='Assessment', form=form, categories=categoryListTest)
           
         elif 'submit' in request.form:
             a = Evaluation(user_id=current_user.id, organization_id=org, assmt=temp)
@@ -363,7 +363,7 @@ def assess(o_id, a_id):
             flash('The assessment was successful!', "success")
             return redirect(url_for('select_vis'))
 
-    return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest)
+    return render_template('assess_start.html', title='Assessment', form=form, categories=categoryListTest)
 
 
 """ Visualization Functionality ================================================================= """
@@ -473,7 +473,7 @@ def delete_selected_questions(questionId):
 @app.route('/throwerror/<errormessage>', methods=['POST', 'GET'])
 def throwerror(errormessage):
     flash(errormessage, 'warning')
-    return render_template('select_assessment_category.html', errormessage=errormessage)
+    return render_template('assess_select.html', errormessage=errormessage)
 
 
 @app.route('/transform', methods=["POST"])
@@ -540,7 +540,7 @@ def transform_view():
 
                 db.session.commit()
 
-    return redirect(url_for('select_assessment_category'))
+    return redirect(url_for('assess_select'))
 
 def transform(text_file_contents):
     return text_file_contents.replace("=", ",")
