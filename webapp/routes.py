@@ -1,5 +1,5 @@
 from webapp import app, db
-from flask import render_template, flash, redirect, url_for, request, jsonify, make_response
+from flask import render_template, flash, redirect, url_for, request, jsonify, make_response, session
 from werkzeug.urls import url_parse
 from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, RatingForm, ResetPasswordForm, DeleteQuestionsForm, SelectTimestampForm, ViewSingleAssessmentForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -13,6 +13,7 @@ from sqlalchemy import and_, subquery
 @app.route('/index')
 @login_required
 def index():
+    print(session)
     return render_template("index.html", title="Home")
 
 @app.route('/register',methods=['GET','POST'])
@@ -39,6 +40,8 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
+        ratinglist = [0]
+        session['myratings'] = ratinglist
         user = UserAccount.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password', "danger")
@@ -72,6 +75,7 @@ def reset_password():
 @app.route('/logout')
 def logout():
     logout_user()
+    session.pop('myratings', None)
     flash('You have been signed out!', "success")
     return redirect(url_for('index'))
 
@@ -288,7 +292,6 @@ def assess():
     org = int(request.args['org'])
     temp = int(request.args['template'])
     form = RatingForm(request.form)
-
     cL = Category.query.filter(Category.templateid == temp).all()
     categoryListTest = []
     for c in cL:
@@ -306,28 +309,47 @@ def assess():
         categoryListTest.append(cObj)
 
     if form.validate_on_submit():
-        print(temp)
-        a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
-        print(a.temp)
-        db.session.add(a)
-        db.session.commit()
+        if 'save' in request.form:
+            queslist = []
+            ratinglist = []
+            for catQuestions in categoryListTest:
+                for question in catQuestions.info:
+                    queslist.append(question.data)
 
-        queslist = []
-        for catQuestions in categoryListTest:
-            for question in catQuestions.info:
-                queslist.append(question.data)
+            for q in queslist:
+                if request.method == "POST":
+                    #print(request.form['rating' + str(q.id)])
+                    if 'rating' + str(q.id) in request.form:
+                        rate = int(request.form['rating' + str(q.id)])
+                        ratinglist.append(rate)
+            session['myratings']=ratinglist
+            print(session)
+            return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest)
+          
+        elif 'submit' in request.form:
+            a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
+            db.session.add(a)
+            db.session.commit()
 
-        for q in queslist:
-            if request.method == "POST":
-                #print(request.form['rating' + str(q.id)])
-                if 'rating' + str(q.id) in request.form:
-                    rate = int(request.form['rating' + str(q.id)])
-                    print(rate)
-                    obj = Rating(assessment_id=a.id, question_id=q.id, rating=rate)
-                    db.session.add(obj)
-        db.session.commit()
-        flash('The assessment was successful!', "success")
-        return redirect(url_for('select_vis'))
+            queslist = []
+            ratinglist = []
+            for catQuestions in categoryListTest:
+                for question in catQuestions.info:
+                    queslist.append(question.data)
+
+            for q in queslist:
+                if request.method == "POST":
+                    #print(request.form['rating' + str(q.id)])
+                    if 'rating' + str(q.id) in request.form:
+                        rate = int(request.form['rating' + str(q.id)])
+                        ratinglist.append(rate)
+                        obj = Rating(assessment_id=a.id, question_id=q.id, rating=rate)
+                        db.session.add(obj)
+            session.pop('myratings', None)
+            session['myratings'] = [0]
+            db.session.commit()
+            flash('The assessment was successful!', "success")
+            return redirect(url_for('select_vis'))
 
     return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest)
 
@@ -362,14 +384,11 @@ def view_single_assessment():
     if request.method == "POST":
         ad = int(request.form["select"])
     assessdetail = db.session.query(Rating, Question, Category).filter(ad == Rating.assessment_id).filter(Rating.question_id == Question.id).filter(Question.category_id == Category.id).all()
-    print(assessdetail)
 #    assessd = Guideline.query.outerjoin(subq, Guideline.quest_id == subq.rating_question_id)
 #   assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
     questionsArray = []
     categories = []
     for a in assessdetail:
-        print("UWWWWWWWWWWWWWWWWWWWWWWWWU")
-        print(a)
         questionObj = {}
  #       guideLinesObj = []
         questionObj["question"] = a.Question.name
@@ -379,7 +398,6 @@ def view_single_assessment():
         if category_name not in categories:
             categories.append(category_name)
         guidedetail = db.session.query(Guideline).filter(a.Question.id==Guideline.quest_id).all()
-        print(guidedetail)
         questionsArray.append(questionObj)
     json_data = json.dumps(questionsArray)
     return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetail, json_data=json_data, guideline=guidedetail, categories=categories)

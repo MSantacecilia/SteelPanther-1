@@ -10,7 +10,6 @@
 
 
 
-
     <div class="container-fluid" id="sidebar">
     <div class="row">
     <div class="col-xs-4 col-sm-4 col-md-1">
@@ -33,47 +32,47 @@
             <div class="inner-wrap">
                 {% for o1 in categories %}
                 {% set c = o1.data %}
+                {% set myrating = session['myratings'] %}
                 {% set qList = o1.info %}
                 <div>
                     <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#{{c.id}}" aria-expanded="false" aria-controls="collapseExample" style="border-radius:0; font-weight: bold;background-color: #708090; font-size:15px;">
                         {{ c.name }}
-                        <button class="btn btn-save">Save</button>
                     </button>
                 </div>
                 <div class="collapse" id="{{c.id}}">
                     <div class="card card-body">
                         <table>
                         {% for o2 in qList %}
-                        {% set q = o2.data %}
-                        {% set gList = o2.info %}
-                            <tr>
-                            <td style="font-weight:bold;">{{ q.name }} </td>
-                            {% set count = [0] %}
-                            <td>
-                                    <div class="form-group">
-                            {% for o3 in gList %}
-                            {% set g = o3.data %}
-                                {% set c = count.pop() %}
-                                
-                                    {% if c==0 %}
-                                        <input type="radio" name="rating{{q.id}}" value="{{ c }}" checked> {{ g.guideline }} <br>
-                                    {% else %}
-                                        <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
-                                    {% endif %}
-                                
-                                
-                                {% if count.append(c + 1) %}{% endif %}
-                              
-                            {% endfor %}
+                            {% set l = loop.index %}
+                            {% set q = o2.data %}
+                            {% set gList = o2.info %}
+                                <tr>
+                                <td style="font-weight:bold;">{{ q.name }} </td>
+                                {% set count = [0] %}
+                                <td>
+                                        <div class="form-group">
+                                {% for o3 in gList %}
+                                    {% set g = o3.data %}
+                                    {% set c = count.pop() %}
+                                        {% if c==myrating[l - 1] %}
+                                            <input type="radio" name="rating{{q.id}}" value="{{ c }}" checked> {{ g.guideline }} <br>
+                                        {% elif c==0 %}
+                                            <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
+                                        {% else %}
+                                            <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
+                                        {% endif %}
+                                        
+                                        {% if count.append(c + 1) %}{% endif %}
+                                {% endfor %}                              
                                 <textarea class="form-control" id="observation" placeholder="Enter your observation here" rows="2"></textarea>
-                            </div>
-                            <tr>
-                                <td colspan="2"><hr/></td>
-                            </tr>
+                                </div>
+                                <tr>
+                                    <td colspan="2"><hr/></td>
+                                </tr>
+                                
                             
-                        
-                        </td>
-                    </tr> 
+                            </td>
+                        </tr> 
                         {% endfor %}
 
 
@@ -83,7 +82,8 @@
                 </div>
                 {% endfor %}
             <br>
-                <button type="submit" class="btn btn-success btn-block">Submit</button>
+                <button type="submit" class="btn btn-success btn-block" name="submit" value="submit">Submit</button>
+                <button type="submit" class="btn btn-success btn-block" name="save" value="save">Save</button>
         </form>
 
         <br>
