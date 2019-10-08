@@ -30,28 +30,28 @@
 
                                      <div class="inner-wrap">
 
-                                     <form action="{{ url_for('assess') }}" method="GET">
+                                     <form action="{{ url_for('select_assessment_category') }}" method="POST">
                                      <p><label>Choose Organization:</label></p>
                                      <p><select name="org" required>
-                                     <option></option>
-                                     {% for entry in org %}
-                                     <option value="{{entry.id}}">{{ entry.name }}</option>
-                                     {% endfor %}
+                                         <option></option>
+                                         {% for entry in org %}
+                                         <option value="{{entry.id}}">{{ entry.name }}</option>
+                                         {% endfor %}
                                      </select></p>
                                      <br><br>
 
                                      <p><label>Choose Assessment Type:</label></p>
                                      <p><select name="template" required>
-                                     <option></option>
-                                     {% for entry in temp %}
-                                     <option value="{{entry.id}}">{{ entry.name }}</option>
-                                     {% endfor %}
+                                         <option></option>
+                                         {% for entry in temp %}
+                                         <option value="{{entry.id}}">{{ entry.name }}</option>
+                                         {% endfor %}
                                      </select><br><br><br>
                                      </p>
 
 
-                                         <center><button type="submit">Proceed</button></center>
-    </form>
+                                    <center><button type="submit">Proceed</button></center>
+                                    </form>
 
 <hr>
 

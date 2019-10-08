@@ -42,8 +42,8 @@
                     {% for ad in assess_deets %}
                         <tr>
                             <td>{{ad.id}}</td>
-                            <td>{{ad.organization.name}}</td>
-                            <td>{{ad.Template.name}}</td>
+                            <td>{{ad.evaluation_organization.name}}</td>
+                            <td>{{ad.evaluation_assessment.name}}</td>
                             <td>{{ad.timestamp}}</td>
                             <td><input type="radio" name="select" value="{{ ad.id }}"></td>
                         </tr>

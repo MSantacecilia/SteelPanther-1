@@ -3,19 +3,18 @@ from flask import render_template, flash, redirect, url_for, request, jsonify, m
 from werkzeug.urls import url_parse
 from webapp.forms import LoginForm, RegistrationForm, CategoryForm, OrganizationForm, QuestionForm, AssessmentForm, RatingForm, ResetPasswordForm, DeleteQuestionsForm, SelectTimestampForm, ViewSingleAssessmentForm
 from flask_login import current_user, login_user, logout_user, login_required
-from webapp.models import UserAccount, Category, Organization, Question, Assessment, Rating, Template, Guideline
+from webapp.models import UserAccount, Category, Organization, Question, Evaluation, Rating, Assessment, Guideline
 import io,csv, json
 import re
 from sqlalchemy import and_, subquery
-
 
 
 @app.route('/')
 @app.route('/index')
 @login_required
 def index():
-    print(session)
     return render_template("index.html", title="Home")
+
 
 @app.route('/register',methods=['GET','POST'])
 def register():
@@ -54,6 +53,7 @@ def login():
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
+
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password():
     form = ResetPasswordForm()
@@ -80,7 +80,8 @@ def logout():
     flash('You have been signed out!', "success")
     return redirect(url_for('index'))
 
-#TODO: add functionality to select relevant categories
+
+""" Organization Functionalities ================================================================= """
 @app.route('/add_organization',methods=['GET','POST'])
 def add_organization():
     if not current_user.is_authenticated:
@@ -96,10 +97,7 @@ def add_organization():
     return render_template('add_organization.html', title='Add Organization', form=form)
 
 
-def get_current_user_role():
-    return g.user.role
-
-
+""" Category Functionalities ================================================================= """
 @app.route('/add_category',methods=['GET','POST'])
 def add_category():
     # This functionality is only for managers
@@ -108,124 +106,17 @@ def add_category():
     if not current_user.is_admin():
         return redirect(url_for('index'))
     form = CategoryForm()
-    temp = Template.query.all()
+    temp = Assessment.query.all()
     if form.validate_on_submit():
-        cat = Category(name=form.name.data, templateid=request.form['temp'])
+        cat = Category(name=form.name.data, assessmentid=request.form['temp'])
         db.session.add(cat)
         db.session.commit()
         flash('Success', "success")
         return redirect(url_for('add_question'))
     return render_template('add_category.html', title='Add Category', form=form, temp=temp)
 
-""" Assessment Functionalities ================================================================= """
-@app.route('/assessment',methods=['GET','POST'])
-def select_template():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
 
-    if request.method == 'POST':
-        assessment_type_id = request.form['assessment_type_id']
-        # assessment_type_name = request.form['assessment_type_name']
-        return redirect(url_for('category',id=assessment_type_id))
-    temp = Template.query.all()
-    # flash('Successful assessment')
-    return render_template('select_template.html', title='Select Template', temp=temp)
-
-@app.route('/assessment/add',methods=['GET','POST'])
-def create_template():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    if request.method == 'POST':
-        assessment_type_name = request.form['template_name']
-
-    newTemplate = Template(name=assessment_type_name)
-    db.session.add(newTemplate)
-    db.session.commit()
-    newTempId=Template.query.filter_by(name=assessment_type_name).first().id
-
-
-    flash(f"Template '{assessment_type_name}' created successfully", 'success')
-    return redirect(url_for('category', id=newTempId))
-
-
-
-@app.route('/assessment/<id>',methods=['GET','POST'])
-# Agile, Cloud, Devop
-def category(id):
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    form = CategoryForm()
-    categories = Category.query.filter(Category.templateid == id).order_by(Category.name).all()
-    temp_name = Template.query.filter_by(id=id).one()
-    return render_template('category.html', title=f'{temp_name.name.title()} Assessment Type', categories=categories, form=form, id=id)
-
-def is_category_repeat(name):
-    if Category.query.filter_by(name=name).count() != 0:
-        return True
-    else: return False
-
-@app.route('/assessment/<id>/category/add',methods=['POST'])
-# Agile, Cloud, Devop
-def insert_category(id):
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    if request.method == 'POST':
-        new_category_name = request.form['new_cat']
-        if is_category_repeat(new_category_name):
-            flash(f"Category '{new_category_name}' already exists. Please make sure category you create has a unique name. ", 'error')
-        else:
-            cat = Category(name=new_category_name, templateid=id)
-            db.session.add(cat)
-            db.session.commit()
-            flash(f"Category '{new_category_name}' added successfully", 'success')
-        return redirect(url_for('category', id=id))
-
-@app.route('/assessment/<id>/category/update/<cid>',methods=['POST'])
-def update(id, cid):
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    print('in the method with cid=' + cid)
-    if request.method == 'POST':
-        new_category_name = request.form[f"cat_name{cid}"]
-        print(new_category_name)
-        if is_category_repeat(new_category_name):
-            flash(f"Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
-        else:
-            cat = Category.query.filter_by(id=cid, templateid=id).first()
-            cat.name = new_category_name
-            flash(f"Category name updated to '{new_category_name}'", 'success')
-            db.session.commit()
-        return redirect(url_for('category', id=id))
-
-@app.route('/assessment/<id>/category/delete/<cid>', methods = ['GET'])
-def delete_category(id, cid):
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    delete_category = Category.query.filter_by(id=cid, templateid=id).one()
-    db.session.delete(delete_category)
-    db.session.commit()
-    flash(f"Category '{delete_category.name}' deleted successfully", 'success')
-
-    return redirect(url_for('category', id=id))
-""" EndCategory ============================================================================== """
-
+""" Question Functionality ================================================================= """
 @app.route('/add_question',methods=['GET','POST'])
 def add_question():
     # This functionality is only for managers
@@ -243,37 +134,139 @@ def add_question():
         flash('Success')
         return redirect(url_for('add_question'))
     return render_template('add_question.html', title='Add Question', form=form, cats=cats)
-"""
-@app.route('/add_guidelines',methods=['GET','POST'])
-def add_question():
-    # This functionality is only for managers
+
+
+@app.route('/delete_question', methods=['GET', 'POST'])
+def delete_question():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    form = DeleteQuestionsForm()
+    if request.method == 'POST':
+        print("in post")
+        if request.form['submit_button'] == 'Edit':
+            pass  # do something
+        elif request.form['submit_button'] == 'Delete':
+            pass  # do something else
+        else:
+            pass  # unknown
+    elif request.method == 'GET':
+        print("in get")
+        templates = Assessment.query.all()
+        return render_template('delete_question.html', title='Delete Question', form=form, templates=templates)
+
+
+""" Assessment Functionalities ================================================================="""
+@app.route('/assessment',methods=['GET','POST'])
+def select_template():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     if not current_user.is_admin():
         return redirect(url_for('index'))
 
-    form = GuidelineForm()
-    cats = Category.query.all()
-    if form.validate_on_submit():
-        q = Question(name=form.name.data, category_id=request.form['cat'])
-        db.session.add(q)
-        db.session.commit()
-        flash('Success')
-        return redirect(url_for('add_question'))
-    return render_template('add_question.html', title='Add Guideline', form=form, cats=cats)
- """
+    if request.method == 'POST':
+        assessment_type_id = request.form['assessment_type_id']
+        # assessment_type_name = request.form['assessment_type_name']
+        return redirect(url_for('category',id=assessment_type_id))
+    temp = Assessment.query.all()
+    # flash('Successful assessment')
+    return render_template('select_template.html', title='Select Template', temp=temp)
 
-@app.route('/select_assessment_category',methods=['GET','POST'])
-def select_assessment_category():
+
+@app.route('/assessment/add',methods=['GET','POST'])
+def create_template():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-    org = Organization.query.all()
-    temp = Template.query.all()
-    gl = Guideline.query.all()
-    # flash('Successful assessment!', "success")
-    return render_template('select_assessment_category.html', title='Select Template', org=org, temp=temp, gl=gl)
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        assessment_type_name = request.form['template_name']
+
+    newTemplate = Assessment(name=assessment_type_name)
+    db.session.add(newTemplate)
+    db.session.commit()
+    newTempId=Assessment.query.filter_by(name=assessment_type_name).first().id
 
 
+    flash(f"Template '{assessment_type_name}' created successfully", 'success')
+    return redirect(url_for('category', id=newTempId))
+
+
+@app.route('/assessment/<id>',methods=['GET','POST'])
+# Agile, Cloud, Devop
+def category(id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    form = CategoryForm()
+    categories = Category.query.filter(Category.assessmentid == id).order_by(Category.name).all()
+    temp_name = Assessment.query.filter_by(id=id).one()
+    return render_template('category.html', title=f'{temp_name.name.title()} Assessment Type', categories=categories, form=form, id=id)
+
+
+def is_category_repeat(name):
+    if Category.query.filter_by(name=name).count() != 0:
+        return True
+    else: return False
+
+
+@app.route('/assessment/<id>/category/add',methods=['POST'])
+# Agile, Cloud, Devop
+def insert_category(id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        new_category_name = request.form['new_cat']
+        if is_category_repeat(new_category_name):
+            flash(f"Category '{new_category_name}' already exists. Please make sure category you create has a unique name. ", 'error')
+        else:
+            cat = Category(name=new_category_name, assessmentid=id)
+            db.session.add(cat)
+            db.session.commit()
+            flash(f"Category '{new_category_name}' added successfully", 'success')
+        return redirect(url_for('category', id=id))
+
+
+@app.route('/assessment/<id>/category/update/<cid>',methods=['POST'])
+def update(id, cid):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        new_category_name = request.form[f"cat_name{cid}"]
+        if is_category_repeat(new_category_name):
+            flash(f"Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
+        else:
+            cat = Category.query.filter_by(id=cid, assessmentid=id).first()
+            cat.name = new_category_name
+            flash(f"Category name updated to '{new_category_name}'", 'success')
+            db.session.commit()
+        return redirect(url_for('category', id=id))
+
+
+@app.route('/assessment/<id>/category/delete/<cid>', methods = ['GET'])
+def delete_category(id, cid):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    delete_category = Category.query.filter_by(id=cid, assessmentid=id).one()
+    db.session.delete(delete_category)
+    db.session.commit()
+    flash(f"Category '{delete_category.name}' deleted successfully", 'success')
+
+    return redirect(url_for('category', id=id))
+
+
+""" Evaluation Functionality ================================================================= """
 class DataWithInfo(object):
     def __init__(self, data, info):
         self.data = data
@@ -289,15 +282,32 @@ class DataWithInfo(object):
         return "%s has %i items associated with it" % (self.data, len(self.info))
 
 
-@app.route('/assess', methods=['GET','POST'])
-def assess():
+@app.route('/select_assessment_category',methods=['GET','POST'])
+def select_assessment_category():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
-    org = int(request.args['org'])
-    temp = int(request.args['template'])
+    org = Organization.query.all()
+    assmt = Assessment.query.all()
+    gl = Guideline.query.all()
+
+    if request.method == 'POST':
+        org_id = request.form['org']
+        assmt_id = request.form['template']
+        return redirect(url_for('assess',o_id=org_id, a_id=assmt_id))
+
+    return render_template('select_assessment_category.html', title='Select Template', org=org, temp=assmt, gl=gl)
+
+
+@app.route('/assess/<o_id>&<a_id>', methods=['GET','POST'])
+def assess(o_id, a_id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
+    org = o_id
+    temp = a_id
     form = RatingForm(request.form)
-    cL = Category.query.filter(Category.templateid == temp).all()
+    cL = Category.query.filter(Category.assessmentid == temp).all()
     categoryListTest = []
     for c in cL:
         qL = Question.query.filter(Question.category_id == c.id).order_by(Question.name).all()
@@ -323,16 +333,14 @@ def assess():
 
             for q in queslist:
                 if request.method == "POST":
-                    #print(request.form['rating' + str(q.id)])
                     if 'rating' + str(q.id) in request.form:
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
             session['myratings']=ratinglist
-            print(session)
             return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest)
           
         elif 'submit' in request.form:
-            a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
+            a = Evaluation(user_id=current_user.id, organization_id=org, assmt=temp)
             db.session.add(a)
             db.session.commit()
 
@@ -344,11 +352,10 @@ def assess():
 
             for q in queslist:
                 if request.method == "POST":
-                    #print(request.form['rating' + str(q.id)])
                     if 'rating' + str(q.id) in request.form:
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
-                        obj = Rating(assessment_id=a.id, question_id=q.id, rating=rate)
+                        obj = Rating(evaluation_id=a.id, question_id=q.id, rating=rate)
                         db.session.add(obj)
             session.pop('myratings', None)
             session['myratings'] = [0]
@@ -358,12 +365,14 @@ def assess():
 
     return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest)
 
+
+""" Visualization Functionality ================================================================= """
 @app.route('/select_vis', methods=['GET','POST'])
 def select_vis():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     orgs = Organization.query.all()
-    temp = Template.query.all()
+    temp = Assessment.query.all()
     return render_template('select_vis.html', title='Select Visual', temp=temp, orgs=orgs)
 
 
@@ -373,13 +382,14 @@ def select_timestamp():
         return redirect(url_for('login'))
     orgs = int(request.args['orgs'])
     temp = int(request.args['temp'])
-    cats = Category.query.filter(Category.templateid == temp)
+    cats = Category.query.filter(Category.assessmentid == temp)
     form = SelectTimestampForm()
-    assess_deets = Assessment.query.filter((Assessment.temp == temp) & (Assessment.organization_id == orgs)).all()
+    eval_details = Evaluation.query.filter((Evaluation.assmt == temp) & (Evaluation.organization_id == orgs)).all()
 
-#   assess_cat = Assessment.query.filter(Assessment.cat == Category.query.get(cats)).all()
-#   assess_org = Assessment.query.filter(Assessment.organization_id == Organization.query.get(orgs)).all()
-    return render_template('select_timestamp.html', title='Relevant Assessments',  form=form, assess_deets=assess_deets, cats=cats)
+#   assess_cat = Evaluation.query.filter(Evaluation.cat == Category.query.get(cats)).all()
+#   assess_org = Evaluation.query.filter(Evaluation.organization_id == Organization.query.get(orgs)).all()
+    return render_template('select_timestamp.html', title='Relevant Assessments',  form=form, assess_deets=eval_details, cats=cats)
+
 
 @app.route('/view_single_assessment', methods=['GET','POST'])
 def view_single_assessment():
@@ -388,72 +398,27 @@ def view_single_assessment():
     form = ViewSingleAssessmentForm()
     if request.method == "POST":
         ad = int(request.form["select"])
-    assessdetail = db.session.query(Rating, Question, Category).filter(ad == Rating.assessment_id).filter(Rating.question_id == Question.id).filter(Question.category_id == Category.id).all()
+    eval_details = db.session.query(Rating, Question, Category).filter(ad == Rating.evaluation_id).filter(Rating.question_id == Question.id).filter(Question.category_id == Category.id).all()
 #    assessd = Guideline.query.outerjoin(subq, Guideline.quest_id == subq.rating_question_id)
 #   assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
     questionsArray = []
     categories = []
-    for a in assessdetail:
+    for e in eval_details:
         questionObj = {}
  #       guideLinesObj = []
-        questionObj["question"] = a.Question.name
-        questionObj["Value"] = a.Rating.rating
-        questionObj["category"] = re.sub(r"[^a-zA-Z0-9]+", ' ', a.Category.name)
-        category_name = re.sub(r"[^a-zA-Z0-9]+", ' ', a.Category.name)
+        questionObj["question"] = e.Question.name
+        questionObj["Value"] = e.Rating.rating
+        questionObj["category"] = re.sub(r"[^a-zA-Z0-9]+", ' ', e.Category.name)
+        category_name = re.sub(r"[^a-zA-Z0-9]+", ' ', e.Category.name)
         if category_name not in categories:
             categories.append(category_name)
-        guidedetail = db.session.query(Guideline).filter(a.Question.id==Guideline.quest_id).all()
+        guidedetail = db.session.query(Guideline).filter(e.Question.id==Guideline.quest_id).all()
         questionsArray.append(questionObj)
     json_data = json.dumps(questionsArray)
-    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=assessdetail, json_data=json_data, guideline=guidedetail, categories=categories)
+    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=eval_details, json_data=json_data, guideline=guidedetail, categories=categories)
 
-@app.route('/multi_vis',methods=['GET'])
-def multi_vis():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    organization_id = int(request.args['org'])
-    # assessmentList = Assessment.query.all()
-    Rating = Rating.query.all()
-    assessDict = {}
-    ratingdict = {}
-    for q in Rating:
-        if q.assessment.organization.id == organization_id:
-            if q.assessment.id not in assessDict:
-                q.count = 1
-                assessDict[q.assessment.id] = q
-                # if q.rating == "":
-                #     q.rating = "0"
-                #     q.save()
-                ratingdict[q.assessment.id] = int(q.rating)
-            else:
-                # if q.rating == "":
-                #     q.rating = "0"
-                #     q.save()
-                ratingdict[q.assessment.id] += int(q.rating)
-                assessDict[q.assessment.id].count += 1
 
-            for k in assessDict:
-                if k in ratingdict:
-                    assessDict[k].rating = str(int(round(ratingdict[k] / assessDict[k].count, 1)))
-
-    return render_template('multiple_assess_vis.html', title='Multi-Visual', assessDict=assessDict, ratingDict=ratingdict)
-
-@app.route('/delete_question', methods=['GET', 'POST'])
-def delete_question():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    form = DeleteQuestionsForm()
-    if request.method == 'POST':
-        if request.form['submit_button'] == 'Edit':
-            pass  # do something
-        elif request.form['submit_button'] == 'Delete':
-            pass  # do something else
-        else:
-            pass  # unknown
-    elif request.method == 'GET':
-        templates = Template.query.all()
-        return render_template('delete_question.html', title='Delete Question', form=form, templates=templates)
-
+""" Guideline Functionality ================================================================= """
 @app.route('/guidelines', methods=['GET', 'POST'])
 def filter_guidelines():
     if not current_user.is_authenticated:
@@ -461,9 +426,10 @@ def filter_guidelines():
     guidelines = Guidelines.query.all()
     return render_template()('guidelines.html', title='Guidelines for Rating', guidelines=guidelines)
 
+
 @app.route('/filter_category/<templateId>')
 def filter_category(templateId):
-    categories = Category.query.filter_by(templateid=templateId).all()
+    categories = Category.query.filter_by(assessmentid=templateId).all()
     categoryArray = []
     for category in categories:
         categoryObj = {}
@@ -471,6 +437,7 @@ def filter_category(templateId):
         categoryObj["name"] = category.name
         categoryArray.append(categoryObj)
     return jsonify({'categories': categoryArray})
+
 
 @app.route('/filter_questions/<categoryId>')
 def filter_questions(categoryId):
@@ -484,12 +451,14 @@ def filter_questions(categoryId):
         questionsArray.append(questionObj)
     return jsonify({'questions': questionsArray})
 
+
 @app.route('/update_question/<questionId>/<updatedQuestion>')
 def update_questions(questionId, updatedQuestion):
     question = Question.query.filter_by(id=questionId).first()
     question.name = updatedQuestion
     db.session.commit()
     return jsonify({'result': "success"})
+
 
 @app.route('/delete_question/<questionId>')
 def delete_selected_questions(questionId):
@@ -500,10 +469,12 @@ def delete_selected_questions(questionId):
     except Exception as e:
         return jsonify("result", "failure")
 
+
 @app.route('/throwerror/<errormessage>', methods=['POST', 'GET'])
 def throwerror(errormessage):
     flash(errormessage, 'warning')
     return render_template('select_assessment_category.html', errormessage=errormessage)
+
 
 @app.route('/transform', methods=["POST"])
 def transform_view():
@@ -520,7 +491,7 @@ def transform_view():
     # Add a template to the database
     # TODO use input field to get the actual name of the template
     template_name = request.form['template_name']
-    template = Template(name=template_name)
+    template = Assessment(name=template_name)
     db.session.add(template)
     db.session.commit()
 
@@ -536,10 +507,10 @@ def transform_view():
         # This row corresponds to a category
         if row[1] == "":
             category_name = row[0]
-            category = Category.query.filter_by(name=category_name, templateid=template_id).first()
+            category = Category.query.filter_by(name=category_name, assessmentid=template_id).first()
 
             if category is None:
-                category = Category(name=category_name, templateid=template_id)
+                category = Category(name=category_name, assessmentid=template_id)
                 db.session.add(category)
                 db.session.commit()
 
@@ -573,6 +544,3 @@ def transform_view():
 
 def transform(text_file_contents):
     return text_file_contents.replace("=", ",")
-
-#TODO
-# def export_csv():
