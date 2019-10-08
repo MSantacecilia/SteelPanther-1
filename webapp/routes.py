@@ -9,6 +9,7 @@ import re
 from sqlalchemy import and_, subquery
 
 
+
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -93,6 +94,10 @@ def add_organization():
         flash('Organization was added successfully!', "success")
         return redirect(url_for('add_organization'))
     return render_template('add_organization.html', title='Add Organization', form=form)
+
+
+def get_current_user_role():
+    return g.user.role
 
 
 @app.route('/add_category',methods=['GET','POST'])
@@ -393,7 +398,7 @@ def view_single_assessment():
  #       guideLinesObj = []
         questionObj["question"] = a.Question.name
         questionObj["Value"] = a.Rating.rating
-        questionObj["category"] = a.Category.name
+        questionObj["category"] = re.sub(r"[^a-zA-Z0-9]+", ' ', a.Category.name)
         category_name = re.sub(r"[^a-zA-Z0-9]+", ' ', a.Category.name)
         if category_name not in categories:
             categories.append(category_name)
