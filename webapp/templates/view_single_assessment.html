@@ -25,9 +25,9 @@
     <i onclick="goBack()" class="material-icons md-48" style="cursor: pointer;top: 25px;position: relative;color: white;">arrow_back</i><center><h1>Assessment Information</h1></center>
 
     <div id="Content">
-        <p style="font-size: 20px;">Select type of graph:<p>
-        <select id="graph_select" name="hi">
-            <option value="bar">Bar Graph</option>
+        <p style="font-size: 20px;">Select the type of graph:<p>
+        <select id="graph_select" name="hi" >
+            <option value="bar" selected>Bar Graph</option>
             <option value="pie">Pie Graph</option>
             <option value="spider">Spider Graph</option><br><br>
         </select>
@@ -96,10 +96,10 @@
 
         function loadGraph(){
             graph_type = graph_select.value;
-            if(graph_type == "bar"){
+            if(graph_type === "bar"){
                 generateBarGraph('bar');
             }
-            else if(graph_type == "pie"){
+            else if(graph_type === "pie"){
                 generateBarGraph('pie');
             }
             else{
@@ -161,7 +161,7 @@
       labels: labelArray,
       datasets: [
         {
-          label: "bar",
+          label: "Rating",
           backgroundColor: colorArray,
           data: valueArray
         }
@@ -254,6 +254,7 @@
        {% endfor %}
      }
        </script>
+
         </div></div></div></div></div></div></div></div>
 
 {% endblock %}

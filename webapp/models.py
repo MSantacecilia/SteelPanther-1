@@ -4,7 +4,7 @@ from datetime import datetime
 from webapp import db, login
 from sqlalchemy.ext.declarative import declarative_base
 
-# UserMixin will implement the is_authenticated, is_active, is_anonymous, and get_id() 
+# UserMixin will implement the is_authenticated, is_active, is_anonymous, and get_id()
 # required items for flask_login
 class UserAccount(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -13,6 +13,7 @@ class UserAccount(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     manager_status = db.Column(db.Integer, default=1)
     assessments = db.relationship('Assessment', backref='useraccount', lazy='dynamic')
+
 
     def __repr__(self):
         return '<UserAccount {0}>'.format(self.username)
@@ -25,6 +26,10 @@ class UserAccount(UserMixin, db.Model):
 
     def is_admin(self):
         return self.manager_status == 1
+
+    def is_manager(self):
+        return self.manager_status
+
 
 class Template(db.Model):
     id = db.Column(db.Integer, primary_key=True)
