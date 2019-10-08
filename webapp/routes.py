@@ -292,11 +292,11 @@ def assess():
     gl = Guideline.query.all()
 
     if request.method == 'POST':
-        org_id = request.form['org']
-        assmt_id = request.form['template']
-        return redirect(url_for('assess_start',o_id=org_id, a_id=assmt_id))
+        o_id = request.form['organization']
+        a_id = request.form['assessment']
+        return redirect(url_for('assess_start',o_id=o_id, a_id=a_id))
 
-    return render_template('assess.html', title='Select Template', org=org, temp=assmt, gl=gl)
+    return render_template('assess.html', title='Select Template', org=org, assmt=assmt, gl=gl)
 
 
 @app.route('/assess/<o_id>&<a_id>', methods=['GET','POST'])
@@ -473,7 +473,7 @@ def delete_selected_questions(questionId):
 @app.route('/throwerror/<errormessage>', methods=['POST', 'GET'])
 def throwerror(errormessage):
     flash(errormessage, 'warning')
-    return render_template('assess_select.html', errormessage=errormessage)
+    return render_template('assess.html', errormessage=errormessage)
 
 
 @app.route('/transform', methods=["POST"])
@@ -490,7 +490,7 @@ def transform_view():
 
     # Add a template to the database
     # TODO use input field to get the actual name of the template
-    template_name = request.form['template_name']
+    template_name = request.form['assessment_name']
     template = Assessment(name=template_name)
     db.session.add(template)
     db.session.commit()
@@ -540,7 +540,7 @@ def transform_view():
 
                 db.session.commit()
 
-    return redirect(url_for('assess_select'))
+    return redirect(url_for('assess'))
 
 def transform(text_file_contents):
     return text_file_contents.replace("=", ",")

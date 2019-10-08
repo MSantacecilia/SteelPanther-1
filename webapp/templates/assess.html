@@ -24,7 +24,7 @@
                             <div class="form-style-10">
 
 
-                            <center><h1>Create an Assessment</h1></center>
+                            <center><h1>Start an Evaluation</h1></center>
 
                                 <div id="Content">
 
@@ -32,7 +32,7 @@
 
                                      <form action="{{ url_for('assess') }}" method="POST">
                                      <p><label>Choose Organization:</label></p>
-                                     <p><select name="org" required>
+                                     <p><select name="organization" required>
                                          <option></option>
                                          {% for entry in org %}
                                          <option value="{{entry.id}}">{{ entry.name }}</option>
@@ -40,10 +40,10 @@
                                      </select></p>
                                      <br><br>
 
-                                     <p><label>Choose Assessment Type:</label></p>
-                                     <p><select name="template" required>
+                                     <p><label>Choose Assessment:</label></p>
+                                     <p><select name="assessment" required>
                                          <option></option>
-                                         {% for entry in temp %}
+                                         {% for entry in assmt %}
                                          <option value="{{entry.id}}">{{ entry.name }}</option>
                                          {% endfor %}
                                      </select><br><br><br>
@@ -65,29 +65,10 @@
         <form action="/transform" method="post" enctype="multipart/form-data">
 
             <h3>Upload a new assessment (.csv) file:</h3>
-            Assessment name: <input type="text" name="template_name" id="template_name" required><br>
+            Assessment name: <input type="text" name="assessment_name" id="assessment_name" required><br>
                 <input class="input-sm" type="file" id="file" name="data_file" required/><br>
             <button type="submit" value="submit">Upload</button>
         </form>
         </div></div></div></div></div></div></div></div>
-
-
-    <script>
-        //Code for upload csv
-        function empty() {
-            var templateName = document.getElementById("template_name").value;
-            if (templateName == "") {
-                //alert("Enter a valid assessment name !");
-                return false;
-            };
-            if( document.getElementById("file").files.length == 0 ){
-                //alert("Please select a file !");
-                return false;
-            }
-        }
-    </script>
-
-
-
 
 {% endblock %}
