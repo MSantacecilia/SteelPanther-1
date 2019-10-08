@@ -172,7 +172,20 @@
       title: {
         display: true,
         text: '{{category}}'
-      }
+      },
+      scaleShowValues: true,
+        scales: {
+        yAxes: [{
+        ticks: {
+        beginAtZero: true
+        }
+        }],
+        xAxes: [{
+        ticks: {
+        autoSkip: false
+        }
+        }]
+        }
     }
 	});
 	 {% endfor %}
