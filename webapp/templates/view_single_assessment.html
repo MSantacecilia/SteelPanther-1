@@ -97,10 +97,10 @@
         function loadGraph(){
             graph_type = graph_select.value;
             if(graph_type === "bar"){
-                generateBarGraph('bar');
+                generateBarGraph();
             }
             else if(graph_type === "pie"){
-                generateBarGraph('pie');
+                generatePieGraph();
             }
             else{
                 generateSpiderGraph();
@@ -129,7 +129,7 @@
 
 
 
-    function generateBarGraph(graphType){
+    function generateBarGraph(){
 
        var labelArray =[], valueArray=[], colorArray=[];
 
@@ -156,7 +156,7 @@
        }
 
         new Chart(document.getElementById("{{category}}"), {
-    type: graphType,
+    type: 'bar',
     data: {
       labels: labelArray,
       datasets: [
@@ -186,6 +186,56 @@
         }
         }]
         }
+    }
+	});
+	 {% endfor %}
+
+    }
+
+    function generatePieGraph(){
+
+       var labelArray =[], valueArray=[], colorArray=[];
+
+       canvasHTML = '';
+        {% for category in categories %}
+            canvasHTML += '<canvas height="300px" id="{{category}}" style="border:1px solid" width="500px"></canvas>';
+        {% endfor %}
+
+       canvas_div.innerHTML = canvasHTML;
+
+        {% for category in categories %}
+       labelArray =[];
+       valueArray=[];
+        colorArray=[];
+
+        var chartData = JSON.parse(jsonData);
+
+       for (var i = 0, len = chartData.length; i < len; ++i) {
+           if(chartData[i].category == "{{category}}"){
+                labelArray.push(chartData[i].question);
+                valueArray.push(chartData[i].Value);
+                colorArray.push(randomRGB());
+           }
+       }
+
+        new Chart(document.getElementById("{{category}}"), {
+    type: 'pie',
+    data: {
+      labels: labelArray,
+      datasets: [
+        {
+          label: "Rating",
+          backgroundColor: colorArray,
+          data: valueArray
+        }
+      ]
+    },
+    options: {
+      legend: { display: true },
+      title: {
+        display: true,
+        text: '{{category}}'
+      }
     }
 	});
 	 {% endfor %}
