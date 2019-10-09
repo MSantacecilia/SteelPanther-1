@@ -9,6 +9,7 @@ import re
 from sqlalchemy import and_, subquery
 
 
+""" Basic Functionalities ================================================================= """
 @app.route('/')
 @app.route('/index')
 @login_required
@@ -79,191 +80,6 @@ def logout():
     session.pop('myratings', None)
     flash('You have been signed out!', "success")
     return redirect(url_for('index'))
-
-
-""" Organization Functionalities ================================================================= """
-@app.route('/add_organization',methods=['GET','POST'])
-def add_organization():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    form = OrganizationForm()
-    if form.validate_on_submit():
-        org = Organization(name=form.name.data, location=form.loc.data,
-            size=form.size.data, domain=form.domain.data)
-        db.session.add(org)
-        db.session.commit()
-        flash('Organization was added successfully!', "success")
-        return redirect(url_for('add_organization'))
-    return render_template('add_organization.html', title='Add Organization', form=form)
-
-
-""" Category Functionalities ================================================================= """
-@app.route('/add_category',methods=['GET','POST'])
-def add_category():
-    # This functionality is only for managers
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-    form = CategoryForm()
-    temp = Assessment.query.all()
-    if form.validate_on_submit():
-        cat = Category(name=form.name.data, assessmentid=request.form['temp'])
-        db.session.add(cat)
-        db.session.commit()
-        flash('Success', "success")
-        return redirect(url_for('add_question'))
-    return render_template('add_category.html', title='Add Category', form=form, temp=temp)
-
-
-""" Question Functionality ================================================================= """
-@app.route('/add_question',methods=['GET','POST'])
-def add_question():
-    # This functionality is only for managers
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    form = QuestionForm()
-    cats = Category.query.all()
-    if form.validate_on_submit():
-        q = Question(name=form.name.data, category_id=request.form['cat'])
-        db.session.add(q)
-        db.session.commit()
-        flash('Success')
-        return redirect(url_for('add_question'))
-    return render_template('add_question.html', title='Add Question', form=form, cats=cats)
-
-
-@app.route('/delete_question', methods=['GET', 'POST'])
-def delete_question():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    form = DeleteQuestionsForm()
-    if request.method == 'POST':
-        print("in post")
-        if request.form['submit_button'] == 'Edit':
-            pass  # do something
-        elif request.form['submit_button'] == 'Delete':
-            pass  # do something else
-        else:
-            pass  # unknown
-    elif request.method == 'GET':
-        print("in get")
-        templates = Assessment.query.all()
-        return render_template('delete_question.html', title='Delete Question', form=form, templates=templates)
-
-
-""" Assessment Functionalities ================================================================="""
-@app.route('/assessment',methods=['GET','POST'])
-def select_template():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    if request.method == 'POST':
-        assessment_type_id = request.form['assessment_type_id']
-        # assessment_type_name = request.form['assessment_type_name']
-        return redirect(url_for('category',id=assessment_type_id))
-    temp = Assessment.query.all()
-    # flash('Successful assessment')
-    return render_template('select_template.html', title='Select Template', temp=temp)
-
-
-@app.route('/assessment/add',methods=['GET','POST'])
-def create_template():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    if request.method == 'POST':
-        assessment_type_name = request.form['template_name']
-
-    newTemplate = Assessment(name=assessment_type_name)
-    db.session.add(newTemplate)
-    db.session.commit()
-    newTempId=Assessment.query.filter_by(name=assessment_type_name).first().id
-
-
-    flash(f"Template '{assessment_type_name}' created successfully", 'success')
-    return redirect(url_for('category', id=newTempId))
-
-
-@app.route('/assessment/<id>',methods=['GET','POST'])
-# Agile, Cloud, Devop
-def category(id):
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    form = CategoryForm()
-    categories = Category.query.filter_by(assessmentid=id).order_by(Category.name).all()
-    temp_name = Assessment.query.filter_by(id=id).one()
-    return render_template('category.html', title=f'{temp_name.name.title()} Assessment Type', categories=categories, form=form, id=id)
-
-
-def is_category_repeat(name):
-    if Category.query.filter_by(name=name).count() != 0:
-        return True
-    else: return False
-
-
-@app.route('/assessment/<id>/category/add',methods=['POST'])
-# Agile, Cloud, Devop
-def insert_category(id):
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    if request.method == 'POST':
-        new_category_name = request.form['new_cat']
-        if is_category_repeat(new_category_name):
-            flash(f"Category '{new_category_name}' already exists. Please make sure category you create has a unique name. ", 'error')
-        else:
-            cat = Category(name=new_category_name, assessmentid=id)
-            db.session.add(cat)
-            db.session.commit()
-            flash(f"Category '{new_category_name}' added successfully", 'success')
-        return redirect(url_for('category', id=id))
-
-
-@app.route('/assessment/<id>/category/update/<cid>',methods=['POST'])
-def update(id, cid):
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    if request.method == 'POST':
-        new_category_name = request.form[f"cat_name{cid}"]
-        if is_category_repeat(new_category_name):
-            flash(f"Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
-        else:
-            cat = Category.query.filter_by(id=cid, assessmentid=id).first()
-            cat.name = new_category_name
-            flash(f"Category name updated to '{new_category_name}'", 'success')
-            db.session.commit()
-        return redirect(url_for('category', id=id))
-
-
-@app.route('/assessment/<id>/category/delete/<cid>', methods = ['GET'])
-def delete_category(id, cid):
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-    if not current_user.is_admin():
-        return redirect(url_for('index'))
-
-    delete_category = Category.query.filter_by(id=cid, assessmentid=id).one()
-    db.session.delete(delete_category)
-    db.session.commit()
-    flash(f"Category '{delete_category.name}' deleted successfully", 'success')
-
-    return redirect(url_for('category', id=id))
 
 
 """ Evaluation Functionality ================================================================= """
@@ -421,64 +237,118 @@ def view_single_assessment():
     return render_template('view_single_assessment.html', title='View Evaluation Visualization', form=form, assessdetails=eval_details, json_data=json_data, guideline=guidedetail, categories=categories)
 
 
-""" Guideline Functionality ================================================================= """
-@app.route('/guidelines', methods=['GET', 'POST'])
-def filter_guidelines():
+""" Edit Assessment Functionalities =============================================================="""
+@app.route('/assessment',methods=['GET','POST'])
+def assessment():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-    guidelines = Guidelines.query.all()
-    return render_template()('guidelines.html', title='Guidelines for Rating', guidelines=guidelines)
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    assmt = Assessment.query.all()
+
+    if request.method == 'POST':
+        assmt_id = request.form['assmt']
+        return redirect(url_for('assessment_edit',id=assmt_id))
+
+    return render_template('assessment.html', title='Select Assessment', assmt=assmt)
 
 
-@app.route('/filter_category/<templateId>')
-def filter_category(templateId):
-    categories = Category.query.filter_by(assessmentid=templateId).all()
-    categoryArray = []
-    for category in categories:
-        categoryObj = {}
-        categoryObj["id"] = category.id
-        categoryObj["name"] = category.name
-        categoryArray.append(categoryObj)
-    return jsonify({'categories': categoryArray})
+@app.route('/assessment/add',methods=['GET','POST'])
+def assessment_add():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
 
+    if request.method == 'POST':
+        assessment_name = request.form['assessment_name']
 
-@app.route('/filter_questions/<categoryId>')
-def filter_questions(categoryId):
-    questions = Question.query.filter_by(category_id=categoryId).all()
-    questionsArray = []
-    for question in questions:
-        # TODO add question.maximum to the objects
-        questionObj = {}
-        questionObj["id"] = question.id
-        questionObj["name"] = question.name
-        questionsArray.append(questionObj)
-    return jsonify({'questions': questionsArray})
-
-
-@app.route('/update_question/<questionId>/<updatedQuestion>')
-def update_questions(questionId, updatedQuestion):
-    question = Question.query.filter_by(id=questionId).first()
-    question.name = updatedQuestion
+    newAssessment = Assessment(name=assessment_name)
+    db.session.add(newAssessment)
     db.session.commit()
-    return jsonify({'result': "success"})
+    newAssmtId = Assessment.query.filter_by(name=assessment_name).first().id
 
 
-@app.route('/delete_question/<questionId>')
-def delete_selected_questions(questionId):
-    try:
-        Question.query.filter_by(id=questionId).delete()
-        db.session.commit()
-        return jsonify({'result': "success"})
-    except Exception as e:
-        return jsonify("result", "failure")
+    flash(f"Template '{assessment_name}' created successfully", 'success')
+    return redirect(url_for('assessment_edit', id=newAssmtId))
 
 
-@app.route('/throwerror/<errormessage>', methods=['POST', 'GET'])
-def throwerror(errormessage):
-    flash(errormessage, 'warning')
-    return render_template('assess.html', errormessage=errormessage)
+@app.route('/assessment/<id>',methods=['GET','POST'])
+# Agile, Cloud, Devop
+def assessment_edit(id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    form = CategoryForm()
+    categories = Category.query.filter_by(assessmentid=id).order_by(Category.name).all()
+    assmt = Assessment.query.filter_by(id=id).one()
+    return render_template('assessment_edit.html', title=f"Editing Assessment '{assmt.name}'", categories=categories, form=form, id=id)
 
 
+def is_category_repeat(name):
+    if Category.query.filter_by(name=name).count() != 0:
+        return True
+    else: return False
+
+
+@app.route('/assessment/<id>/category/add',methods=['POST'])
+# Agile, Cloud, Devop
+def assessment_category_add(id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        new_category_name = request.form['new_cat']
+        if is_category_repeat(new_category_name):
+            flash(f"Category '{new_category_name}' already exists. Please make sure category you create has a unique name. ", 'error')
+        else:
+            cat = Category(name=new_category_name, assessmentid=id)
+            db.session.add(cat)
+            db.session.commit()
+            flash(f"Category '{new_category_name}' added successfully", 'success')
+        return redirect(url_for('assessment_edit', id=id))
+
+
+@app.route('/assessment/<id>/category/update/<cid>',methods=['POST'])
+def assessment_category_update(id, cid):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    if request.method == 'POST':
+        new_category_name = request.form[f"cat_name{cid}"]
+        if is_category_repeat(new_category_name):
+            flash(f"Category '{new_category_name}' already exists. Please make sure the new category name is unique. ", 'error')
+        else:
+            cat = Category.query.filter_by(id=cid, assessmentid=id).first()
+            cat.name = new_category_name
+            flash(f"Category name updated to '{new_category_name}'", 'success')
+            db.session.commit()
+        return redirect(url_for('assessment_edit', id=id))
+
+
+@app.route('/assessment/<id>/category/<cid>/delete', methods = ['GET'])
+def assessment_category_delete(id, cid):
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    if not current_user.is_admin():
+        return redirect(url_for('index'))
+
+    delete_category = Category.query.filter_by(id=cid, assessmentid=id).one()
+    db.session.delete(delete_category)
+    db.session.commit()
+    flash(f"Category '{delete_category.name}' deleted successfully", 'success')
+
+    return redirect(url_for('assessment_edit', id=id))
+
+
+""" Import CSV Functionality ================================================================= """
 @app.route('/transform', methods=["POST"])
 def transform_view():
     f = request.files['data_file']
@@ -545,5 +415,58 @@ def transform_view():
 
     return redirect(url_for('assess'))
 
+
 def transform(text_file_contents):
     return text_file_contents.replace("=", ",")
+
+
+""" Auxiliary Functionality ================================================================= """
+@app.route('/filter_category/<templateId>')
+def filter_category(templateId):
+    categories = Category.query.filter_by(assessmentid=templateId).all()
+    categoryArray = []
+    for category in categories:
+        categoryObj = {}
+        categoryObj["id"] = category.id
+        categoryObj["name"] = category.name
+        categoryArray.append(categoryObj)
+    return jsonify({'categories': categoryArray})
+
+
+@app.route('/filter_questions/<categoryId>')
+def filter_questions(categoryId):
+    questions = Question.query.filter_by(category_id=categoryId).all()
+    questionsArray = []
+    for question in questions:
+        # TODO add question.maximum to the objects
+        questionObj = {}
+        questionObj["id"] = question.id
+        questionObj["name"] = question.name
+        questionsArray.append(questionObj)
+    return jsonify({'questions': questionsArray})
+
+
+@app.route('/update_question/<questionId>/<updatedQuestion>')
+def update_questions(questionId, updatedQuestion):
+    question = Question.query.filter_by(id=questionId).first()
+    question.name = updatedQuestion
+    db.session.commit()
+    return jsonify({'result': "success"})
+
+
+@app.route('/delete_question/<questionId>')
+def delete_selected_questions(questionId):
+    try:
+        Question.query.filter_by(id=questionId).delete()
+        db.session.commit()
+        return jsonify({'result': "success"})
+    except Exception as e:
+        return jsonify("result", "failure")
+
+
+@app.route('/throwerror/<errormessage>', methods=['POST', 'GET'])
+def throwerror(errormessage):
+    flash(errormessage, 'warning')
+    return render_template('assess.html', errormessage=errormessage)
+
+

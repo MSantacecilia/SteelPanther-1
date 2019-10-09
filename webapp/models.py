@@ -93,7 +93,7 @@ class UserAccount(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    manager_status = db.Column(db.Integer, default=1)
+    privilege = db.Column(db.Integer, default=1)
 
     evalulations = db.relationship('Evaluation', backref='evaluation_user_account', lazy='dynamic')
 
@@ -107,11 +107,11 @@ class UserAccount(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def is_admin(self):
-        return self.manager_status == 1
-
     def is_manager(self):
-        return self.manager_status
+        return self.privilege >= 1
+
+    def is_admin(self):
+        return self.privilege == 2
 
 
 @login.user_loader
