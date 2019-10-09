@@ -19,7 +19,7 @@ $(document).ready(function(){
 	
 	$('.save').mousedown(function(){
 		var cid = $(this).attr('id');
-		var form = "update_category"
+		var form = "update_category_"
 		var form_id = form.concat(cid);
 		
 		var textField = $(this).parent().prev().children().first();

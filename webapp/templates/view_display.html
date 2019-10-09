@@ -22,7 +22,7 @@
 
 <div class="form-style-10">
 
-    <i onclick="goBack()" class="material-icons md-48" style="cursor: pointer;top: 25px;position: relative;color: white;">arrow_back</i><center><h1>Assessment Information</h1></center>
+    <i onclick="goBack()" class="material-icons md-48" style="cursor: pointer;top: 25px;position: relative;color: white;">arrow_back</i><center><h1>{{title}}</h1></center>
 
     <div id="Content">
         <p style="font-size: 20px;">Select the type of graph:<p>
@@ -56,23 +56,23 @@
 <br><br>
             <div id="viztable" class="collapse">
 
-                <table style="width: auto;text-align: center;font: 14px black" id="assessment_detail_table" border="1">
+                <table style="width: auto;text-align: center;font: 14px black" id="evaluation_detail_table" border="1">
                     <tr>
                         <th>Category</th>
                         <th>Question</th>
                         <th>Guidelines</th>
                         <th>Rating</th>
                     </tr>
-                    {% for ad in assessdetails %}
+                    {% for ed in eval_details %}
                         <tr>
-                            <td>{{ ad.Category.name }}</td>
-                            <td>{{ ad.Question.name }}</td>
+                            <td>{{ ed.Category.name }}</td>
+                            <td>{{ ed.Question.name }}</td>
                             <td>
                             {% for g in guideline %}
                                 <pre style="width: 100%;white-space:pre-wrap;">{{ g.guideline }} </pre>
                             {% endfor %}
                             </td>
-                            <td>{{ ad.Rating.rating }}</td>
+                            <td>{{ ed.Rating.rating }}</td>
                         </tr>
                     {% endfor %}
                 </table>
