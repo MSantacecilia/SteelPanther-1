@@ -24,18 +24,18 @@
                             <div class="form-style-10">
 
 
-                            <center><h1>Start an Evaluation</h1></center>
+                            <center><h1>{{title}}</h1></center>
 
                                 <div id="Content">
 
                                      <div class="inner-wrap">
 
-                                     <form action="{{ url_for('assess') }}" method="POST">
+                                     <form action="{{ url_for('evaluate') }}" method="POST">
                                      <p><label>Choose Organization:</label></p>
                                      <p><select name="organization" required>
                                          <option></option>
                                          {% for entry in org %}
-                                         <option value="{{entry.id}}">{{ entry.name }}</option>
+                                        <option value="{{entry.id}}">{{ entry.name }}</option>
                                          {% endfor %}
                                      </select></p>
                                      <br><br>
@@ -52,23 +52,13 @@
 
                                     <center><button type="submit">Proceed</button></center>
                                     </form>
-
-<hr>
-
-
-
-
-
-
-
-
-        <form action="/import_CSV" method="post" enctype="multipart/form-data">
-
-            <h3>Upload a new assessment (.csv) file:</h3>
-            Assessment name: <input type="text" name="assessment_name" id="assessment_name" required><br>
-                <input class="input-sm" type="file" id="file" name="data_file" required/><br>
-            <button type="submit" value="submit">Upload</button>
-        </form>
-        </div></div></div></div></div></div></div></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}

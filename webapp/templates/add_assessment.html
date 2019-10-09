@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+
+
+
+
+    <div class="container-fluid" id="sidebar" style="color: black;">
+
+        <div class="row">
+
+            <div class="col-xs-1 col-sm-1 col-md-1">
+                {% include 'navbar.html' %}
+            </div>
+
+                <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main">
+
+                    <div class="row align-items-center">
+
+                        <div class="col-md-9 col-xs-9">
+
+                            <div class="form-style-10">
+
+
+                            <center><h1>{{title}}</h1></center>
+
+                                <div id="Content">
+
+                                     <div class="inner-wrap">
+
+                                        <form action="/add_assessment" method="post" enctype="multipart/form-data">
+
+                                            <h3>Upload a new assessment (.csv) file:</h3>
+                                            Assessment name: 
+                                            <input type="text" name="assessment_name" id="assessment_name" required autofocus><br>
+                                            <input class="input-sm" type="file" id="file" name="data_file" required/><br>
+                                            <button type="submit" value="submit">Upload</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}

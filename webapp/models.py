@@ -1,7 +1,10 @@
+from flask_admin import Admin, expose
+from flask_admin.contrib.sqla import ModelView
+from flask_admin.menu import MenuLink
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from datetime import datetime
-from webapp import db, login
+from webapp import db, login, app
 from sqlalchemy.ext.declarative import declarative_base
 
 # Ordered ALPHABETICALLY
@@ -112,6 +115,23 @@ class UserAccount(UserMixin, db.Model):
 
     def is_admin(self):
         return self.privilege == 2
+
+
+# set optional bootswatch theme
+app.config['FLASK_ADMIN_SWATCH'] = 'darkly'
+
+newadmin = Admin(app, name='SteelPanther', template_mode='bootstrap3')
+# Add administrative views here
+
+
+newadmin.add_link(MenuLink(name='Go Back', url='/'))
+newadmin.add_view(ModelView(UserAccount, db.session))
+newadmin.add_view(ModelView(Organization, db.session))
+newadmin.add_view(ModelView(Category, db.session))
+newadmin.add_view(ModelView(Rating, db.session))
+newadmin.add_view(ModelView(Question, db.session))
+newadmin.add_view(ModelView(Guideline, db.session))
+newadmin.add_view(ModelView(Assessment, db.session))
 
 
 @login.user_loader
