@@ -78,7 +78,7 @@ body {
 
 
 .form-style-10 h1{
-	background: #003873;
+	background: #495057;
 	padding: 20px 30px 15px 30px;
 	margin: -30px -30px 30px -30px;
 	border-radius: 10px 10px 0 0;
@@ -90,7 +90,7 @@ body {
 	-moz-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
 	-webkit-box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
 	box-shadow: inset 0px 2px 2px 0px rgba(255, 255, 255, 0.17);
-	border: 1px solid #003873;
+	border: 1px solid #495057;
 
 }
 .form-style-10 h1 > span{
@@ -143,11 +143,11 @@ body {
 
 .form-style-10 .section{
 	font: normal 20px 'Nanum Gothic', serif;
-	color: #003873;
+	color: #495057;
 	margin-bottom: 5px;
 }
 .form-style-10 .section span {
-	background: #003873;
+	background: #495057;
 	padding: 5px 10px 5px 10px;
 	position: absolute;
 	border-radius: 50%;
@@ -187,7 +187,7 @@ a.reg:hover{
 }
 
 a.reg:visited {
-	color: #003873;
+	color: #495057;
 	text-decoration: none;
 	font: normal 14px 'Nanum Gothic', serif;
 }
