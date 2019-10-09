@@ -209,20 +209,25 @@ def view_select(o_id,a_id):
     cats = Category.query.filter_by(assessmentid=a_id)
     eval_details = Evaluation.query.filter_by(assmt=a_id, organization_id=o_id).all()
 
-    return render_template('view_select.html', title='Select Evaluation',  form=form, eval_details=eval_details, cats=cats)
+    if request.method == 'POST':
+        e_id = int(request.form["select"])
+        return redirect(url_for('view_display', o_id=o_id, a_id=a_id, e_id=e_id))
+
+    return render_template('view_select.html', title='Select Evaluation',  form=form, eval_details=eval_details, cats=cats, o_id=o_id, a_id=a_id)
 
 
-@app.route('/view_single_assessment', methods=['POST'])
-def view_single_assessment():
+@app.route('/view/<o_id>&<a_id>/<e_id>', methods=['GET'])
+def view_display(o_id, a_id, e_id):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
     form = ViewSingleAssessmentForm()
 
-    e_id = int(request.form["select"])
+    # e_id = int(request.form["select"])
     eval_details = db.session.query(Rating, Question, Category).filter(Rating.evaluation_id == e_id).filter(Rating.question_id == Question.id).filter(Question.category_id == Category.id).all()
     questionsArray = []
     categories = []
+    guidedetail = []
     for e in eval_details:
         questionObj = {}
         questionObj["question"] = e.Question.name
@@ -234,7 +239,7 @@ def view_single_assessment():
         guidedetail = Guideline.query.filter_by(quest_id=e.Question.id).all()
         questionsArray.append(questionObj)
     json_data = json.dumps(questionsArray)
-    return render_template('view_single_assessment.html', title='View Evaluation Visualization', form=form, assessdetails=eval_details, json_data=json_data, guideline=guidedetail, categories=categories)
+    return render_template('view_display.html', title='View Evaluation Visualization', form=form, eval_details=eval_details, json_data=json_data, guideline=guidedetail, categories=categories)
 
 
 """ Edit Assessment Functionalities =============================================================="""
@@ -249,7 +254,7 @@ def assessment():
 
     if request.method == 'POST':
         assmt_id = request.form['assmt']
-        return redirect(url_for('assessment_edit',id=assmt_id))
+        return redirect(url_for('assessment_display',id=assmt_id))
 
     return render_template('assessment.html', title='Select Assessment', assmt=assmt)
 
@@ -270,13 +275,13 @@ def assessment_add():
     newAssmtId = Assessment.query.filter_by(name=assessment_name).first().id
 
 
-    flash(f"Template '{assessment_name}' created successfully", 'success')
-    return redirect(url_for('assessment_edit', id=newAssmtId))
+    flash(f"Assessment '{assessment_name}' created successfully", 'success')
+    return redirect(url_for('assessment_display', id=newAssmtId))
 
 
 @app.route('/assessment/<id>',methods=['GET','POST'])
 # Agile, Cloud, Devop
-def assessment_edit(id):
+def assessment_display(id):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
     if not current_user.is_admin():
@@ -285,7 +290,7 @@ def assessment_edit(id):
     form = CategoryForm()
     categories = Category.query.filter_by(assessmentid=id).order_by(Category.name).all()
     assmt = Assessment.query.filter_by(id=id).one()
-    return render_template('assessment_edit.html', title=f"Editing Assessment '{assmt.name}'", categories=categories, form=form, id=id)
+    return render_template('assessment_display.html', title=f"Editing Assessment '{assmt.name}'", categories=categories, form=form, id=id)
 
 
 def is_category_repeat(name):
@@ -311,7 +316,7 @@ def assessment_category_add(id):
             db.session.add(cat)
             db.session.commit()
             flash(f"Category '{new_category_name}' added successfully", 'success')
-        return redirect(url_for('assessment_edit', id=id))
+        return redirect(url_for('assessment_display', id=id))
 
 
 @app.route('/assessment/<id>/category/update/<cid>',methods=['POST'])
@@ -330,7 +335,7 @@ def assessment_category_update(id, cid):
             cat.name = new_category_name
             flash(f"Category name updated to '{new_category_name}'", 'success')
             db.session.commit()
-        return redirect(url_for('assessment_edit', id=id))
+        return redirect(url_for('assessment_display', id=id))
 
 
 @app.route('/assessment/<id>/category/<cid>/delete', methods = ['GET'])
@@ -345,12 +350,12 @@ def assessment_category_delete(id, cid):
     db.session.commit()
     flash(f"Category '{delete_category.name}' deleted successfully", 'success')
 
-    return redirect(url_for('assessment_edit', id=id))
+    return redirect(url_for('assessment_display', id=id))
 
 
 """ Import CSV Functionality ================================================================= """
-@app.route('/transform', methods=["POST"])
-def transform_view():
+@app.route('/import_CSV', methods=["POST"])
+def import_CSV():
     f = request.files['data_file']
     if not f:
         return "No file"
@@ -361,15 +366,14 @@ def transform_view():
     currentRow = 1
     firstRow = 10
 
-    # Add a template to the database
-    # TODO use input field to get the actual name of the template
-    template_name = request.form['assessment_name']
-    template = Assessment(name=template_name)
-    db.session.add(template)
+    # Add an assessment to the database
+    assessment_name = request.form['assessment_name']
+    assessment = Assessment(name=assessment_name)
+    db.session.add(assessment)
     db.session.commit()
 
     # Use the id to create new categories and questions
-    template_id = template.id
+    assessment_id = assessment.id
     category_id = -1
 
     for row in csv_input:
@@ -380,10 +384,10 @@ def transform_view():
         # This row corresponds to a category
         if row[1] == "":
             category_name = row[0]
-            category = Category.query.filter_by(name=category_name, assessmentid=template_id).first()
+            category = Category.query.filter_by(name=category_name, assessmentid=assessment_id).first()
 
             if category is None:
-                category = Category(name=category_name, assessmentid=template_id)
+                category = Category(name=category_name, assessmentid=assessment_id)
                 db.session.add(category)
                 db.session.commit()
 
@@ -414,59 +418,3 @@ def transform_view():
                 db.session.commit()
 
     return redirect(url_for('assess'))
-
-
-def transform(text_file_contents):
-    return text_file_contents.replace("=", ",")
-
-
-""" Auxiliary Functionality ================================================================= """
-@app.route('/filter_category/<templateId>')
-def filter_category(templateId):
-    categories = Category.query.filter_by(assessmentid=templateId).all()
-    categoryArray = []
-    for category in categories:
-        categoryObj = {}
-        categoryObj["id"] = category.id
-        categoryObj["name"] = category.name
-        categoryArray.append(categoryObj)
-    return jsonify({'categories': categoryArray})
-
-
-@app.route('/filter_questions/<categoryId>')
-def filter_questions(categoryId):
-    questions = Question.query.filter_by(category_id=categoryId).all()
-    questionsArray = []
-    for question in questions:
-        # TODO add question.maximum to the objects
-        questionObj = {}
-        questionObj["id"] = question.id
-        questionObj["name"] = question.name
-        questionsArray.append(questionObj)
-    return jsonify({'questions': questionsArray})
-
-
-@app.route('/update_question/<questionId>/<updatedQuestion>')
-def update_questions(questionId, updatedQuestion):
-    question = Question.query.filter_by(id=questionId).first()
-    question.name = updatedQuestion
-    db.session.commit()
-    return jsonify({'result': "success"})
-
-
-@app.route('/delete_question/<questionId>')
-def delete_selected_questions(questionId):
-    try:
-        Question.query.filter_by(id=questionId).delete()
-        db.session.commit()
-        return jsonify({'result': "success"})
-    except Exception as e:
-        return jsonify("result", "failure")
-
-
-@app.route('/throwerror/<errormessage>', methods=['POST', 'GET'])
-def throwerror(errormessage):
-    flash(errormessage, 'warning')
-    return render_template('assess.html', errormessage=errormessage)
-
-

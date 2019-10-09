@@ -24,14 +24,14 @@
     <i onclick="goBack()" class="material-icons md-48" style="cursor: pointer;top: 25px;position: relative;color: white;">arrow_back</i><center><h1>{{title}}</h1></center>
 
 
-    <form action="{{ url_for('view_single_assessment') }}" method="post" >
+    <form action="{{ url_for('view_select', o_id=o_id, a_id=a_id) }}" method="post" >
         {{ form.hidden_tag() }}
 
                 {{ form.csrf_token }}
 
 
                 <p><center>
-                <table style="text-align: center;font: 15px black" id="assessment_detail_table" border="1" width="600">
+                <table style="text-align: center;font: 15px black" id="evaluation_detail_table" border="1" width="600">
                     <tr>
                         <th>ID</th>
                         <th>Timestamp</th>
