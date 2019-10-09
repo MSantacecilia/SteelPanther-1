@@ -82,6 +82,22 @@ def logout():
     return redirect(url_for('index'))
 
 
+""" Organization Functionality ================================================================= """
+@app.route('/add_organization',methods=['GET','POST'])
+def add_organization():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+    form = OrganizationForm()
+    if form.validate_on_submit():
+        org = Organization(name=form.name.data, location=form.loc.data,
+            size=form.size.data, domain=form.domain.data)
+        db.session.add(org)
+        db.session.commit()
+        flash('Organization was added successfully!', "success")
+        return redirect(url_for('add_organization'))
+    return render_template('add_organization.html', title='Add Organization', form=form)
+
+
 """ Evaluation Functionality ================================================================= """
 class DataWithInfo(object):
     def __init__(self, data, info):
