@@ -19,4 +19,3 @@ migrations/
 #configuration file
 config.py
 *.pyc
-.flaskenv
