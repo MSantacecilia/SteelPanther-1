@@ -29,12 +29,12 @@
 
                 {% with errors = get_flashed_messages(category_filter=["error"]) %}
                 {% if errors %}
-                {%- for message in errors %}
+                {% for message in errors %}
                 <div class="alert alert-danger">
                     <a class="close" data-dismiss="alert" href="#">×</a>
                     <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>{{ message }}
                 </div>
-                {% endfor -%}
+                {% endfor %}
                 {% endif %}
                 {% endwith %}
 
