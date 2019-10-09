@@ -22,23 +22,23 @@
     <div class="form-style-10">
 
 
-<center><h1>View Visualization</h1></center>
+<center><h1>{{title}}</h1></center>
 <div id="Content">
 
         <div class="inner-wrap">
-    <form action="{{ url_for('.select_timestamp') }}" method="GET">
+    <form action="{{ url_for('view') }}" method="POST">
         <p><label>Choose Organization:</label></p>
-        <p><select name="orgs">
+        <p><select name="organization">
                 <option></option>
                 {% for entry in orgs %}
                 <option value="{{entry.id}}">{{ entry.name }}</option>
                 {% endfor %}
             </select>
         </p><br><br>
-        <p><label>Choose Assessment Type:</label></p>
-        <p><select name="temp">
+        <p><label>Choose Assessment:</label></p>
+        <p><select name="assessment">
                 <option></option>
-                {% for entry in temp %}
+                {% for entry in assmt %}
                 <option value="{{entry.id}}">{{ entry.name }}</option>
                 {% endfor %}
             </select>

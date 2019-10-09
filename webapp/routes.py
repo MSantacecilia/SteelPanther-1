@@ -201,7 +201,7 @@ def category(id):
         return redirect(url_for('index'))
 
     form = CategoryForm()
-    categories = Category.query.filter(Category.assessmentid == id).order_by(Category.name).all()
+    categories = Category.query.filter_by(assessmentid=id).order_by(Category.name).all()
     temp_name = Assessment.query.filter_by(id=id).one()
     return render_template('category.html', title=f'{temp_name.name.title()} Assessment Type', categories=categories, form=form, id=id)
 
@@ -294,7 +294,7 @@ def assess():
     if request.method == 'POST':
         o_id = request.form['organization']
         a_id = request.form['assessment']
-        return redirect(url_for('assess_start',o_id=o_id, a_id=a_id))
+        return redirect(url_for('assess_start', o_id=o_id, a_id=a_id))
 
     return render_template('assess.html', title='Select Template', org=org, assmt=assmt, gl=gl)
 
@@ -306,14 +306,15 @@ def assess_start(o_id, a_id):
 
     org = o_id
     temp = a_id
+    page_title = f"Evaluating '{Organization.query.get(o_id).name}' with Assessment '{Assessment.query.get(a_id).name}'"
     form = RatingForm(request.form)
-    cL = Category.query.filter(Category.assessmentid == temp).all()
-    categoryListTest = []
+    cL = Category.query.filter_by(assessmentid=temp).all()
+    categoryList = []
     for c in cL:
-        qL = Question.query.filter(Question.category_id == c.id).order_by(Question.name).all()
+        qL = Question.query.filter_by(category_id=c.id).all()
         queslist = []
         for q in qL:
-            gL = Guideline.query.filter(Guideline.quest_id == q.id).order_by(Guideline.guideline).all()
+            gL = Guideline.query.filter_by(quest_id=q.id).order_by(Guideline.guideline).all()
             guidelineList = []
             for g in gL:
                 gObj = DataWithInfo(g, [])
@@ -321,13 +322,13 @@ def assess_start(o_id, a_id):
             qObj = DataWithInfo(q, guidelineList)
             queslist.append(qObj)
         cObj = DataWithInfo(c, queslist)
-        categoryListTest.append(cObj)
+        categoryList.append(cObj)
 
     if form.validate_on_submit():
         if 'save' in request.form:
             queslist = []
             ratinglist = []
-            for catQuestions in categoryListTest:
+            for catQuestions in categoryList:
                 for question in catQuestions.info:
                     queslist.append(question.data)
 
@@ -337,7 +338,7 @@ def assess_start(o_id, a_id):
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
             session['myratings']=ratinglist
-            return render_template('assess_start.html', title='Assessment', form=form, categories=categoryListTest)
+            return render_template('assess_start.html', title=page_title, form=form, categories=categoryList)
           
         elif 'submit' in request.form:
             a = Evaluation(user_id=current_user.id, organization_id=org, assmt=temp)
@@ -346,7 +347,7 @@ def assess_start(o_id, a_id):
 
             queslist = []
             ratinglist = []
-            for catQuestions in categoryListTest:
+            for catQuestions in categoryList:
                 for question in catQuestions.info:
                     queslist.append(question.data)
 
@@ -361,61 +362,63 @@ def assess_start(o_id, a_id):
             session['myratings'] = [0]
             db.session.commit()
             flash('The assessment was successful!', "success")
-            return redirect(url_for('select_vis'))
+            return redirect(url_for('view'))
 
-    return render_template('assess_start.html', title='Assessment', form=form, categories=categoryListTest)
+    return render_template('assess_start.html', title=page_title, form=form, categories=categoryList)
 
 
 """ Visualization Functionality ================================================================= """
-@app.route('/select_vis', methods=['GET','POST'])
-def select_vis():
+@app.route('/view', methods=['GET','POST'])
+def view():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
+
     orgs = Organization.query.all()
-    temp = Assessment.query.all()
-    return render_template('select_vis.html', title='Select Visual', temp=temp, orgs=orgs)
+    assmt = Assessment.query.all()
+
+    if request.method == 'POST':
+        o_id = request.form['organization']
+        a_id = request.form['assessment']
+        return redirect(url_for('view_select', o_id=o_id, a_id=a_id))
+
+    return render_template('view.html', title='Select Criteria of Evaluations', assmt=assmt, orgs=orgs)
 
 
-@app.route('/select_timestamp', methods=['GET'])
-def select_timestamp():
+@app.route('/view/<o_id>&<a_id>', methods=['GET', 'POST'])
+def view_select(o_id,a_id):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-    orgs = int(request.args['orgs'])
-    temp = int(request.args['temp'])
-    cats = Category.query.filter(Category.assessmentid == temp)
+
     form = SelectTimestampForm()
-    eval_details = Evaluation.query.filter((Evaluation.assmt == temp) & (Evaluation.organization_id == orgs)).all()
+    cats = Category.query.filter_by(assessmentid=a_id)
+    eval_details = Evaluation.query.filter_by(assmt=a_id, organization_id=o_id).all()
 
-#   assess_cat = Evaluation.query.filter(Evaluation.cat == Category.query.get(cats)).all()
-#   assess_org = Evaluation.query.filter(Evaluation.organization_id == Organization.query.get(orgs)).all()
-    return render_template('select_timestamp.html', title='Relevant Assessments',  form=form, assess_deets=eval_details, cats=cats)
+    return render_template('view_select.html', title='Select Evaluation',  form=form, eval_details=eval_details, cats=cats)
 
 
-@app.route('/view_single_assessment', methods=['GET','POST'])
+@app.route('/view_single_assessment', methods=['POST'])
 def view_single_assessment():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
+
     form = ViewSingleAssessmentForm()
-    if request.method == "POST":
-        ad = int(request.form["select"])
-    eval_details = db.session.query(Rating, Question, Category).filter(ad == Rating.evaluation_id).filter(Rating.question_id == Question.id).filter(Question.category_id == Category.id).all()
-#    assessd = Guideline.query.outerjoin(subq, Guideline.quest_id == subq.rating_question_id)
-#   assessdetails = Rating.query.filter(ad == Rating.assessment_id).all()
+
+    e_id = int(request.form["select"])
+    eval_details = db.session.query(Rating, Question, Category).filter(Rating.evaluation_id == e_id).filter(Rating.question_id == Question.id).filter(Question.category_id == Category.id).all()
     questionsArray = []
     categories = []
     for e in eval_details:
         questionObj = {}
- #       guideLinesObj = []
         questionObj["question"] = e.Question.name
         questionObj["Value"] = e.Rating.rating
         questionObj["category"] = re.sub(r"[^a-zA-Z0-9]+", ' ', e.Category.name)
         category_name = re.sub(r"[^a-zA-Z0-9]+", ' ', e.Category.name)
         if category_name not in categories:
             categories.append(category_name)
-        guidedetail = db.session.query(Guideline).filter(e.Question.id==Guideline.quest_id).all()
+        guidedetail = Guideline.query.filter_by(quest_id=e.Question.id).all()
         questionsArray.append(questionObj)
     json_data = json.dumps(questionsArray)
-    return render_template('view_single_assessment.html', title='View Assessment', form=form, assessdetails=eval_details, json_data=json_data, guideline=guidedetail, categories=categories)
+    return render_template('view_single_assessment.html', title='View Evaluation Visualization', form=form, assessdetails=eval_details, json_data=json_data, guideline=guidedetail, categories=categories)
 
 
 """ Guideline Functionality ================================================================= """

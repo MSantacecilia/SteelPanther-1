@@ -12,7 +12,7 @@
         <li class='last'><a href='#'><span><i class="material-icons" style="top: 3px;position: relative">list</i>Evaluation</span></a>
             <ul>
                 <li class="has-sub"><a href="{{ url_for('assess') }}"><i class="material-icons" style="top: 6px;position: relative">check_circle</i><span>Start Evaluation</span></a></li>
-                <li class="has-sub"><a href="{{ url_for('select_vis') }}"><i class="material-icons" style="top: 6px;position: relative">bar_chart</i><span>Visualize Data</span></a></li>
+                <li class="has-sub"><a href="{{ url_for('view') }}"><i class="material-icons" style="top: 6px;position: relative">bar_chart</i><span>Visualize Data</span></a></li>
             </ul>
         </li>
         {% if current_user.is_manager()==1 %}
