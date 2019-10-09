@@ -17,10 +17,7 @@
 
         <!-- Admin-only edit tools -->
         {% if current_user.is_authenticated and current_user.is_admin() %}
-        <li class='last'><a href='#'><span><i class="material-icons" style="top: 3px;position: relative">build</i>Administrator</span></a>
-            <ul>
-                <li class='has-sub'><a href="{{ url_for('assessment') }}"><span><i class="material-icons" style="top: 5px;position: relative">category</i>Edit Assessment</span></a></li>
-            </ul>
+        <li class="has-sub"><a href="{{ url_for('admin.index') }}"><i class="material-icons" style="top: 5px;position: relative">supervised_user_circle</i><span>Admin Console</span></a></li>
         {% endif %}
 
         <!-- Standard account tools -->
@@ -32,7 +29,6 @@
                 </li>
             </ul>
         </li>
-        <li class="has-sub"><a href="{{ url_for('admin.index') }}"><i class="material-icons" style="top: 5px;position: relative">supervised_user_circle</i><span>Admin Console</span></a></li>
 
     </ul>
 </div>
