@@ -112,9 +112,23 @@ def add_assessment():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
-    form = OrganizationForm()
+    if request.method == 'POST':
+        file = request.files['data_file']
+        assessment_name = request.form['assessment_name']
 
-    return render_template('add_assessment.html', title='Add Assessment', form=form)
+        if not import_CSV(file, assessment_name):
+            flash('Something went wrong with the CSV upload')
+            return redirect(url_for('add_assessment'))
+
+        flash('Assessment was added successfully!', "success")
+
+        orgList = Organization.query.all()
+        if len(orgList) == 0:
+            return redirect(url_for('add_organization'))
+        else:
+            return redirect(url_for('evaluate'))
+
+    return render_template('add_assessment.html', title='Add Assessment')
 
 
 """ Evaluation Functionality ================================================================= """
@@ -131,6 +145,25 @@ class DataWithInfo(object):
 
     def __str__(self):
         return "%s has %i items associated with it" % (self.data, len(self.info))
+
+
+def getDataForAssessment(a_id):
+    categoryList = []
+    cL = Category.query.filter_by(assessmentid=a_id).all()
+    for c in cL:
+        queslist = []
+        qL = Question.query.filter_by(category_id=c.id).all()
+        for q in qL:
+            guidelineList = []
+            gL = Guideline.query.filter_by(quest_id=q.id).order_by(Guideline.guideline).all()
+            for g in gL:
+                gObj = DataWithInfo(g, [])
+                guidelineList.append(gObj)
+            qObj = DataWithInfo(q, guidelineList)
+            queslist.append(qObj)
+        cObj = DataWithInfo(c, queslist)
+        categoryList.append(cObj)
+    return categoryList
 
 
 @app.route('/evaluate',methods=['GET','POST'])
@@ -155,25 +188,10 @@ def evaluate_perform(o_id, a_id):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
-    org = o_id
-    temp = a_id
     page_title = f"Evaluating '{Organization.query.get(o_id).name}' with Assessment '{Assessment.query.get(a_id).name}'"
     form = RatingForm(request.form)
-    cL = Category.query.filter_by(assessmentid=temp).all()
-    categoryList = []
-    for c in cL:
-        qL = Question.query.filter_by(category_id=c.id).all()
-        queslist = []
-        for q in qL:
-            gL = Guideline.query.filter_by(quest_id=q.id).order_by(Guideline.guideline).all()
-            guidelineList = []
-            for g in gL:
-                gObj = DataWithInfo(g, [])
-                guidelineList.append(gObj)
-            qObj = DataWithInfo(q, guidelineList)
-            queslist.append(qObj)
-        cObj = DataWithInfo(c, queslist)
-        categoryList.append(cObj)
+
+    categoryList = getDataForAssessment(a_id)
 
     if form.validate_on_submit():
         if 'save' in request.form:
@@ -192,7 +210,7 @@ def evaluate_perform(o_id, a_id):
             return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList)
           
         elif 'submit' in request.form:
-            a = Evaluation(user_id=current_user.id, organization_id=org, assmt=temp)
+            a = Evaluation(user_id=current_user.id, organization_id=o_id, assmt=a_id)
             db.session.add(a)
             db.session.commit()
 
@@ -212,7 +230,7 @@ def evaluate_perform(o_id, a_id):
             session.pop('myratings', None)
             session['myratings'] = [0]
             db.session.commit()
-            flash('The assessment was successful!', "success")
+            flash('The evaluation was successful!', "success")
             return redirect(url_for('view'))
 
     return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList)
@@ -251,14 +269,13 @@ def view_select(o_id,a_id):
     return render_template('view_select.html', title='Select Evaluation',  form=form, eval_details=eval_details, cats=cats, o_id=o_id, a_id=a_id)
 
 
-@app.route('/view/<o_id>&<a_id>/<e_id>', methods=['GET'])
+@app.route('/view/<o_id>&<a_id>&<e_id>', methods=['GET'])
 def view_display(o_id, a_id, e_id):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
     form = ViewSingleAssessmentForm()
 
-    # e_id = int(request.form["select"])
     eval_details = db.session.query(Rating, Question, Category).filter(Rating.evaluation_id == e_id).filter(Rating.question_id == Question.id).filter(Question.category_id == Category.id).all()
     questionsArray = []
     categories = []
@@ -389,11 +406,11 @@ def assessment_category_delete(id, cid):
 
 
 """ Import CSV Functionality ================================================================= """
-@app.route('/import_CSV', methods=["POST"])
-def import_CSV():
-    f = request.files['data_file']
+def import_CSV(file, assessment_name):
+    f = file
     if not f:
-        return "No file"
+        # No file error
+        return False
     stream = io.StringIO(f.stream.read().decode("UTF8"), newline=None)
     csv_input = csv.reader(stream)
 
@@ -402,7 +419,7 @@ def import_CSV():
     firstRow = 10
 
     # Add an assessment to the database
-    assessment_name = request.form['assessment_name']
+    # assessment_name = request.form['assessment_name']
     assessment = Assessment(name=assessment_name)
     db.session.add(assessment)
     db.session.commit()
@@ -452,8 +469,4 @@ def import_CSV():
 
                 db.session.commit()
 
-    orgList = Organization.query.all()
-    if len(orgList) == 0:
-        return redirect(url_for('add_organization'))
-    else:
-        return redirect(url_for('evaluate'))
+    return True
