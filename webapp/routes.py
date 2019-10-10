@@ -43,6 +43,8 @@ def login():
     if form.validate_on_submit():
         ratinglist = [0]
         session['myratings'] = ratinglist
+        session['numquestions'] = 0
+        session['myobs'] = ['']
         user = UserAccount.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password', "danger")
@@ -145,27 +147,7 @@ class DataWithInfo(object):
 
     def __str__(self):
         return "%s has %i items associated with it" % (self.data, len(self.info))
-
-
-def getDataForAssessment(a_id):
-    categoryList = []
-    cL = Category.query.filter_by(assessmentid=a_id).all()
-    for c in cL:
-        queslist = []
-        qL = Question.query.filter_by(category_id=c.id).all()
-        for q in qL:
-            guidelineList = []
-            gL = Guideline.query.filter_by(quest_id=q.id).order_by(Guideline.guideline).all()
-            for g in gL:
-                gObj = DataWithInfo(g, [])
-                guidelineList.append(gObj)
-            qObj = DataWithInfo(q, guidelineList)
-            queslist.append(qObj)
-        cObj = DataWithInfo(c, queslist)
-        categoryList.append(cObj)
-    return categoryList
-
-
+        
 @app.route('/evaluate',methods=['GET','POST'])
 def evaluate():
     if not current_user.is_authenticated:
@@ -182,32 +164,72 @@ def evaluate():
 
     return render_template('evaluate.html', title='Start an Evaluation', org=org, assmt=assmt, gl=gl)
 
-
 @app.route('/assess/<o_id>&<a_id>', methods=['GET','POST'])
 def evaluate_perform(o_id, a_id):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-
+    if 'savedassess' not in session:
+        session['savedassess'] = a_id
+    session['numquestions'] = 0
     page_title = f"Evaluating '{Organization.query.get(o_id).name}' with Assessment '{Assessment.query.get(a_id).name}'"
     form = RatingForm(request.form)
-
-    categoryList = getDataForAssessment(a_id)
-
+    if a_id == session['savedassess']:
+        savedassess = session['savedassess']
+    else:
+        savedassess = [0]
+    print(savedassess)
+    cL = Category.query.filter(Category.assessmentid == a_id).all()
+    categoryList = []
+    numberquestonslist = []
+    reverseQues=[]
+    j = 0
+    for c in cL:
+        queslist = []
+        i=0
+        qL = Question.query.filter_by(category_id=c.id).all()
+        for q in qL:
+            guidelineList = []
+            j += 1
+            numberquestonslist.append(j)
+            gL = Guideline.query.filter_by(quest_id=q.id).order_by(Guideline.guideline).all()
+            for g in gL:
+                gObj = DataWithInfo(g, [])
+                guidelineList.append(gObj)
+            qObj = DataWithInfo(q, guidelineList)
+            queslist.append(qObj)
+            i+=1
+        cObj = DataWithInfo(c, queslist)
+        categoryList.append(cObj)
+        session['numquestions'] += i
+    for i in reversed(numberquestonslist):
+        reverseQues.append(i)
+    session['numqueslist'] = reverseQues
     if form.validate_on_submit():
         if 'save' in request.form:
             queslist = []
             ratinglist = []
+            obslist = []
             for catQuestions in categoryList:
                 for question in catQuestions.info:
                     queslist.append(question.data)
 
             for q in queslist:
                 if request.method == "POST":
+                    if 'obs' + str(q.id) in request.form:
+                        obs = str(request.form['obs' + str(q.id)])
+                        obslist.append(obs)
+                    #print(request.form['rating' + str(q.id)])
                     if 'rating' + str(q.id) in request.form:
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
-            session['myratings']=ratinglist
-            return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList)
+            if savedassess == a_id:
+                session['myratings']=ratinglist
+                session['myobs']=obslist
+            else:
+                session['myratings']=[0]
+                session['myobs']=[]
+            print(session)
+            return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList, a_id=a_id)
           
         elif 'submit' in request.form:
             a = Evaluation(user_id=current_user.id, organization_id=o_id, assmt=a_id)
@@ -222,18 +244,25 @@ def evaluate_perform(o_id, a_id):
 
             for q in queslist:
                 if request.method == "POST":
+                    #print(request.form['rating' + str(q.id)])
+                    if 'obs' + str(q.id) in request.form:
+                        obs = str(request.form['obs' + str(q.id)])
                     if 'rating' + str(q.id) in request.form:
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
-                        obj = Rating(evaluation_id=a.id, question_id=q.id, rating=rate)
+                        obj = Rating(evaluation_id=a.id, question_id=q.id, rating=rate, observation=obs)
                         db.session.add(obj)
             session.pop('myratings', None)
+            session.pop('savedassess', None)
+            session.pop('numquestions', None)
+            session.pop('myobs', None)
             session['myratings'] = [0]
+            session['myobs'] = ['']
             db.session.commit()
             flash('The evaluation was successful!', "success")
             return redirect(url_for('view'))
 
-    return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList)
+    return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList, a_id=a_id)
 
 
 """ Visualization Functionality ================================================================= """

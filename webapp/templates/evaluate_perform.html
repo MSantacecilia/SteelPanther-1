@@ -30,9 +30,16 @@
         <div id="Content">
             
             <div class="inner-wrap">
+                {% set numquestlist = session['numqueslist'] %}    
+                {% set myobslist = session['myobs'] %}        
                 {% for o1 in categories %}
                 {% set c = o1.data %}
-                {% set myrating = session['myratings'] %}
+                {% set myrating = [0] %}
+                {% set l = 1 %}
+                {% if a_id == session['savedassess'] %}
+                    {% set myrating = session['myratings'] %}
+                    {% set numquestions = session['numquestions'] %}
+                {% endif %}
                 {% set qList = o1.info %}
                 <div>
                     <button class="btn btn-secondary btn-block" type="button" data-toggle="collapse" data-target="#{{c.id}}" aria-expanded="false" aria-controls="collapseExample" style="border-radius:0; font-weight: bold;background-color: #708090; font-size:15px;">
@@ -43,7 +50,7 @@
                     <div class="card card-body">
                         <table>
                         {% for o2 in qList %}
-                            {% set l = loop.index %}
+                            {% set i = numquestlist.pop() %}
                             {% set q = o2.data %}
                             {% set gList = o2.info %}
                                 <tr>
@@ -54,28 +61,28 @@
                                 {% for o3 in gList %}
                                     {% set g = o3.data %}
                                     {% set c = count.pop() %}
-                                        {% if c==myrating[l - 1] %}
-                                            <input type="radio" name="rating{{q.id}}" value="{{ c }}" checked> {{ g.guideline }} <br>
-                                        {% elif c==0 %}
-                                            <input type="radio" name="rating{{q.id}}" value="{{ c }}" checked> {{ g.guideline }} <br>
-                                        {% else %}
-                                            <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
-                                        {% endif %}
+                                    {% if c==myrating[i - 1] %}
+                                        <input type="radio" name="rating{{q.id}}" value="{{ c }}" checked> {{ g.guideline }} <br>
+                                    {% elif c==0 %}
+                                        <input type="radio" name="rating{{q.id}}" value="{{ c }}" checked> {{ g.guideline }} <br>
+                                    {% else %}
+                                        <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
+                                    {% endif %}
+                                    {% if count.append(c + 1) %}{% endif %}
                                         
-                                        {% if count.append(c + 1) %}{% endif %}
-                                {% endfor %}                              
-                                <textarea class="form-control" id="observation" placeholder="Enter your observation here" rows="2"></textarea>
+                               {% endfor %}
+                               {% if ''!=myobslist[i-1] %}                             
+                                    <textarea class="form-control" id="observation" name="obs{{q.id}}" placeholder="Enter your observation here" rows="2">{{ myobslist[i-1] }}</textarea>
+                                {% else %}
+                                    <textarea class="form-control" id="observation" name="obs{{q.id}}" placeholder="Enter your observation here" rows="2"></textarea>
+                                {% endif %}
                                 </div>
                                 <tr>
                                     <td colspan="2"><hr/></td>
                                 </tr>
-                                
-                            
                             </td>
-                        </tr> 
+                        </tr>
                         {% endfor %}
-
-
                         </table>
 
                     </div>
