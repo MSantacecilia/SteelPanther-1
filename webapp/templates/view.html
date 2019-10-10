@@ -28,7 +28,7 @@
         <div class="inner-wrap">
     <form action="{{ url_for('view') }}" method="POST">
         <p><label>Choose Organization:</label></p>
-        <p><select name="organization">
+        <p><select name="organization" id="organization_select">
                 <option></option>
                 {% for entry in orgs %}
                 <option value="{{entry.id}}">{{ entry.name }}</option>
@@ -36,18 +36,77 @@
             </select>
         </p><br><br>
         <p><label>Choose Assessment:</label></p>
-        <p><select name="assessment">
-                <option></option>
-                {% for entry in assmt %}
-                <option value="{{entry.id}}">{{ entry.name }}</option>
-                {% endfor %}
+        <p><select name="assessment" id="assessment_select">
+
             </select>
         </p>
+        <table  class="table table-light" style="color:black" id="evaluation_table" >
+
+            <tr><th></th><th></th><th></th></tr>
+        </table>
     <br><br><br>
-        <p><button>Proceed</button></p>  
+
     </form>
 </div>
 </div>
     </div>
                     </div></div></div></div></div>
+
+
+
+<script>
+        let organization_select = document.getElementById("organization_select");
+        let assessment_select = document.getElementById("assessment_select");
+
+        assessment_select.onchange = function() {
+            if(null != organization_select.value){
+                loadTable();
+            }
+        }
+
+        organization_select.onchange = function() {
+            if(null != organization_select.value){
+                loadAssessment();
+            }
+            let assessmentTableHTML = '<tr><th></th><th></th><th></th></tr>';
+            evaluation_table.innerHTML = assessmentTableHTML;
+        }
+
+        function loadAssessment(){
+            organization_id = organization_select.value;
+            fetch('/filter_assessment/' + organization_id).then(function(response){
+                response.json().then(function(data){
+                    let assessmentHTML = '<option></option>';
+                    for(let assessment of data.assessments){
+                        assessmentHTML += '<option value="'+ assessment.id +'">'+ assessment.name +'</option>'
+                    }
+                    assessment_select.innerHTML = assessmentHTML;
+                });
+            });
+         }
+
+         function loadTable(){
+            assessment_id = assessment_select.value;
+            fetch('/filter_assessment_table/' + assessment_id).then(function(response){
+                response.json().then(function(data){
+                    let assessmentTableHTML = '<tr><th>Evaluations:</th><th></th><th></th></tr>';
+                    for(let evaluation of data.evaluations){
+                        assessmentTableHTML += '<tr><td>'+ evaluation.timestamp +'</td>'
+                        assessmentTableHTML += '<td><button type="submit" class="btn btn-info btn-sm" name="select" value="'+ evaluation.id +'">View</button></td>'
+                    }
+                    evaluation_table.innerHTML = assessmentTableHTML;
+                });
+            });
+         }
+
+
+         /*
+         function temp(){
+
+         }
+         */
+
+</script>
+
+
 {% endblock %}
