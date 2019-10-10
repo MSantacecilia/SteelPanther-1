@@ -82,20 +82,39 @@ def logout():
     return redirect(url_for('index'))
 
 
-""" Organization Functionality ================================================================= """
+""" Add Functionality ========================================================================== """
 @app.route('/add_organization',methods=['GET','POST'])
 def add_organization():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
+
     form = OrganizationForm()
+
     if form.validate_on_submit():
         org = Organization(name=form.name.data, location=form.loc.data,
             size=form.size.data, domain=form.domain.data)
         db.session.add(org)
         db.session.commit()
+
         flash('Organization was added successfully!', "success")
-        return redirect(url_for('add_organization'))
+
+        assmtList = Assessment.query.all()
+        if len(assmtList) == 0:
+            return redirect(url_for('add_assessment'))
+        else:
+            return redirect(url_for('evaluate'))
+
     return render_template('add_organization.html', title='Add Organization', form=form)
+
+
+@app.route('/add_assessment',methods=['GET','POST'])
+def add_assessment():
+    if not current_user.is_authenticated:
+        return redirect(url_for('login'))
+
+    form = OrganizationForm()
+
+    return render_template('add_assessment.html', title='Add Assessment', form=form)
 
 
 """ Evaluation Functionality ================================================================= """
@@ -114,8 +133,8 @@ class DataWithInfo(object):
         return "%s has %i items associated with it" % (self.data, len(self.info))
 
 
-@app.route('/assess',methods=['GET','POST'])
-def assess():
+@app.route('/evaluate',methods=['GET','POST'])
+def evaluate():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
@@ -126,13 +145,13 @@ def assess():
     if request.method == 'POST':
         o_id = request.form['organization']
         a_id = request.form['assessment']
-        return redirect(url_for('assess_start', o_id=o_id, a_id=a_id))
+        return redirect(url_for('evaluate_perform', o_id=o_id, a_id=a_id))
 
-    return render_template('assess.html', title='Select Template', org=org, assmt=assmt, gl=gl)
+    return render_template('evaluate.html', title='Start an Evaluation', org=org, assmt=assmt, gl=gl)
 
 
 @app.route('/assess/<o_id>&<a_id>', methods=['GET','POST'])
-def assess_start(o_id, a_id):
+def evaluate_perform(o_id, a_id):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
 
@@ -170,7 +189,7 @@ def assess_start(o_id, a_id):
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
             session['myratings']=ratinglist
-            return render_template('assess_start.html', title=page_title, form=form, categories=categoryList)
+            return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList)
           
         elif 'submit' in request.form:
             a = Evaluation(user_id=current_user.id, organization_id=org, assmt=temp)
@@ -196,7 +215,7 @@ def assess_start(o_id, a_id):
             flash('The assessment was successful!', "success")
             return redirect(url_for('view'))
 
-    return render_template('assess_start.html', title=page_title, form=form, categories=categoryList)
+    return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList)
 
 
 """ Visualization Functionality ================================================================= """
@@ -433,4 +452,8 @@ def import_CSV():
 
                 db.session.commit()
 
-    return redirect(url_for('assess'))
+    orgList = Organization.query.all()
+    if len(orgList) == 0:
+        return redirect(url_for('add_organization'))
+    else:
+        return redirect(url_for('evaluate'))
