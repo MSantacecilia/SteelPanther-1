@@ -283,9 +283,36 @@ def view():
     if request.method == 'POST':
         o_id = request.form['organization']
         a_id = request.form['assessment']
-        return redirect(url_for('view_select', o_id=o_id, a_id=a_id))
+        e_id = int(request.form["select"])
+        return redirect(url_for('view_display', o_id=o_id, a_id=a_id, e_id=e_id))
 
     return render_template('view.html', title='Select Criteria of Evaluations', assmt=assmt, orgs=orgs)
+
+@app.route('/filter_assessment/<organization_id>')
+def filter_assessment(organization_id):
+    evaluations = Evaluation.query.filter_by(organization_id=organization_id).all()
+    assessment_array = []
+    for evaluation in evaluations:
+        assessment = Assessment.query.filter_by(id=evaluation.assmt).first()
+        assessmentObj = {}
+        assessmentObj["id"] = assessment.id
+        assessmentObj["name"] = assessment.name
+        if assessmentObj not in assessment_array:
+            assessment_array.append(assessmentObj)
+    return jsonify({'assessments': assessment_array})
+
+
+@app.route('/filter_assessment_table/<assessment_id>')
+def filter_assessment_table(assessment_id):
+    evaluations = Evaluation.query.filter_by(assmt=assessment_id).all()
+    evaluations_array = []
+    for evaluation in evaluations:
+        evaluationObj = {}
+        evaluationObj["id"] = evaluation.id
+        #evaluation_timestamp = evaluation.timestamp
+        evaluationObj["timestamp"] = evaluation.timestamp
+        evaluations_array.append(evaluationObj)
+    return jsonify({'evaluations': evaluations_array})
 
 
 @app.route('/view/<o_id>&<a_id>', methods=['GET', 'POST'])
