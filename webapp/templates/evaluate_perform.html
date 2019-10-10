@@ -28,18 +28,16 @@
         <form action="" method="POST" class="form">
             {{ form.csrf_token }}
         <div id="Content">
-            
+
             <div class="inner-wrap">
-                {% set numquestlist = session['numqueslist'] %}    
+                {% set numquestlist = session['numqueslist'] %}
                 {% for o1 in categories %}
                 {% set c = o1.data %}
                 {% set myobslist = [''] %}
                 {% set myrating = [0] %}
                 {% set l = 1 %}
-                {{ session['orgname'] }}
                 {% if o_id == session['orgname'] %}
                     {% if a_id == session['savedassess'] %}
-                        {{l}}
                         {% set myrating = session['myratings'] %}
                         {% set numquestions = session['numquestions'] %}
                         {% set myobslist = session['myobs'] %}
@@ -74,9 +72,9 @@
                                         <input type="radio" name="rating{{q.id}}" value="{{ c }}"> {{ g.guideline }} <br>
                                     {% endif %}
                                     {% if count.append(c + 1) %}{% endif %}
-                                        
+
                                {% endfor %}
-                               {% if ''!=myobslist[i-1] %}                             
+                               {% if ''!=myobslist[i-1] %}
                                     <textarea class="form-control" id="observation" name="obs{{q.id}}" placeholder="Enter your observation here" rows="2">{{ myobslist[i-1] }}</textarea>
                                 {% else %}
                                     <textarea class="form-control" id="observation" name="obs{{q.id}}" placeholder="Enter your observation here" rows="2"></textarea>
@@ -101,7 +99,7 @@
         <br>
             </div>
         </div>
-            
+
         </div>
         </div></div></div></div></div>
 
