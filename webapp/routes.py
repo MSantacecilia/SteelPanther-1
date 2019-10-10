@@ -42,6 +42,7 @@ def login():
     if form.validate_on_submit():
         ratinglist = [0]
         session['myratings'] = ratinglist
+        session['numquestions'] = 0
         user = UserAccount.query.filter_by(username=form.username.data).first()
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password', "danger")
@@ -283,48 +284,75 @@ class DataWithInfo(object):
     def __str__(self):
         return "%s has %i items associated with it" % (self.data, len(self.info))
 
-
+@app.before_request
+def set_temp():
+    if 'savedassess' not in session and request.endpoint == 'assess':
+        session['savedassess'] = int(request.args['template'])
 @app.route('/assess', methods=['GET','POST'])
 def assess():
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
-
+    session['numquestions'] = 0
     org = int(request.args['org'])
     temp = int(request.args['template'])
     form = RatingForm(request.form)
+    if temp == session['savedassess']:
+        savedassess = session['savedassess']
+    else:
+        savedassess = [0]
+    print(savedassess)
     cL = Category.query.filter(Category.templateid == temp).all()
     categoryListTest = []
+    numberquestonslist = []
+    reverseQues=[]
+    j = 0
     for c in cL:
         qL = Question.query.filter(Question.category_id == c.id).order_by(Question.name).all()
         queslist = []
+        i=0
         for q in qL:
             gL = Guideline.query.filter(Guideline.quest_id == q.id).order_by(Guideline.guideline).all()
             guidelineList = []
+            j += 1
+            numberquestonslist.append(j)
             for g in gL:
                 gObj = DataWithInfo(g, [])
                 guidelineList.append(gObj)
             qObj = DataWithInfo(q, guidelineList)
             queslist.append(qObj)
+            i+=1
         cObj = DataWithInfo(c, queslist)
         categoryListTest.append(cObj)
-
+        session['numquestions'] += i
+    for i in reversed(numberquestonslist):
+        reverseQues.append(i)
+    session['numqueslist'] = reverseQues
     if form.validate_on_submit():
         if 'save' in request.form:
             queslist = []
             ratinglist = []
+            obslist = []
             for catQuestions in categoryListTest:
                 for question in catQuestions.info:
                     queslist.append(question.data)
 
             for q in queslist:
                 if request.method == "POST":
+                    if 'obs' + str(q.id) in request.form:
+                        obs = str(request.form['obs' + str(q.id)])
+                        obslist.append(obs)
                     #print(request.form['rating' + str(q.id)])
                     if 'rating' + str(q.id) in request.form:
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
-            session['myratings']=ratinglist
+            if savedassess == temp:
+                session['myratings']=ratinglist
+                session['myobs']=obslist
+            else:
+                session['myratings']=[0]
+                session['myobs']=[]
             print(session)
-            return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest)
+            return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest, temp=temp)
           
         elif 'submit' in request.form:
             a = Assessment(user_id=current_user.id, organization_id=org, temp=temp)
@@ -340,18 +368,23 @@ def assess():
             for q in queslist:
                 if request.method == "POST":
                     #print(request.form['rating' + str(q.id)])
+                    if 'obs' + str(q.id) in request.form:
+                        obs = str(request.form['obs' + str(q.id)])
                     if 'rating' + str(q.id) in request.form:
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
-                        obj = Rating(assessment_id=a.id, question_id=q.id, rating=rate)
+                        obj = Rating(assessment_id=a.id, question_id=q.id, rating=rate, observation=obs)
                         db.session.add(obj)
             session.pop('myratings', None)
+            session.pop('savedassess', None)
+            session.pop('numquestions', None)
+            session.pop('myobs', None)
             session['myratings'] = [0]
             db.session.commit()
             flash('The assessment was successful!', "success")
             return redirect(url_for('select_vis'))
 
-    return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest)
+    return render_template('assess.html', title='Assessment', form=form, categories=categoryListTest, temp=temp)
 
 @app.route('/select_vis', methods=['GET','POST'])
 def select_vis():
