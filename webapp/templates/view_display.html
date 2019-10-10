@@ -27,10 +27,14 @@
     <div id="Content">
         <p style="font-size: 20px;">Select the type of graph:<p>
         <select id="graph_select" name="hi" >
-            <option value="bar" selected>Bar Graph</option>
+            <option value="spider" selected>Spider Graph</option>
+            <option value="bar">Bar Graph</option>
             <option value="pie">Pie Graph</option>
-            <option value="spider">Spider Graph</option><br><br>
+            <br><br>
         </select>
+        <br><br>
+        <Center><button id="cmd" class="btn btn-primary">Save as PDF</button></Center>
+        <div id="editor"></div>
         <br />
         <br />
         <br />
@@ -86,6 +90,8 @@
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 
     <script>
 
@@ -110,7 +116,7 @@
        window.onload = function() {
            var temp = '{{json_data}}';
            jsonData = temp.replace(/&#34;/g, '"');
-           generateBarGraph('bar');
+           generateSpiderGraph();
        };
 
 
@@ -316,6 +322,79 @@
        });
        {% endfor %}
      }
+
+    //Test 2
+     $('#cmd').click(function(event) {
+        // get size of report page
+        //var reportPageHeight = $('#canvas_div').innerHeight();
+        //var reportPageWidth = $('#canvas_div').innerWidth();
+
+        var reportPageHeight = 1100;
+        var reportPageWidth = 700;
+
+     //var pdfCanvas =[];
+     var canvasNo = 0;
+     var pdfCanvas = $('<canvas />').attr({
+            id: "canvaspdf",
+            width: reportPageWidth,
+            height: reportPageHeight
+     });
+
+
+    // keep track canvas position
+    var pdfctx = $(pdfCanvas)[0].getContext('2d');
+    var pdfctxX = 2;
+    var pdfctxY = 4;
+    var buffer = 10;
+    var canvasHeight = 420;
+    var canvasWidth = 700;
+
+    var pdf = new jsPDF();
+    //pageHeight= pdf.internal.pageSize.height;
+    pageHeight=700;
+    //alert(pageHeight);
+
+
+
+    // for each chart.js chart
+    $("canvas").each(function(index) {
+
+        // draw the chart into the new canvas
+        pdfctx.drawImage($(this)[0], pdfctxX, pdfctxY, canvasWidth, canvasHeight);
+        pdfctxY += canvasHeight + buffer;
+
+       if (pdfctxY >= pageHeight)
+        {
+            //alert(pdfctxY);
+            //pdf.addImage($(pdfCanvas)[0], 'PNG', 0, 0);
+            //alert(canvasNo);
+            pdf.addImage($(pdfCanvas)[0], 'PNG', 0, 0, 0, 0, canvasNo, 'fast');
+
+            // create a new canvas object that we will populate with all other canvas objects
+            pdfCanvas = $('<canvas />').attr({
+                id: "canvaspdf",
+                width: reportPageWidth,
+                height: reportPageHeight
+            });
+            pdfctx = $(pdfCanvas)[0].getContext('2d');
+            pdf.addPage();
+            pdfctxY = 4; // Restart height position
+            canvasNo++;
+        }
+
+    });
+
+
+
+
+    // download the pdf
+    pdf.save('filename.pdf');
+    //PrintElem('canvas_div');
+    });
+
+
+
+    
        </script>
 
         </div></div></div></div></div></div></div></div>
