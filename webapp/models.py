@@ -157,7 +157,7 @@ class UserModelView(ModelView):
     form_excluded_columns = ['evaluations', ]
     column_exclude_list = ['password_hash']
     column_searchable_list = ['username']
-
+    column_labels = dict(password_hash='Password')
 
 class MyAdminIndexView(AdminIndexView):
 
