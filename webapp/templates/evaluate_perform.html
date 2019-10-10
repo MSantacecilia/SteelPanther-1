@@ -36,10 +36,14 @@
                 {% set myobslist = [''] %}
                 {% set myrating = [0] %}
                 {% set l = 1 %}
-                {% if a_id == session['savedassess'] %}
-                    {% set myrating = session['myratings'] %}
-                    {% set numquestions = session['numquestions'] %}
-                    {% set myobslist = session['myobs'] %}
+                {{ session['orgname'] }}
+                {% if o_id == session['orgname'] %}
+                    {% if a_id == session['savedassess'] %}
+                        {{l}}
+                        {% set myrating = session['myratings'] %}
+                        {% set numquestions = session['numquestions'] %}
+                        {% set myobslist = session['myobs'] %}
+                    {% endif %}
                 {% endif %}
                 {% set qList = o1.info %}
                 <div>
