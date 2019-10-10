@@ -24,15 +24,15 @@
     <div class="form-style-10">
 
 
-<h1>Select Assessment</h1>
+<h1>{{title}}</h1>
 <div id="Content">
 
         <div class="inner-wrap">
-    <form action="{{ url_for('select_template') }}" method="POST">
+    <form action="{{ url_for('assessment') }}" method="POST">
         <p><label>Choose Assessment:</label></p>
-        <p><select name="assessment_type_id">
+        <p><select name="assmt">
                 <option></option>
-                {% for entry in temp %}
+                {% for entry in assmt %}
                 <option value="{{entry.id}}">{{ entry.name }}</option>
                 {% endfor %}
             </select>
@@ -45,10 +45,10 @@
 
 
 
-            <form action="{{url_for('create_template')}}" method="post" enctype="multipart/form-data">
+            <form action="{{url_for('assessment_add')}}" method="post" enctype="multipart/form-data">
 
-                <h3>Create New Template</h3>
-                <p>Assessment name: </p><input type="text" name="template_name"required><br>
+                <h3>Upload New Assessment</h3>
+                <p>Assessment name: </p><input type="text" name="assessment_name"required><br>
                 <br />
                 <br />
                 <button type="submit" value="submit">Proceed</button>

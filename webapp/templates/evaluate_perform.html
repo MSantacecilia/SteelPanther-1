@@ -24,7 +24,7 @@
 
     <div class="form-style-10">
 
-        <i onclick="goBack()" class="material-icons md-48" style="cursor: pointer;top: 25px;position: relative;color: white;">arrow_back</i> <center><h1>Assessment</h1></center>
+        <i onclick="goBack()" class="material-icons md-48" style="cursor: pointer;top: 25px;position: relative;color: white;">arrow_back</i> <center><h1>{{title}}</h1></center>
         <form action="" method="POST" class="form">
             {{ form.csrf_token }}
         <div id="Content">
@@ -36,7 +36,7 @@
                 {% set c = o1.data %}
                 {% set myrating = [0] %}
                 {% set l = 1 %}
-                {% if temp == session['savedassess'] %}
+                {% if a_id == session['savedassess'] %}
                     {% set myrating = session['myratings'] %}
                     {% set numquestions = session['numquestions'] %}
                 {% endif %}
@@ -51,7 +51,6 @@
                         <table>
                         {% for o2 in qList %}
                             {% set i = numquestlist.pop() %}
-                            {{ i }}
                             {% set q = o2.data %}
                             {% set gList = o2.info %}
                                 <tr>
