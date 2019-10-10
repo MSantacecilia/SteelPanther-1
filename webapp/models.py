@@ -1,20 +1,27 @@
-from flask_admin import Admin, expose
+from flask import url_for
+from flask_admin import Admin, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.menu import MenuLink
+from werkzeug import security
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from datetime import datetime
+
+from werkzeug.utils import redirect
+
 from webapp import db, login, app
 from sqlalchemy.ext.declarative import declarative_base
 
 # Ordered ALPHABETICALLY
+
+
 
 class Assessment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64))
 
     cats = db.relationship("Category", backref='category_assessment', lazy='dynamic')
-    evalulations = db.relationship("Evaluation", backref='evaluation_assessment', lazy='dynamic')
+    evaluations = db.relationship("Evaluation", backref='evaluation_assessment', lazy='dynamic')
 
 
 class Category(db.Model):
@@ -41,7 +48,7 @@ class Evaluation(db.Model):
     question = db.relationship("Rating", backref='question_evaluation', lazy='dynamic')
 
     def __repr__(self):
-        return '<Evaluation {0} {1}>'.format(Organization.query.get(self.organization_id).name,self.id)
+        return '<Evaluation {0} {1}>'.format(Organization.query.get(self.organization_id).name, self.id)
 
 
 class Guideline(db.Model):
@@ -60,8 +67,8 @@ class Organization(db.Model):
     size = db.Column(db.String(64))
     domain = db.Column(db.String(64))
 
-    evalulations = db.relationship('Evaluation', backref='evaluation_organization', lazy='dynamic')
-    
+    evaluations = db.relationship('Evaluation', backref='evaluation_organization', lazy='dynamic')
+
     def __repr__(self):
         return '{0}'.format(self.name)
 
@@ -96,9 +103,9 @@ class UserAccount(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    privilege = db.Column(db.Integer, default=1)
+    privilege = db.Column(db.Integer, default=2)
 
-    evalulations = db.relationship('Evaluation', backref='evaluation_user_account', lazy='dynamic')
+    evaluations = db.relationship('Evaluation', backref='evaluation_user_account', lazy='dynamic')
 
 
     def __repr__(self):
@@ -117,21 +124,69 @@ class UserAccount(UserMixin, db.Model):
         return self.privilege == 2
 
 
+# ADMIN STUFF
+
+class MyModelView(ModelView):
+
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+    def is_accessible(self):
+        return current_user.is_admin()
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('index'))
+
+    form_excluded_columns = ['evaluations', ]
+
+
+class UserModelView(ModelView):
+
+    def is_accessible(self):
+        return current_user.is_authenticated
+
+    def is_accessible(self):
+        return current_user.is_admin()
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('index'))
+
+    def on_model_change(self, form, model, is_created):
+        model.password_hash = security.generate_password_hash(model.password_hash)
+
+    form_excluded_columns = ['evaluations', ]
+    column_exclude_list = ['password_hash']
+    column_searchable_list = ['username']
+
+
+class MyAdminIndexView(AdminIndexView):
+
+    def is_accessible(self):
+        if current_user.is_authenticated:
+            return current_user.is_admin()
+        else:
+            return False
+
+    def inaccessible_callback(self, name, **kwargs):
+        return redirect(url_for('index'))
+
+
+
 # set optional bootswatch theme
 app.config['FLASK_ADMIN_SWATCH'] = 'darkly'
 
-newadmin = Admin(app, name='SteelPanther', template_mode='bootstrap3')
+newadmin = Admin(app, name='SteelPanther', template_mode='bootstrap3', index_view=MyAdminIndexView())
 # Add administrative views here
 
 
 newadmin.add_link(MenuLink(name='Go Back', url='/'))
-newadmin.add_view(ModelView(UserAccount, db.session))
-newadmin.add_view(ModelView(Organization, db.session))
-newadmin.add_view(ModelView(Category, db.session))
-newadmin.add_view(ModelView(Rating, db.session))
-newadmin.add_view(ModelView(Question, db.session))
-newadmin.add_view(ModelView(Guideline, db.session))
-newadmin.add_view(ModelView(Assessment, db.session))
+newadmin.add_view(UserModelView(UserAccount, db.session))
+newadmin.add_view(MyModelView(Organization, db.session))
+newadmin.add_view(MyModelView(Assessment, db.session))
+newadmin.add_view(MyModelView(Evaluation, db.session))
+newadmin.add_view(MyModelView(Category, db.session))
+
+
 
 
 @login.user_loader
