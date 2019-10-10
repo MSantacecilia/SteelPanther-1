@@ -147,7 +147,7 @@ class DataWithInfo(object):
 
     def __str__(self):
         return "%s has %i items associated with it" % (self.data, len(self.info))
-        
+
 @app.route('/evaluate',methods=['GET','POST'])
 def evaluate():
     if not current_user.is_authenticated:
@@ -228,12 +228,11 @@ def evaluate_perform(o_id, a_id):
             else:
                 session['myratings']=[0]
                 session['myobs']=[]
-            print(session)
             return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList, a_id=a_id)
-          
+
         elif 'submit' in request.form:
-            a = Evaluation(user_id=current_user.id, organization_id=o_id, assmt=a_id)
-            db.session.add(a)
+            e = Evaluation(user_id=current_user.id, organization_id=o_id, assmt=a_id)
+            db.session.add(e)
             db.session.commit()
 
             queslist = []

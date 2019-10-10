@@ -34,6 +34,8 @@
                                      <p><label>Choose Organization:</label></p>
                                      <p><select name="organization" required>
                                          <option></option>
+
+                                         <!-- need an if statement condition -->
                                          {% for entry in org %}
                                         <option value="{{entry.id}}">{{ entry.name }}</option>
                                          {% endfor %}
@@ -43,6 +45,7 @@
                                      <p><label>Choose Assessment:</label></p>
                                      <p><select name="assessment" required>
                                          <option></option>
+                                         <!-- need an if statement condition -->
                                          {% for entry in assmt %}
                                          <option value="{{entry.id}}">{{ entry.name }}</option>
                                          {% endfor %}
