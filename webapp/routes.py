@@ -148,6 +148,7 @@ class DataWithInfo(object):
     def __str__(self):
         return "%s has %i items associated with it" % (self.data, len(self.info))
 
+
 @app.route('/evaluate',methods=['GET','POST'])
 def evaluate():
     if not current_user.is_authenticated:
@@ -164,20 +165,23 @@ def evaluate():
 
     return render_template('evaluate.html', title='Start an Evaluation', org=org, assmt=assmt, gl=gl)
 
+
 @app.route('/assess/<o_id>&<a_id>', methods=['GET','POST'])
 def evaluate_perform(o_id, a_id):
     if not current_user.is_authenticated:
         return redirect(url_for('login'))
+
+    page_title = f"Evaluating '{Organization.query.get(o_id).name}' with Assessment '{Assessment.query.get(a_id).name}'"
+    form = RatingForm(request.form)
+
     if 'savedassess' not in session:
         session['savedassess'] = a_id
     session['numquestions'] = 0
-    page_title = f"Evaluating '{Organization.query.get(o_id).name}' with Assessment '{Assessment.query.get(a_id).name}'"
-    form = RatingForm(request.form)
     if a_id == session['savedassess']:
         savedassess = session['savedassess']
     else:
         savedassess = [0]
-    print(savedassess)
+
     cL = Category.query.filter(Category.assessmentid == a_id).all()
     categoryList = []
     numberquestonslist = []
@@ -201,14 +205,17 @@ def evaluate_perform(o_id, a_id):
         cObj = DataWithInfo(c, queslist)
         categoryList.append(cObj)
         session['numquestions'] += i
+
     for i in reversed(numberquestonslist):
         reverseQues.append(i)
     session['numqueslist'] = reverseQues
+
     if form.validate_on_submit():
         if 'save' in request.form:
             queslist = []
             ratinglist = []
             obslist = []
+
             for catQuestions in categoryList:
                 for question in catQuestions.info:
                     queslist.append(question.data)
@@ -249,7 +256,7 @@ def evaluate_perform(o_id, a_id):
                     if 'rating' + str(q.id) in request.form:
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
-                        obj = Rating(evaluation_id=a.id, question_id=q.id, rating=rate, observation=obs)
+                        obj = Rating(evaluation_id=e.id, question_id=q.id, rating=rate, observation=obs)
                         db.session.add(obj)
             session.pop('myratings', None)
             session.pop('savedassess', None)
