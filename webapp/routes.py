@@ -176,6 +176,7 @@ def evaluate_perform(o_id, a_id):
 
     if 'savedassess' not in session:
         session['savedassess'] = a_id
+    
     session['numquestions'] = 0
     if a_id == session['savedassess']:
         savedassess = session['savedassess']
@@ -234,7 +235,7 @@ def evaluate_perform(o_id, a_id):
                 session['myobs']=obslist
             else:
                 session['myratings']=[0]
-                session['myobs']=[]
+                session['myobs']=['']
             return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList, a_id=a_id)
 
         elif 'submit' in request.form:

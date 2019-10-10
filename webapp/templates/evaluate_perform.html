@@ -31,14 +31,15 @@
             
             <div class="inner-wrap">
                 {% set numquestlist = session['numqueslist'] %}    
-                {% set myobslist = session['myobs'] %}        
                 {% for o1 in categories %}
                 {% set c = o1.data %}
+                {% set myobslist = [''] %}
                 {% set myrating = [0] %}
                 {% set l = 1 %}
                 {% if a_id == session['savedassess'] %}
                     {% set myrating = session['myratings'] %}
                     {% set numquestions = session['numquestions'] %}
+                    {% set myobslist = session['myobs'] %}
                 {% endif %}
                 {% set qList = o1.info %}
                 <div>
