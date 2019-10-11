@@ -181,7 +181,7 @@ def evaluate_perform(o_id, a_id):
     print(a_id)
     if 'savedassess' not in session:
         session['savedassess'] = a_id
-    
+
     if 'orgname' not in session:
         session['orgname'] = o_id
     print(session)
@@ -369,7 +369,8 @@ def view_display(o_id, a_id, e_id):
         guidedetail = Guideline.query.filter_by(quest_id=e.Question.id).all()
         questionsArray.append(questionObj)
     json_data = json.dumps(questionsArray)
-    return render_template('view_display.html', title='View Evaluation Visualization', form=form, eval_details=eval_details, json_data=json_data, guideline=guidedetail, categories=categories)
+    organization_name = Organization.query.filter_by(id=o_id).first()
+    return render_template('view_display.html', title='View Evaluation Visualization', form=form, eval_details=eval_details, json_data=json_data, guideline=guidedetail, categories=categories, organization_name=organization_name)
 
 
 """ Edit Assessment Functionalities =============================================================="""
