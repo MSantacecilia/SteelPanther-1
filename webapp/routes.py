@@ -326,7 +326,7 @@ def filter_assessment_table(assessment_id):
         evaluationObj = {}
         evaluationObj["id"] = evaluation.id
         #evaluation_timestamp = evaluation.timestamp
-        evaluationObj["timestamp"] = evaluation.timestamp
+        evaluationObj["timestamp"] = evaluation.timestamper
         evaluations_array.append(evaluationObj)
     return jsonify({'evaluations': evaluations_array})
 
