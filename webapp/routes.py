@@ -14,7 +14,11 @@ from sqlalchemy import and_, subquery
 @app.route('/index')
 @login_required
 def index():
-    return render_template("index.html", title="Home")
+    org = Organization.query.all()
+    eval= db.session.query(Evaluation,Organization,Assessment).filter((Evaluation.organization_id==Organization.id) & (Evaluation.assmt==Assessment.id)).all()
+    return render_template("index.html", title="Home", org=org, eval=eval)
+
+
 
 
 @app.route('/register',methods=['GET','POST'])

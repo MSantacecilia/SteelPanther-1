@@ -7,28 +7,98 @@
 
 
 
-    <div class="container-fluid" id="sidebar" style="color: white;">
+    <div class="container-fluid" id="sidebar" style="color: black;">
     <div class="row">
     <div class="col-xs-4 col-sm-4 col-md-1">
         {% include 'navbar.html' %}
     </div>
+
     <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main">
 
 
     <div class="row align-items-center">
 
-    <div class="col-md-9 col-xs-9">
+        <h1>Hi {{ current_user.username }}! This is your dashboard!</h1>
 
-  <div class="index_format">
+    <div class="col-md-9 col-xs-9 vertical-center">
 
 
-    <h1 style="margin-top:150px; margin-left:120px;">Hello, {{ current_user.username }}!</h1>
-    {% for post in posts %}
-        <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
 
-    {% endfor %}
 
-    <h3 style="text-align:center; padding-left:-200px;">Welcome to Steel Panther, Wipro's finest organization assessment application.</h3>
+
+      <div class="card-deck">
+          <div class="card bg-secondary">
+              <div class="card-body text-center">
+                <div class="container">
+
+
+                  <table class="table table-dark table-striped">
+                      <thead>
+                      <tr>
+                          <th>Organization</th>
+
+                      </tr>
+                      </thead>
+                      {% for entry in eval%}
+                      <tr>
+                          <td>
+
+                              {{ entry.Organization.name }}
+
+                          </td>
+
+                      </tr>
+                      {% endfor %}
+
+
+                  </table>
+
+
+</div>
+              </div>
+          </div>
+
+          <div class="card bg-secondary">
+              <div class="card-body text-center">
+
+
+                  <table class="table table-dark table-striped">
+                      <thead>
+                      <tr>
+                          <th>Evaluation</th>
+                          <th>Timestamp</th>
+                      </tr>
+                      </thead>
+                      {% for entry in eval %}
+                          <tr>
+                              <td>
+
+                                  {{ entry.Assessment.name }}
+
+                              </td>
+                          <td>
+
+                                    {{ entry.Evaluation.timestamp }}
+
+
+                          </td>
+
+                          </tr>
+                      {% endfor %}
+
+
+                  </table>
+
+
+
+
+
+
+
+
+              </div>
+          </div>
+      </div>
 
   </div></div></div></div></div></div>
 <!-- \* hellloooooo */ -->
