@@ -177,16 +177,25 @@ def evaluate_perform(o_id, a_id):
 
     page_title = f"Evaluating '{Organization.query.get(o_id).name}' with Assessment '{Assessment.query.get(a_id).name}'"
     form = RatingForm(request.form)
-
+    print(o_id)
+    print(a_id)
     if 'savedassess' not in session:
         session['savedassess'] = a_id
     
+    if 'orgname' not in session:
+        session['orgname'] = o_id
+    print(session)
     session['numquestions'] = 0
+
     if a_id == session['savedassess']:
         savedassess = session['savedassess']
     else:
         savedassess = [0]
 
+    if o_id == session['orgname']:
+        orgname = session['orgname']
+    else:
+        orgname = [0]
     cL = Category.query.filter(Category.assessmentid == a_id).all()
     categoryList = []
     numberquestonslist = []
@@ -234,13 +243,14 @@ def evaluate_perform(o_id, a_id):
                     if 'rating' + str(q.id) in request.form:
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
-            if savedassess == a_id:
+            if savedassess == a_id and orgname == o_id:
+                print('inside save')
                 session['myratings']=ratinglist
                 session['myobs']=obslist
             else:
                 session['myratings']=[0]
                 session['myobs']=['']
-            return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList, a_id=a_id)
+            return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList, a_id=a_id, o_id=o_id)
 
         elif 'submit' in request.form:
             e = Evaluation(user_id=current_user.id, organization_id=o_id, assmt=a_id)
@@ -267,13 +277,14 @@ def evaluate_perform(o_id, a_id):
             session.pop('savedassess', None)
             session.pop('numquestions', None)
             session.pop('myobs', None)
+            session.pop('orgname', None)
             session['myratings'] = [0]
             session['myobs'] = ['']
             db.session.commit()
             flash('The evaluation was successful!', "success")
             return redirect(url_for('view'))
 
-    return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList, a_id=a_id)
+    return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList, a_id=a_id, o_id=o_id)
 
 
 """ Visualization Functionality ================================================================= """
