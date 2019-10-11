@@ -6,6 +6,8 @@ from werkzeug import security
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin, current_user
 from datetime import datetime
+from pytz import timezone
+from tzlocal import get_localzone
 
 from werkzeug.utils import redirect
 
@@ -43,7 +45,7 @@ class Evaluation(db.Model):
     organization_id = db.Column(db.Integer, db.ForeignKey('organization.id'), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user_account.id'), nullable=False)
     assmt = db.Column(db.Integer, db.ForeignKey('assessment.id', ondelete='CASCADE'), nullable=True)
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    timestamper = db.Column(db.String, index=True, default=datetime.now(timezone('UTC')).astimezone(get_localzone()).strftime("%A, %B %d, %Y  %I:%M%p %Z"))
     rating = db.relationship('Rating', backref='rating_evaluation', lazy='dynamic')
     question = db.relationship("Rating", backref='question_evaluation', lazy='dynamic')
 
