@@ -261,7 +261,7 @@
      function generateSpiderGraph(){
         canvasHTML = '';
         {% for category in categories %}
-            canvasHTML += '<canvas height="1050px" id="{{category}}" style="border:1px solid" width="1200px"></canvas>';
+            canvasHTML += '<canvas height=350 id="{{category}}" style="border:1px solid" width=400></canvas>';
         {% endfor %}
 
        canvas_div.innerHTML = canvasHTML;
@@ -273,6 +273,7 @@
 
        //alert(valueArray);
        {% for category in categories %}
+
        labelArray =[];
        valueArray=[];
        var label='';
@@ -346,11 +347,6 @@
      $('#cmd').click(function(event) {
         var fileName = prompt("Please enter file name", "Graph_PDF");
         fileName += '.pdf'
-
-        // get size of report page
-        //var reportPageHeight = $('#canvas_div').innerHeight();
-        //var reportPageWidth = $('#canvas_div').innerWidth();
-
         var reportPageHeight = 1100;
         var reportPageWidth = 780;
 
@@ -365,11 +361,9 @@
     // keep track canvas position
     var pdfctx = $(pdfCanvas)[0].getContext('2d');
     var pdfctxX = 0;
-    var pdfctxY = 4;
+    var pdfctxY = 50;
     var xbuffer = 20;
-    var ybuffer = 50;
-    //var canvasHeight = 270;
-    //var canvasWidth = 440;
+    var ybuffer = 30;
     var canvasHeight = 350;
     var canvasWidth = 400;
     var writeFlag=0;
@@ -377,7 +371,7 @@
     let logo = null;
 
     var pdf = new jsPDF();
-    pageHeight=750;
+    pageHeight=250;
     var pageNumber=1;
 
 
@@ -397,54 +391,35 @@
     pdf.text(String(pageNumber), 103, 275);
     canvasNo++;
 
-
-    // for each chart.js chart
-    $("canvas").each(function(index) {
-
-        // draw the chart into the new canvas
-        pdfctx.drawImage($(this)[0], pdfctxX, pdfctxY, canvasWidth, canvasHeight);
-        pdfctxX += canvasHeight + xbuffer;
-
-        writeFlag=1;
-
-        if (index % 2 === 1) {
+    {% for category in categories %}
+        var canvas = document.getElementById("{{category}}");
+        var img = canvas.toDataURL("image/png");
+        pdf.addImage(img, 'JPEG', pdfctxX, pdfctxY, 100, 100, canvasNo);
+        pdfctxX += 80 + xbuffer;
+        canvasNo++;
+        if (canvasNo % 2 === 1) {
             pdfctxX = 0;
-            pdfctxY += canvasHeight + ybuffer;
+            pdfctxY += 80 + ybuffer;
         }
 
        if (pdfctxY >= pageHeight)
         {
-            if(pageNumber == 1){
-                pdf.addImage($(pdfCanvas)[0], 'PNG', 5, 50, 0, 0, canvasNo);
-            }
-            else{
-                pdf.addImage($(pdfCanvas)[0], 'PNG', 5, 30, 0, 0, canvasNo);
-            }
-            // create a new canvas object that we will populate with all other canvas objects
-            pdfCanvas = $('<canvas />').attr({
-                id: "canvaspdf",
-                width: reportPageWidth,
-                height: reportPageHeight
-            });
-            pdfctx = $(pdfCanvas)[0].getContext('2d');
             pdf.addPage();
             pageNumber++;
             pdf.text(String(pageNumber), 103, 275);
-            pdfctxY = 4; // Restart height position
-            canvasNo++;
+            pdfctxY = 50; // Restart height position
             writeFlag=0;
         }
 
-    });
-
-    if(writeFlag==1){
-        pdf.addImage($(pdfCanvas)[0], 'PNG', 5, 10, 0, 0, canvasNo);
-    }
+    {% endfor %}
 
    // download the pdf
     pdf.save(fileName);
     });
-     </script>
+
+
+
+       </script>
 
 
 
