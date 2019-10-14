@@ -4,42 +4,72 @@
     <link rel="shortcut icon" href="{{url_for('static',filename='wiproLogo.png')}}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
   </head>
   <body>
-      <div class="container p-0 m-0">
-          <div class="row wrapper h-100">
-              <div class="col-12 col-sm-5 col-md-4 col-lg-3" id="sidebar_col">
-                <div id="sidecontainer">
-                  <nav id="sidebar" class="navbar navbar-expand-sm navbar-light bg-light align-items-start flex-sm-column">
-                      <a class="navbar-brand" href="{{ url_for('sidebar') }}"><i class="fa fa-bullseye fa-fw"></i> Wipro Assess</a>
-                      <a href class="navbar-toggler" data-toggle="collapse" data-target=".sidebar">
-                         <span class="navbar-toggler-icon"></span>
+      <div class="container-fluid m-0">
+          <div class="row">
+              <div id="sidecontainer" class="col-xl-2 col-lg-3 col-md-3 bg-white p-0">
+                <div class="sticky-top">
+                  <nav id="sidebar" class="navbar navbar-expand-md align-items-end flex-md-column px-0">
+                      <a href class="navbar-toggler border" data-toggle="collapse" data-target=".sidebar">
+                          <i class="material-icons text-dark">menu</i>
                       </a>
+                      <a class="navbar-brand text-dark" href="{{ url_for('index') }}"><i class="fa fa-bullseye fa-fw"></i> Wipro Assess</a>
                       <div class="collapse navbar-collapse sidebar">
                         <div class="flex-column">
-                          <center class="my-3" style="background:white;"><img id="logo" src="../static/wiproLogo.png" class="img-fluid"></center>
-                          <ul class="flex-column navbar-nav align-top border-left">
+                          <center class="my-3 pl-lg-5 pl-xl-4 pl-4 pr-lg-4 pr-xl-3 pr-3" style="background:white;"><img id="logo" src="../static/wiproLogo_nav.png" class="img-fluid"></center>
+                          <ul class="flex-column navbar-nav align-top m-0">
                               <div>
                               <li class="nav-item">
-                                  <a class="nav-link " href=""><i class="fa fa-heart-o fa-fw"></i> <span class="">Link</span></a>
-                              </li>
+                                <a class="nav-link" href="{{ url_for('index') }}">
+                                  <span><i class="material-icons align-middle mx-1">home</i>Home</span></a></li>
+                              <!-- <li class="nav-item">
+                                  <a class="nav-link" href="{{ url_for('sidebar') }}">
+                                    <span><i class="material-icons align-middle mx-1">home</i>Home</span></a></li> -->
+
+                              <!-- Admin-only edit tools -->
+                              {% if current_user.is_authenticated and current_user.is_admin() %}
                               <li class="nav-item">
-                                  <a class="nav-link  dropdown-toggle text-nowrap" href="#m1" data-parent="#navbar1" data-toggle="collapse" data-target="#m1" aria-expanded="false">
-                                      <i class="fa fa-address-card-o fa-fw"></i> <span class=""> Link</span>
-                                  </a>
-                                  <div class="collapse" id="m1">
-                                      <ul class="flex-column nav">
-                                          <a class="nav-link px-0 text-truncate" href="#">Sub</a>
-                                          <a class="nav-link px-0 text-truncate" href="#">Sub longer</a>
-                                      </ul>
-                                  </div>
-                              </li>
+                                <a class="nav-link" href="{{ url_for('admin.index') }}">
+                                  <i class="material-icons align-middle mx-1">supervised_user_circle</i><span>Admin Console</span></a></li>
+                              {% endif %}
+
+                              <!-- Standard evaluation tools -->
                               <li class="nav-item">
-                                  <a class="nav-link" href="#"><i class="fa fa-book fa-fw"></i> <span class="">Link</span></a>
-                              </li>
+                                  <a class="nav-link" href="{{ url_for('evaluate') }}">
+                                      <i class="material-icons align-middle mx-1">check_circle</i><span> Evaluation</span></a></li>
                               <li class="nav-item">
-                                  <a class="nav-link" href="#"><i class="fa fa-heart fa-fw"></i> <span class="">Link</span></a>
+                                  <a class="nav-link" href="{{ url_for('view') }}">
+                                      <i class="material-icons align-middle mx-1">bar_chart</i><span>Visualization</span></a></li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('add_organization') }}">
+                                  <span><i class="material-icons align-middle mx-1">home_work</i>Organization</span></a></li>
+                              <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('add_assessment') }}">
+                                  <span><i class="material-icons align-middle mx-1">list</i>Assessment</span></a></li>
+                              
+                              <!-- Standard account tools -->
+                              <li class="nav-item">
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="collapse" data-target="#account" aria-expanded="false">
+                                  <span><i class="material-icons align-middle mx-1">account_circle</i>My Account</span>
+                                </a>
                               </li>
+                              <div class="collapse" id="account">
+                                <ul class="flex-column nav ml-4">
+                                  <li class="nav-item">
+                                    <a class="nav-link px-0 text-truncate text-secondary" href="{{url_for('logout')}}">
+                                        <i class="material-icons align-middle mx-1">power_settings_new</i><span>Logout</span>
+                                    </a>
+                                  </li>
+                                  <li class="nav-item">
+                                    <a class="nav-link px-0 text-truncate text-secondary" href="{{url_for('reset_password')}}">
+                                        <i class="material-icons align-middle mx-1">create</i><span>Reset Password</span>
+                                    </a>
+                                  </li>
+                                </ul>
+                              </div>
                             </div>
                           </ul>
                         </div>
@@ -103,7 +133,12 @@
   li.active{
     background-color: #000;
   }
-  
+  .nav-link{
+    color:black;
+  }
+  /* a{
+    color:black;
+  } */
   /* a:visited {
     display: block;
     color: #000;
@@ -117,31 +152,39 @@
     border-bottom: 5px solid red;
   } */
 
-  @media (min-width: 576px) {
+  main{
+    background-color: darkgray;
+  }
+
+  /* small = 576 */
+  @media (min-width: 767px) {
     
-    #sidecontainer{
+    /* #sidecontainer{
       position: fixed;
+      width: 20%;
     }
     #sidebar {
       position: absolute;
       height: 100%;
-    }
+    } */
     /* #sidebar_col{
       position: fixed;
     } */
     .collapse.navbar-collapse.sidebar{
       align-items: flex-start;
     }
+    .navbar-brand{
+      display:none;
+    }
     /* img#logo{
       height:auto;
     } */
   }
-  @media (max-width: 576px) {
-    img#logo{
+  @media (max-width: 766px) {
+    center{
       display:none;
     }
   }
-  
   
   /* .wrapper {
       min-height: 100vh;
