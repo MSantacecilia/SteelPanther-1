@@ -549,3 +549,7 @@ def import_CSV(file, assessment_name):
                 db.session.commit()
 
     return True
+
+@app.route('/sidebar', methods = ['GET'])
+def sidebar():
+    return render_template("sidenav.html")
