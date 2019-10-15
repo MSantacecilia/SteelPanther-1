@@ -19,32 +19,24 @@
 
 {% block head %}
 
-    <!-- {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-                    <span>{{ message }}</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %} -->
+
 
   {{super()}}
-    <link rel="stylesheet" href="{{url_for('static',filename='css/normalize.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='styles/styles.css')}}">
+    <!-- <link rel="stylesheet" href="{{url_for('static',filename='styles/styles.css')}}">
     <link rel="stylesheet" href="{{url_for('static',filename='css/test_category.css')}}">
-    <link rel="stylesheet" href="{{url_for('static',filename='styles/login_style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='styles/login_style.css')}}"> -->
+    <link rel="stylesheet" href="{{url_for('static',filename='css/normalize.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
-  <link rel="shortcut icon" href="{{url_for('static',filename='wiproLogo.png')}}">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="shortcut icon" href="{{url_for('static',filename='wiproLogo.png')}}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 {% endblock %}
 
 
 
-    <body>
+    <body style="min-height: 100vh;">
 
         {% block content %}
 
@@ -66,17 +58,18 @@
         }
     </script>
     <script type="text/javascript">
-        $(function() {
-            // this will get the full URL at the address bar
+        $(document).ready(function(){
             var url = window.location.href;
 
             // passes on every "a" tag
-            $("#cssmenu a").each(function() {
+            $(".navbar-nav a").each(function() {
                 // checks if its the same on the address bar
                 if (url == (this.href)) {
+                    
+                    // $(this).addClass("active");
                     $(this).closest("li").addClass("active");
                     //for making parent of submenu active
-                    $(this).closest("li").parent().parent().addClass("active");
+                    // $(this).closest("li").parent().parent().addClass("active");
                 }
             });
         });

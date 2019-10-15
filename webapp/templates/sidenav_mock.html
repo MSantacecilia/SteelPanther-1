@@ -1,15 +1,21 @@
-<!-- <head>
-    <link rel="stylesheet" href="{{url_for('static',filename='css/normalize.css')}}">
+{% extends "base.html" %}
+
+{% block head %}
+<!-- <head> -->
+  <link rel="stylesheet" href="{{url_for('static',filename='css/normalize.css')}}">
     <link href="https://fonts.googleapis.com/css?family=Nanum+Gothic&display=swap" rel="stylesheet" type="text/css">
     <link rel="shortcut icon" href="{{url_for('static',filename='wiproLogo.png')}}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
       rel="stylesheet">
-  </head>
-  <body> -->
-      <!-- <div class="container-fluid m-0">
-          <div class="row"> -->
+  <!-- </head> -->
+{% endblock %}
+
+  {% block content %}
+  <!-- <body> -->
+      <div class="container-fluid m-0">
+          <div class="row">
 <div id="sidecontainer" class="col-xl-2 col-lg-3 col-md-3 bg-white p-0">
   <div class="sticky-top">
     <nav id="sidebar" class="navbar navbar-expand-md align-items-start flex-md-column px-0">
@@ -77,7 +83,7 @@
     </nav>
   </div>
 </div>
-              <!-- <main class="col bg-faded py-3">
+              <div class="col bg-faded py-3">
                   <h2>Main</h2>
                   <p>Sriracha biodiesel taxidermy organic post-ironic, Intelligentsia salvia mustache 90's code editing brunch. Butcher polaroid VHS art party, hashtag Brooklyn deep v PBR narwhal sustainable mixtape 
       swag wolf squid tote bag. Tote bag cronut semiotics, raw denim deep v taxidermy messenger bag. Tofu YOLO Etsy, direct trade 
@@ -114,9 +120,11 @@
               readymade disrupt deep v. Meggings seitan Wes Anderson semiotics, cliche American Apparel whatever. Helvetica cray plaid, vegan brunch Banksy 
               leggings +1 direct trade. Wayfarers codeply PBR selfies. Banh mi McSweeney's Shoreditch selfies, 
               forage fingerstache food truck occupy YOLO Pitchfork fixie iPhone fanny pack art party Portland.</p>
-              </main>
+            </div>
           </div>
-      </div> -->
+      </div>
+    <!-- </body> -->
+      
   
   <style CSS>
   
@@ -197,10 +205,30 @@
   } */
   
   </style>
-<!--   
+  {% endblock %}
+  
+  {% block scripts %}
   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
-  <!-- <script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script>
+      $(document).ready(function(){
+        var url = window.location.href;
+  
+        // passes on every "a" tag
+        $(".navbar-nav a").each(function() {
+            // checks if its the same on the address bar
+            if (url == (this.href)) {
+               
+                // $(this).addClass("active");
+                $(this).closest("li").addClass("active");
+                //for making parent of submenu active
+                // $(this).closest("li").parent().parent().addClass("active");
+            }
+        });
+      });
+    </script>
+  {% endblock %}
+   <!-- <script>
     $(document).ready(function(){
       var url = window.location.href;
 

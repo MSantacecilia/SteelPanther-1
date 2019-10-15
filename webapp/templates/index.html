@@ -7,105 +7,78 @@
 
 
 
-    <div class="container-fluid" id="sidebar" style="color: black;">
-    <div class="row">
-    <div class="col-xs-4 col-sm-4 col-md-1">
-        {% include 'navbar.html' %}
+<div class="container-fluid h-100 m-0 p-0">
+    <div class="row h-100">
+        
+            {% include 'sidenav.html' %}
+
+        <div class="col bg-faded py-3">
+            <div class="row align-items-center">
+                    <div class="jumbotron bg-dark" style="opacity: 0.8;color: white">
+                        <h1>Hi, {{ current_user.username }}!</h1>
+                        <p>This is the one tool you've been looking for all your life. The Organization Assessment tool!</p>
+                    </div>
+                    <div class="col-md-9 col-xs-9 vertical-center">
+                        <div class="card-deck">
+                            <div class="card bg-secondary">
+                                <div class="card-body text-center">
+                                    <div class="container">
+                                        <table class="table table-dark table-striped">
+                                            <thead>
+                                            <tr>
+                                                <th>Organization</th>
+                                            </tr>
+                                            </thead>
+                                            {% for entry in eval%}
+                                            <tr>
+                                                <td>
+                                                    {{ entry.Organization.name }}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="card bg-secondary">
+                            <div class="card-body text-center">
+                                <table class="table table-dark table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>Evaluation</th>
+                                        <th>Timestamp</th>
+                                    </tr>
+                                    </thead>
+                                    {% for entry in eval %}
+                                        <tr>
+                                            <td>
+                                                {{ entry.Assessment.name }}
+                                            </td>
+                                            <td>
+                                            {{ entry.Evaluation.timestamper }}
+                                            </td> 
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main">
-
-
-    <div class="row align-items-center">
-
-        <div class="jumbotron bg-dark" style="opacity: 0.8;color: white">
-            <h1>Hi, {{ current_user.username }}!</h1>
-            <p>This is the one tool you've been looking for all your life. The Organization Assessment tool!</p>
-        </div>
-
-    <div class="col-md-9 col-xs-9 vertical-center">
-
-
-
-
-
-      <div class="card-deck">
-          <div class="card bg-secondary">
-              <div class="card-body text-center">
-                <div class="container">
-
-
-                  <table class="table table-dark table-striped">
-                      <thead>
-                      <tr>
-                          <th>Organization</th>
-
-                      </tr>
-                      </thead>
-                      {% for entry in eval%}
-                      <tr>
-                          <td>
-
-                              {{ entry.Organization.name }}
-
-                          </td>
-
-                      </tr>
-                      {% endfor %}
-
-
-                  </table>
-
-
+    <!-- <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main"></div> -->
 </div>
-              </div>
-          </div>
-
-          <div class="card bg-secondary">
-              <div class="card-body text-center">
-
-
-                  <table class="table table-dark table-striped">
-                      <thead>
-                      <tr>
-                          <th>Evaluation</th>
-                          <th>Timestamp</th>
-                      </tr>
-                      </thead>
-                      {% for entry in eval %}
-                          <tr>
-                              <td>
-
-                                  {{ entry.Assessment.name }}
-
-                              </td>
-                          <td>
-
-                                    {{ entry.Evaluation.timestamper }}
-
-
-                          </td>
-
-                          </tr>
-                      {% endfor %}
-
-
-                  </table>
-
-
-
-
-
-
-
-
-              </div>
-          </div>
-      </div>
-
-  </div></div></div></div></div></div>
 <!-- \* hellloooooo */ -->
 
+<style>
+    html, body{
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+</style>
 
 
 {% endblock %}

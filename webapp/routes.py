@@ -552,4 +552,4 @@ def import_CSV(file, assessment_name):
 
 @app.route('/sidebar', methods = ['GET'])
 def sidebar():
-    return render_template("sidenav.html")
+    return render_template("sidenav_mock.html")
