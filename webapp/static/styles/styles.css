@@ -1,7 +1,12 @@
 @import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);
 
 
-
+.dash-content {
+  font-family: 'Lato', sans-serif;
+  color: black;
+  font-size: large;
+  font-weight: 300;
+}
 
 #cssmenu ul li.active a, #cssmenu ul li a:hover {
   text-decoration:none;

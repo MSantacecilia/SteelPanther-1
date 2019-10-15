@@ -1,111 +1,41 @@
 {% extends "base.html" %}
 
-
 {% block content %}
-
-
-
-
 
     <div class="container-fluid" id="sidebar" style="color: black;">
     <div class="row">
-    <div class="col-xs-4 col-sm-4 col-md-1">
-        {% include 'navbar.html' %}
-    </div>
-
-    <div class="col-xs-8 col-xs-offset-3 col-sm-8 col-sm-offset-3 col-md-8 col-md-offset-4 main">
-
-
-    <div class="row align-items-center">
-
-        <div class="jumbotron bg-dark" style="opacity: 0.8;color: white">
-            <h1>Hi, {{ current_user.username }}!</h1>
-            <p>This is the one tool you've been looking for all your life. The Organization Assessment tool!</p>
+        <div class="col-xs-3 col-sm-3 col-md-3">
+            {% include 'navbar.html' %}
         </div>
-
-    <div class="col-md-9 col-xs-9 vertical-center">
-
-
-
-
-
-      <div class="card-deck">
-          <div class="card bg-secondary">
-              <div class="card-body text-center">
-                <div class="container">
-
-
-                  <table class="table table-dark table-striped">
-                      <thead>
-                      <tr>
-                          <th>Organization</th>
-
-                      </tr>
-                      </thead>
-                      {% for entry in eval%}
-                      <tr>
-                          <td>
-
-                              {{ entry.Organization.name }}
-
-                          </td>
-
-                      </tr>
-                      {% endfor %}
-
-
-                  </table>
-
-
+        <div class="col-xs-9 col-sm-9 col-md-9 main">
+            <div class="container m-0 p-0">
+                <div class="align-items-center vertical-center">
+                    <div class="container m-0 p-0">
+                        <div class="row">
+                            <div class="col-xs-3 col-sm-3 col-md-3 m-0 p-0"></div>
+                            <div class="col-xs-6 col-sm-6 col-md-6 p-0">
+                                {% for e in evals %}
+                                {% set i = loop.index0 %}
+                                <div class="p-2 border dash-content" style="background-color: white;">
+                                    <div class="p-0">
+                                        <p class="m-0 float-right">{{e.evaluation_user_account.username}}</p>
+                                        <p class="m-0">{{e.evaluation_organization.name}}</p>
+                                    </div>
+                                    <div class="p-0">
+                                        <p class="m-0 float-right" style="font-size:12px;">{{ts[i]}}</p>
+                                        <p class="m-0">{{e.evaluation_assessment.name}}</p>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="col-xs-3 col-sm-3 col-md-3 m-0 p-0"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
 </div>
-              </div>
-          </div>
-
-          <div class="card bg-secondary">
-              <div class="card-body text-center">
-
-
-                  <table class="table table-dark table-striped">
-                      <thead>
-                      <tr>
-                          <th>Evaluation</th>
-                          <th>Timestamp</th>
-                      </tr>
-                      </thead>
-                      {% for entry in eval %}
-                          <tr>
-                              <td>
-
-                                  {{ entry.Assessment.name }}
-
-                              </td>
-                          <td>
-
-                                    {{ entry.Evaluation.timestamper }}
-
-
-                          </td>
-
-                          </tr>
-                      {% endfor %}
-
-
-                  </table>
-
-
-
-
-
-
-
-
-              </div>
-          </div>
-      </div>
-
-  </div></div></div></div></div></div>
-<!-- \* hellloooooo */ -->
-
-
 
 {% endblock %}

@@ -7,6 +7,9 @@ from webapp.models import UserAccount, Category, Organization, Question, Evaluat
 import io,csv, json
 import re
 from sqlalchemy import and_, subquery
+from datetime import datetime
+from pytz import timezone
+from tzlocal import get_localzone
 
 
 """ Basic Functionalities ================================================================= """
@@ -15,10 +18,14 @@ from sqlalchemy import and_, subquery
 @login_required
 def index():
     org = Organization.query.all()
-    eval= db.session.query(Evaluation,Organization,Assessment).filter((Evaluation.organization_id==Organization.id) & (Evaluation.assmt==Assessment.id)).all()
-    return render_template("index.html", title="Home", org=org, eval=eval)
 
+    evals = Evaluation.query.order_by(Evaluation.timestamp.desc()).limit(5).all()
 
+    timestamps = []
+    # TODO these are all saving as the same thing
+    for e in evals:
+        timestamps.append(e.timestamp.astimezone(get_localzone()).strftime("%A, %B %d, %Y  %I:%M%p %Z"))
+    return render_template("index.html", title="Home", org=org, evals=evals, ts=timestamps)
 
 
 @app.route('/register',methods=['GET','POST'])
@@ -177,14 +184,11 @@ def evaluate_perform(o_id, a_id):
 
     page_title = f"Evaluating '{Organization.query.get(o_id).name}' with Assessment '{Assessment.query.get(a_id).name}'"
     form = RatingForm(request.form)
-    print(o_id)
-    print(a_id)
     if 'savedassess' not in session:
         session['savedassess'] = a_id
 
     if 'orgname' not in session:
         session['orgname'] = o_id
-    print(session)
     session['numquestions'] = 0
 
     if a_id == session['savedassess']:
@@ -239,12 +243,10 @@ def evaluate_perform(o_id, a_id):
                     if 'obs' + str(q.id) in request.form:
                         obs = str(request.form['obs' + str(q.id)])
                         obslist.append(obs)
-                    #print(request.form['rating' + str(q.id)])
                     if 'rating' + str(q.id) in request.form:
                         rate = int(request.form['rating' + str(q.id)])
                         ratinglist.append(rate)
             if savedassess == a_id and orgname == o_id:
-                print('inside save')
                 session['myratings']=ratinglist
                 session['myobs']=obslist
             else:
@@ -253,7 +255,9 @@ def evaluate_perform(o_id, a_id):
             return render_template('evaluate_perform.html', title=page_title, form=form, categories=categoryList, a_id=a_id, o_id=o_id)
 
         elif 'submit' in request.form:
-            e = Evaluation(user_id=current_user.id, organization_id=o_id, assmt=a_id)
+            # e = Evaluation(user_id=current_user.id, organization_id=o_id, assmt=a_id)
+            # TODO why  did this work
+            e = Evaluation(user_id=current_user.id, organization_id=o_id, assmt=a_id, timestamp=datetime.utcnow())
             db.session.add(e)
             db.session.commit()
 
@@ -265,7 +269,6 @@ def evaluate_perform(o_id, a_id):
 
             for q in queslist:
                 if request.method == "POST":
-                    #print(request.form['rating' + str(q.id)])
                     if 'obs' + str(q.id) in request.form:
                         obs = str(request.form['obs' + str(q.id)])
                     if 'rating' + str(q.id) in request.form:
@@ -326,7 +329,7 @@ def filter_assessment_table(assessment_id):
         evaluationObj = {}
         evaluationObj["id"] = evaluation.id
         #evaluation_timestamp = evaluation.timestamp
-        evaluationObj["timestamp"] = evaluation.timestamper
+        evaluationObj["timestamp"] = evaluation.timestamp
         evaluations_array.append(evaluationObj)
     return jsonify({'evaluations': evaluations_array})
 
